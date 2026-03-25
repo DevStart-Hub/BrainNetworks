@@ -1,15 +1,0 @@
-[1/3] CONTENT\Installation.qmd
-WARNING: Unable to resolve link target: CONTENT\BrainNetworks.qmd
-WARNING: Unable to resolve link target: CONTENT/GettingStarted/GettingStartedWithPython.qmd
-[2/3] CONTENT\Introduction.qmd
-[3/3] index.qmd
-
-ERROR: The process cannot access the file because it is being used by another process. (os error 32), rename 'C:\Users\fp02\OneDrive\Documenti\GNM_tutorials\CONTENT\Introduction.html' -> 'C:\Users\fp02\OneDrive\Documenti\GNM_tutorials\docs\CONTENT\Introduction.html'
-
-Error: The process cannot access the file because it is being used by another process. (os error 32), rename 'C:\Users\fp02\OneDrive\Documenti\GNM_tutorials\CONTENT\Introduction.html' -> 'C:\Users\fp02\OneDrive\Documenti\GNM_tutorials\docs\CONTENT\Introduction.html'
-    at Object.renameSync (deno:runtime/js/30_fs.js:175:9)
-    at renderProject (file:///C:/Program%20Files/RStudio/resources/app/bin/quarto/bin/quarto.js:86832:22)
-    at async Command.fn (file:///C:/Program%20Files/RStudio/resources/app/bin/quarto/bin/quarto.js:90856:32)
-    at async Command.execute (file:///C:/Program%20Files/RStudio/resources/app/bin/quarto/bin/quarto.js:8437:13)
-    at async quarto (file:///C:/Program%20Files/RStudio/resources/app/bin/quarto/bin/quarto.js:127545:5)
-    at async file:///C:/Program%20Files/RStudio/resources/app/bin/quarto/bin/quarto.js:127563:9
