@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>nextsteps – DevStart</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./resources/ICON.png" rel="icon" type="image/png">
+<script src="site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-297f82be50efc673ebd96f37595b8476.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4a0951d19dedb3de55823374062f1177.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G5XSH1GLW7"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G5XSH1GLW7', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"implied",
+  "palette":"dark",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
+
+
+<meta property="og:title" content="GNM Tutorials">
+<meta property="og:description" content="Generative Network Models tutorials">
+<meta property="og:image" content="https://devstart.org/BrainNetworks/images/ICON.png">
+<meta property="og:site_name" content="DevStart">
+<meta property="og:image:height" content="131">
+<meta property="og:image:width" content="120">
+<meta name="twitter:title" content="GNM Tutorials">
+<meta name="twitter:description" content="Generative Network Models tutorials">
+<meta name="twitter:image" content="https://devstart.org/BrainNetworks/images/ICON.png">
+<meta name="twitter:site" content="@DevSciStart">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image-height" content="131">
+<meta name="twitter:image-width" content="120">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="4">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#gnm-tutorials-next-steps-full-plan" id="toc-gnm-tutorials-next-steps-full-plan" class="nav-link active" data-scroll-target="#gnm-tutorials-next-steps-full-plan">GNM Tutorials — Next Steps &amp; Full Plan</a>
+  <ul class="collapse">
+  <li><a href="#general-setup" id="toc-general-setup" class="nav-link" data-scroll-target="#general-setup">General Setup</a></li>
+  <li><a href="#section-1-brain-networks" id="toc-section-1-brain-networks" class="nav-link" data-scroll-target="#section-1-brain-networks">Section 1: Brain Networks</a>
+  <ul class="collapse">
+  <li><a href="#tutorial-introduction-done-introduction.qmd" id="toc-tutorial-introduction-done-introduction.qmd" class="nav-link" data-scroll-target="#tutorial-introduction-done-introduction.qmd">Tutorial: Introduction (DONE — <code>Introduction.qmd</code>)</a></li>
+  <li><a href="#tutorial-installation-done-installation.qmd" id="toc-tutorial-installation-done-installation.qmd" class="nav-link" data-scroll-target="#tutorial-installation-done-installation.qmd">Tutorial: Installation (DONE — <code>Installation.qmd</code>)</a></li>
+  <li><a href="#tutorial-research-question" id="toc-tutorial-research-question" class="nav-link" data-scroll-target="#tutorial-research-question">Tutorial: Research Question</a></li>
+  <li><a href="#tutorial-preprocessing" id="toc-tutorial-preprocessing" class="nav-link" data-scroll-target="#tutorial-preprocessing">Tutorial: Preprocessing</a></li>
+  <li><a href="#tutorial-topology" id="toc-tutorial-topology" class="nav-link" data-scroll-target="#tutorial-topology">Tutorial: Topology</a></li>
+  </ul></li>
+  <li><a href="#section-2-generative-models" id="toc-section-2-generative-models" class="nav-link" data-scroll-target="#section-2-generative-models">Section 2: Generative Models</a>
+  <ul class="collapse">
+  <li><a href="#tutorial-what-is-a-gnm" id="toc-tutorial-what-is-a-gnm" class="nav-link" data-scroll-target="#tutorial-what-is-a-gnm">Tutorial: What is a GNM?</a></li>
+  <li><a href="#tutorial-model-fitting" id="toc-tutorial-model-fitting" class="nav-link" data-scroll-target="#tutorial-model-fitting">Tutorial: Model Fitting</a></li>
+  <li><a href="#tutorial-individual-differences" id="toc-tutorial-individual-differences" class="nav-link" data-scroll-target="#tutorial-individual-differences">Tutorial: Individual Differences</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7"></h1></header><div class="quarto-title-block"><div class="quarto-title-tools-only"><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i></button></div></div>
+
+
+
+
+<section id="gnm-tutorials-next-steps-full-plan" class="level1">
+<h1>GNM Tutorials — Next Steps &amp; Full Plan</h1>
+<section id="general-setup" class="level2">
+<h2 class="anchored" data-anchor-id="general-setup">General Setup</h2>
+<ul>
+<li><strong>Create a dedicated Conda environment</strong> that includes:
+<ul>
+<li><code>GenerativeNetworkModels</code> (the GNM toolbox)</li>
+<li><code>jupyter</code> (so that Quarto can execute Python chunks during render)</li>
+<li>Plotting libraries (e.g., <code>matplotlib</code>, <code>nilearn</code>, <code>networkx</code>)</li>
+<li>Any other dependencies needed across all tutorials</li>
+</ul></li>
+<li><strong>We will NOT use real data!</strong> All brain networks used throughout the tutorials will be <strong>generated using the GNM toolbox itself</strong>.</li>
+</ul>
+<hr>
+</section>
+<section id="section-1-brain-networks" class="level2">
+<h2 class="anchored" data-anchor-id="section-1-brain-networks">Section 1: Brain Networks</h2>
+<section id="tutorial-introduction-done-introduction.qmd" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-introduction-done-introduction.qmd">Tutorial: Introduction (DONE — <code>Introduction.qmd</code>)</h3>
+<ul>
+<li>Conceptual intro to brain networks, graph theory, and connectivity matrices.</li>
+<li>Under the hood (without showing the code overtly), we produce <strong>two figures</strong>:
+<ol type="1">
+<li>A <strong>3D brain connectivity plot</strong> using <code>nilearn</code>, displaying the GNM default network with default coordinates.</li>
+<li>A <strong>connectivity matrix</strong> of the same data.</li>
+</ol></li>
+<li>These figures are embedded as images — the reader sees the visuals but not the code that generated them.</li>
+</ul>
+</section>
+<section id="tutorial-installation-done-installation.qmd" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-installation-done-installation.qmd">Tutorial: Installation (DONE — <code>Installation.qmd</code>)</h3>
+<ul>
+<li>Install Python, set up Conda environment, <code>pip install GenerativeNetworkModels</code>.</li>
+<li>Callout box briefly explaining what GNMs are (simple rules to create artificial networks mimicking real brains — full details later).</li>
+<li>Load the default built-in network using <code>gnm.defaults.get_binary_network()</code>.</li>
+<li><strong>Now we show the script!</strong> We reproduce the same connectivity matrix from the Introduction tutorial, but this time the reader sees and runs the code themselves.</li>
+</ul>
+</section>
+<section id="tutorial-research-question" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-research-question">Tutorial: Research Question</h3>
+<ul>
+<li>Introduce a <strong>general scientific question</strong> that will drive the rest of the tutorial series.</li>
+<li><strong>Scenario:</strong> We have <strong>20 brains</strong>, and we want to investigate whether brain network organisation changes depending on <strong>early life stress</strong>.</li>
+<li>Each brain has an associated <strong>early life stress score</strong> from a real questionnaire (we need to identify which one — e.g., the Childhood Trauma Questionnaire, CTQ, or the Adverse Childhood Experiences, ACE).</li>
+<li>Frame the question: <em>Do individuals with higher early life stress show different network properties?</em></li>
+<li>This question will be tackled using <strong>different approaches</strong> across the following tutorials.</li>
+</ul>
+</section>
+<section id="tutorial-preprocessing" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-preprocessing">Tutorial: Preprocessing</h3>
+<ul>
+<li>Before analysing the networks, we must check the data is usable!
+<ul>
+<li><strong>Threshold</strong> all networks to the <strong>same density</strong> (so they are comparable).</li>
+<li>Check: are the networks <strong>fully connected</strong>? Identify and discard any that are not.</li>
+<li>Any other quality-control steps.</li>
+</ul></li>
+</ul>
+</section>
+<section id="tutorial-topology" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-topology">Tutorial: Topology</h3>
+<ul>
+<li><strong>First approach</strong> to the research question: look at <strong>topology metrics</strong> and see if they correlate with early life stress.</li>
+<li>Compute network metrics for each of the 20 brains (e.g., clustering coefficient, path length, modularity, degree distribution, betweenness centrality, etc.).</li>
+<li>Possibly run a <strong>PCA</strong> on the metrics to show that they naturally cluster into <strong>integration</strong> vs <strong>segregation</strong> dimensions.</li>
+<li>Build <strong>regression models in R</strong> to test whether topology metrics (or PCA components) correlate with early life stress scores.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="section-2-generative-models" class="level2">
+<h2 class="anchored" data-anchor-id="section-2-generative-models">Section 2: Generative Models</h2>
+<section id="tutorial-what-is-a-gnm" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-what-is-a-gnm">Tutorial: What is a GNM?</h3>
+<ul>
+<li>We got very weak correlations from topology alone — but there is more we can do!</li>
+<li>Introduce the idea of <strong>Generative Network Models</strong>: finding a <strong>parsimonious, small set of parameters</strong> that captures complex brain topology.</li>
+<li>Explain <strong>what a GNM is</strong> conceptually: using simple wiring rules to grow artificial networks that look like real brains.</li>
+<li>Introduce the <strong>two key parameters</strong>:
+<ul>
+<li><strong>eta (η):</strong> controls the spatial/distance penalty (how much wiring cost matters).</li>
+<li><strong>gamma (γ):</strong> controls the topological preference (e.g., homophily — connecting to nodes with similar existing connectivity).</li>
+</ul></li>
+<li>Explain what each parameter does and how they interact to shape the generated network.</li>
+</ul>
+</section>
+<section id="tutorial-model-fitting" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-model-fitting">Tutorial: Model Fitting</h3>
+<ul>
+<li>Now that we understand GNMs, we apply them!</li>
+<li>Perform a <strong>binary sweep</strong> over the eta-gamma parameter space.</li>
+<li>Define the <strong>energy function</strong> (how we measure how close a generated network is to a real one).</li>
+<li>Identify the <strong>lowest energy model</strong> (the parameter combination that best reproduces the observed brain network).</li>
+<li><strong>Interpret the results at group level</strong>: what do the best-fitting eta and gamma values tell us about how brains are wired?</li>
+</ul>
+</section>
+<section id="tutorial-individual-differences" class="level3">
+<h3 class="anchored" data-anchor-id="tutorial-individual-differences">Tutorial: Individual Differences</h3>
+<ul>
+<li>Move from group-level to <strong>individual-level</strong> parameter estimation.</li>
+<li>Perform a <strong>second sweep</strong> that is:
+<ul>
+<li><strong>More focused / fine-grained</strong> (narrower parameter range around the group optimum).</li>
+<li>Run over <strong>multiple runs</strong> to ensure robust individual estimates.</li>
+</ul></li>
+<li>Extract <strong>individual-level eta and gamma estimates</strong> for each of the 20 brains.</li>
+<li><strong>Correlate</strong> these individual parameter estimates with <strong>early life stress scores</strong>.</li>
+<li>Interpret the results: what do individual differences in wiring rules tell us?</li>
+<li><strong>Speculate on links to cognition</strong>: how might differences in eta/gamma relate to cognitive outcomes?</li>
+</ul>
+
+
+<!-- -->
+
+</section>
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/devstart\.org\/BrainNetworks");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># GNM Tutorials — Next Steps &amp; Full Plan</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## General Setup</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Create a dedicated Conda environment** that includes:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span><span class="in">`GenerativeNetworkModels`</span> (the GNM toolbox)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span><span class="in">`jupyter`</span> (so that Quarto can execute Python chunks during render)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Plotting libraries (e.g., <span class="in">`matplotlib`</span>, <span class="in">`nilearn`</span>, <span class="in">`networkx`</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Any other dependencies needed across all tutorials</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**We will NOT use real data!** All brain networks used throughout the tutorials will be **generated using the GNM toolbox itself**.</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Section 1: Brain Networks</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Introduction (DONE — `Introduction.qmd`)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Conceptual intro to brain networks, graph theory, and connectivity matrices.</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Under the hood (without showing the code overtly), we produce **two figures**:</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">  1. </span>A **3D brain connectivity plot** using <span class="in">`nilearn`</span>, displaying the GNM default network with default coordinates.</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">  2. </span>A **connectivity matrix** of the same data.</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>These figures are embedded as images — the reader sees the visuals but not the code that generated them.</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Installation (DONE — `Installation.qmd`)</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Install Python, set up Conda environment, <span class="in">`pip install GenerativeNetworkModels`</span>.</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Callout box briefly explaining what GNMs are (simple rules to create artificial networks mimicking real brains — full details later).</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Load the default built-in network using <span class="in">`gnm.defaults.get_binary_network()`</span>.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Now we show the script!** We reproduce the same connectivity matrix from the Introduction tutorial, but this time the reader sees and runs the code themselves.</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Research Question</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Introduce a **general scientific question** that will drive the rest of the tutorial series.</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Scenario:** We have **20 brains**, and we want to investigate whether brain network organisation changes depending on **early life stress**.</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Each brain has an associated **early life stress score** from a real questionnaire (we need to identify which one — e.g., the Childhood Trauma Questionnaire, CTQ, or the Adverse Childhood Experiences, ACE).</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Frame the question: *Do individuals with higher early life stress show different network properties?*</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>This question will be tackled using **different approaches** across the following tutorials.</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Preprocessing</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Before analysing the networks, we must check the data is usable!</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**Threshold** all networks to the **same density** (so they are comparable).</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Check: are the networks **fully connected**? Identify and discard any that are not.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Any other quality-control steps.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Topology</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**First approach** to the research question: look at **topology metrics** and see if they correlate with early life stress.</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Compute network metrics for each of the 20 brains (e.g., clustering coefficient, path length, modularity, degree distribution, betweenness centrality, etc.).</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Possibly run a **PCA** on the metrics to show that they naturally cluster into **integration** vs **segregation** dimensions.</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Build **regression models in R** to test whether topology metrics (or PCA components) correlate with early life stress scores.</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Section 2: Generative Models</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: What is a GNM?</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>We got very weak correlations from topology alone — but there is more we can do!</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Introduce the idea of **Generative Network Models**: finding a **parsimonious, small set of parameters** that captures complex brain topology.</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Explain **what a GNM is** conceptually: using simple wiring rules to grow artificial networks that look like real brains.</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Introduce the **two key parameters**:</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**eta (η):** controls the spatial/distance penalty (how much wiring cost matters).</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**gamma (γ):** controls the topological preference (e.g., homophily — connecting to nodes with similar existing connectivity).</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Explain what each parameter does and how they interact to shape the generated network.</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Model Fitting</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Now that we understand GNMs, we apply them!</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Perform a **binary sweep** over the eta-gamma parameter space.</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Define the **energy function** (how we measure how close a generated network is to a real one).</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Identify the **lowest energy model** (the parameter combination that best reproduces the observed brain network).</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Interpret the results at group level**: what do the best-fitting eta and gamma values tell us about how brains are wired?</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tutorial: Individual Differences</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Move from group-level to **individual-level** parameter estimation.</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Perform a **second sweep** that is:</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**More focused / fine-grained** (narrower parameter range around the group optimum).</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Run over **multiple runs** to ensure robust individual estimates.</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Extract **individual-level eta and gamma estimates** for each of the 20 brains.</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Correlate** these individual parameter estimates with **early life stress scores**.</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Interpret the results: what do individual differences in wiring rules tell us?</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Speculate on links to cognition**: how might differences in eta/gamma relate to cognitive outcomes?</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/EdwardJamesYoung/GenerativeNetworkModels">
+      <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/DevSciStart">
+      <i class="bi bi-twitter" role="img" aria-label="Twitter">
+</i> 
+    </a>
+  </li>  
+</ul>
+    <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

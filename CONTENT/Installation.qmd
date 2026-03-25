@@ -1,0 +1,102 @@
+---
+title: "Installation"
+author-meta: "Francesco Poli"
+date: "23/03/2026" 
+description-meta: "A guide to installing Python, setting up a Conda environment, and loading built-in brain networks using the GenerativeNetworkModels package." 
+
+categories:
+  - Python
+  - Installation
+  - GNM
+---
+
+Welcome back! In our [previous tutorial](Introduction.qmd), we learned how the messy 3D brain can be simplified into a graph, and perfectly mapped out as a clean 2D Connectivity Matrix.
+
+Did you know that the beautiful plots we showed in that tutorial were actually made using `Python`? Python is an incredibly powerful tool—not just for creating beautiful visualizations, but also for all kinds of data preprocessing, modeling, and network analysis!
+
+Since we will be using Python heavily for all our upcoming tutorials, it's time to get everything installed!
+
+# Installing all we need
+
+If you haven't installed Python and yet, don't worry! Check out our detailed [Getting Started with Python](/CONTENT/GettingStarted/GettingStartedWithPython.qmd) tutorial for full instructions on getting it running on your laptop.
+
+Once Python is installed, the best way to manage your projects is by using a **Conda environment**. An environment is like a secure, isolated sandbox for your project. It ensures that all the packages you install don't interfere with your other projects and prevents messy compatibility issues! But if this sounds new to you, do check out the [Getting Started with Python](/CONTENT/GettingStarted/GettingStartedWithPython.qmd) tutorial!
+
+To create and activate your environment, open your terminal (or Command Prompt) and run the following commands:
+
+``` bash
+conda create -n gnm_box python=3.9.25
+conda activate gnm_box
+```
+
+Now that your `gnm_box` sandbox is active, we can install the package we need:
+
+``` bash
+pip install GenerativeNetworkModels
+```
+
+::: callout-note
+## What are Generative Network Models?
+
+You might be wondering what these `GenerativeNetworkModels` we just installed actually are! Well, this is a package we made specifically to create and run generative network models (or GNMs)!
+
+GNMs use simple mathematical rules to try and create artificial networks that look and behave as much as possible like real brains. For today, we are just focusing on getting the package installed—we will actually use these rules to generate synthetic networks in later tutorials!
+:::
+
+We also need to install a few more packages! First off, we need **PyTorch**. PyTorch is a powerful deep learning framework that provides the efficient tensor operations our GNM toolbox relies on under the hood. We can install it simply by doing:
+
+``` bash
+pip install torch
+```
+
+However, there are different ways of installing PyTorch depending on whether you are running on Windows, Mac, or Linux, so do check out the details on the [official PyTorch website](https://pytorch.org/get-started/locally/) where you will be guided through the best install options for you with just a couple of clicks!
+
+Finally, we will need some more, smaller packages useful for data wrangling and plotting:
+
+``` bash
+pip install pandas; matplotlib; nilearn; seaborn
+```
+
+# Loading our first brain network
+
+Now that everything is installed, let's fire up Python and test it out!
+
+For these tutorials, we have prepared a brain network for you to work with. You can download it here:
+
+{{< downloadthis ../resources/BrainNetworks/DATA/generated_binary_network.npy label="Download Network" dname="binary_network" type="secondary" >}}
+
+Save this file somewhere convenient — we will load it right away! This is a **binary connectivity matrix** (just like the spreadsheet we talked about in the previous tutorial), where each cell tells us whether two brain regions are connected (1) or not (0).
+
+Let's load it and take a look:
+
+``` python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the binary connectivity matrix
+adj_matrix = np.load("binary_network.npy")
+print(f"Our brain network has {adj_matrix.shape[0]} nodes!")
+
+# Plot the connectivity matrix as a heatmap
+fig, ax = plt.subplots(figsize=(8, 7))
+im = ax.imshow(adj_matrix, cmap='Reds', interpolation='nearest', aspect='equal')
+cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+cbar.set_label('Connection', fontsize=12)
+
+ax.set_xlabel('Brain Region', fontsize=13)
+ax.set_ylabel('Brain Region', fontsize=13)
+ax.set_title('Binary Connectivity Matrix', fontsize=15, fontweight='bold')
+
+plt.tight_layout()
+plt.show()
+```
+
+If everything works, you should see something like this:
+
+![](../images/BrainNetworks/binary_matrix_heatmap.png){width="80%" fig-align="center"}
+
+Look at that! Each coloured cell is a connection between two brain regions. You can already spot some structure — regions that are close together (along the diagonal) tend to be more connected, just like we discussed in the previous tutorial!
+
+If that runs successfully without errors, congratulations! You have successfully set up everything you need, and you have just loaded and visualized your very first brain network in Python! 🎉
+
+**Next up:** Now that we have everything installed, let's frame our **Research Question** and load the full dataset of 20 brains! 🚀

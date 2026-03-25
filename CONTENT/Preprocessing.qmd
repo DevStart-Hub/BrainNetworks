@@ -1,0 +1,171 @@
+---
+title: "Preprocessing"
+author-meta: "Francesco Poli"
+date: "25/03/2026" 
+description-meta: "Quality-checking brain networks: thresholding to a common density and verifying full connectivity before analysis." 
+
+categories:
+  - Python
+  - Preprocessing
+  - Networks
+---
+
+In the previous tutorial, we loaded our 20 brain networks and framed our research question. But before we can start computing any meaningful metrics, we need to make sure our data is **clean and comparable**.
+
+This is a critical step that is often underappreciated: if our networks are not properly preprocessed, any downstream analysis could be misleading or simply wrong!
+
+In this tutorial, we will perform two essential quality-control checks:
+
+1.  **Density check**: do all networks have the same number of connections? If not, we need to threshold them to a common density so they are comparable.
+2.  **Connectivity check**: is every network *fully connected*? That is, can you reach any brain region from any other? If a network has isolated components, some metrics (like shortest path length) become meaningless.
+
+Let's get started!
+
+# Loading the Data
+
+First, let's load our 20 brain networks and have a quick look:
+
+``` python
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# Load the brain networks
+brains = np.load("brain_networks_20.npy")
+num_brains = brains.shape[0]
+num_nodes = brains.shape[1]
+
+print(f"Loaded {num_brains} brains with {num_nodes} nodes each.")
+```
+
+# Step 1: Checking Density
+
+The **density** of a network is the proportion of all possible connections that actually exist. If two networks have different densities, comparing their topology is like comparing apples with oranges — a denser network will naturally have higher clustering, shorter paths, etc.
+
+Let's check whether our 20 brains have the same density:
+
+``` python
+# Compute density for each brain
+densities = []
+for i in range(num_brains):
+    num_edges = int(brains[i].sum() / 2)  # Divide by 2 because matrix is symmetric
+    num_possible = num_nodes * (num_nodes - 1) / 2
+    density = num_edges / num_possible
+    densities.append(density)
+    print(f"Brain {i+1:2d}: {num_edges} edges, density = {density:.4f}")
+
+print(f"\nDensity range: {min(densities):.4f} to {max(densities):.4f}")
+```
+
+If the densities are not identical (and they almost certainly won't be!), we need to **threshold** all networks to the same density.
+
+## Thresholding to a Common Density
+
+The idea is simple: we pick a **target density** (typically the minimum across all networks, so we only remove edges, never add them), and for each network we keep only the strongest connections until we reach that target.
+
+But wait — our networks are *binary* (all edges are either 0 or 1), so there is no "edge strength" to rank by! In this case, a common approach is to randomly remove edges until we hit the target density. We set a seed for reproducibility:
+
+``` python
+def threshold_to_density(adj_matrix, target_edges, seed=None):
+    """
+    Threshold a binary adjacency matrix to a target number of edges.
+    Randomly removes edges until the target is reached.
+    """
+    rng = np.random.default_rng(seed)
+    
+    # Get all existing edges (upper triangle only to avoid double-counting)
+    rows, cols = np.where(np.triu(adj_matrix, k=1) > 0)
+    current_edges = len(rows)
+    
+    if current_edges <= target_edges:
+        return adj_matrix.copy()  # Already at or below target
+    
+    # Randomly select edges to KEEP
+    keep_indices = rng.choice(current_edges, size=target_edges, replace=False)
+    
+    # Build the new thresholded matrix
+    new_matrix = np.zeros_like(adj_matrix)
+    for idx in keep_indices:
+        r, c = rows[idx], cols[idx]
+        new_matrix[r, c] = 1
+        new_matrix[c, r] = 1  # Keep it symmetric
+    
+    return new_matrix
+
+# Find the minimum density (= minimum number of edges)
+edge_counts = [int(brains[i].sum() / 2) for i in range(num_brains)]
+target_edges = min(edge_counts)
+target_density = target_edges / (num_nodes * (num_nodes - 1) / 2)
+
+print(f"Target: {target_edges} edges (density = {target_density:.4f})")
+
+# Threshold all brains
+brains_thresholded = np.zeros_like(brains)
+for i in range(num_brains):
+    brains_thresholded[i] = threshold_to_density(brains[i], target_edges, seed=i)
+    new_edges = int(brains_thresholded[i].sum() / 2)
+    print(f"Brain {i+1:2d}: {edge_counts[i]} → {new_edges} edges")
+```
+
+Now all our networks have exactly the same number of connections — we can compare them fairly!
+
+# Step 2: Checking Connectivity
+
+The second critical check is whether each network is **fully connected**. A fully connected network is one where you can travel from any node to any other node by following edges. If a network has **disconnected components** (isolated clusters of nodes), some important metrics like the **average shortest path length** become undefined (or infinite).
+
+We can use `networkx` to check this easily:
+
+``` python
+# Check connectivity for each thresholded brain
+disconnected = []
+
+for i in range(num_brains):
+    G = nx.from_numpy_array(brains_thresholded[i])
+    connected = nx.is_connected(G)
+    num_components = nx.number_connected_components(G)
+    
+    status = "✓ Connected" if connected else f"✗ DISCONNECTED ({num_components} components)"
+    print(f"Brain {i+1:2d}: {status}")
+    
+    if not connected:
+        disconnected.append(i)
+
+if len(disconnected) == 0:
+    print("\n🎉 All networks are fully connected!")
+else:
+    print(f"\n⚠️  {len(disconnected)} network(s) are disconnected: {[d+1 for d in disconnected]}")
+```
+
+::: callout-warning
+## What if a network is disconnected?
+
+If any network is disconnected, we have a few options:
+
+1.  **Discard it** — simply exclude it from further analysis. This is the simplest approach, but you lose data.
+2.  **Keep only the largest connected component** — extract the biggest cluster and analyse that. However, this changes the number of nodes, making comparisons tricky.
+3.  **Re-threshold less aggressively** — use a slightly higher target density to preserve connectivity.
+
+For these tutorials, if all networks pass the connectivity check, we proceed as-is. If any fail, we will flag them and decide how to handle them.
+:::
+
+# Summary
+
+Let's save our preprocessed, thresholded networks for use in later tutorials:
+
+``` python
+# Save the preprocessed networks
+np.save("brain_networks_20_preprocessed.npy", brains_thresholded)
+print(f"Saved preprocessed networks with shape {brains_thresholded.shape}")
+print(f"All networks now have {target_edges} edges (density = {target_density:.4f})")
+```
+
+Here is what we accomplished:
+
+| Check | What we did | Why it matters |
+|-----------------|------------------------|-------------------------------|
+| **Density** | Thresholded all networks to the minimum edge count | Ensures fair comparison of topology metrics |
+| **Connectivity** | Verified all networks are fully connected | Ensures metrics like shortest path length are defined |
+
+Our data is now clean and ready for analysis!
+
+**Next up:** In the next tutorial, we will compute **topological metrics** for each brain (clustering, path length, modularity, and more) and test whether they relate to early life stress. Let's see if topology alone can answer our research question! 🚀

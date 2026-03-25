@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../DevStart-1"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../GenerativeNetworkModels"
+		}
+	],
+	"settings": {}
+}

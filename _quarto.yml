@@ -1,0 +1,116 @@
+project:
+  type: website
+  execute-dir: project
+  output-dir: docs
+  resources:
+    - resources/
+execute:
+  freeze: auto
+
+website:
+
+  cookie-consent:
+    type: implied
+    style: simple 
+    palette: dark
+  google-analytics:
+    tracking-id: "G-G5XSH1GLW7"
+
+  favicon: resources/ICON.png
+  title: "DevStart"
+  description: "Hands-on tutorials for the GenerativeNetworkModels Python package."
+  site-url: "https://devstart.org/BrainNetworks"
+  repo-url: "https://github.com/EdwardJamesYoung/GenerativeNetworkModels"
+  image: resources/LOGO.png
+
+  # Cards
+  open-graph:
+    title: "GNM Tutorials"
+    description: "Generative Network Models tutorials"
+    image: "images/ICON.png"
+  
+  twitter-card: 
+    title: "GNM Tutorials"
+    card-style: summary
+    description: "Generative Network Models tutorials"
+    site: "@DevSciStart"
+    image: "images/ICON.png"
+  
+  # Utilities
+  back-to-top-navigation: true
+  page-navigation: true
+  reader-mode: false
+
+  search:
+    location: sidebar
+    type: textbox
+
+  ## Sidebar settings
+  sidebar:
+    title: " "
+    style: "floating"
+    border: true
+    align: center
+    logo: "images/LOGO.png"
+    logo-href: "https://devstart.org/"
+
+    tools:
+      - icon: twitter
+        href: https://x.com/DevSciStart
+      - icon: github
+        menu:
+          - text: Source Code
+            url:  https://github.com/EdwardJamesYoung/GenerativeNetworkModels
+          - text: Report a Bug
+            url:  https://github.com/EdwardJamesYoung/GenerativeNetworkModels/issues
+      - icon: menu-up
+        href: index.qmd
+    
+    contents:
+      - index.qmd
+      - section: "Brain Networks"
+        contents:
+          - CONTENT/Introduction.qmd
+          - CONTENT/Installation.qmd
+          - CONTENT/ResearchQuestion.qmd
+          - CONTENT/Preprocessing.qmd
+
+  ## Footer
+  page-footer:
+    center:  
+      - href: https://github.com/EdwardJamesYoung/GenerativeNetworkModels
+        icon: github
+        aria-label: GitHub
+      - href: https://x.com/DevSciStart
+        icon: twitter
+        aria-label: Twitter
+
+##### Format #####
+format:
+  html:
+    # Toc
+    toc: true
+    toc-expand: 4    
+
+    # Images
+    lightbox: true
+    
+    theme:
+      light: bookup.scss
+      # dark:  bookup_dark.scss
+
+    mainfont: 'Arial'
+    
+    # Code variables
+    code-fold: false
+    code-copy: true
+    code-link: true
+    code-overflow: scroll
+    code-tools:
+      source: true
+      toggle: true
+      caption: none
+    highlight-style: zenburn
+    code-block-background: true
+    code-block-border-left: "#00B3B3"
+editor: visual

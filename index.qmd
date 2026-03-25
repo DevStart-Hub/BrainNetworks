@@ -1,0 +1,14 @@
+---
+title: "Welcome to DevStart"
+comments: false
+---
+
+Welcome to the **Brain Network** side of DevStart! 🎉
+
+The tutorials that you will find here are entirely dedicated to exploring, understanding, and generating brain networks using Python and the `GenerativeNetworkModels` package.
+
+DevStart is an online hands-on manual for anyone who is approaching developmental cognitive neuroscience for the first time, from master’s students and PhDs to postdocs. 
+
+Assuming no prior knowledge, Devstart guides you through your first steps as a developmental researcher. On our main website, you’ll find many examples and guidelines on how to grasp the basic principles of developmental research, design and set up a study with different research methods, analyze data, and start programming.
+
+But here, you're on the brainy side of DevStart, where we learn about brains as networks... So let's dive in! 🚀
