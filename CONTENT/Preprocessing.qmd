@@ -36,9 +36,9 @@ num_nodes = brains.shape[1]
 print(f"Loaded {num_brains} brains with {num_nodes} nodes each.")
 ```
 
-# Step 1: Checking Density
+## Step 1: Checking Density
 
-## What is density?
+### What is density?
 
 The **density** of a network is simply the proportion of all possible connections that actually exist. If a network with 100 nodes had *every single possible* connection, its density would be 1.0 (or 100%). In practice, brain networks are **sparse**: most possible connections don't exist, so densities are typically around 10-30%.
 
@@ -60,7 +60,7 @@ G = nx.from_numpy_array(brain_0)
 print(f"This graph has {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.")
 ```
 
-What just happened? `nx.from_numpy_array()` reads our connectivity matrix and creates a **Graph object**. Each row/column becomes a node, and each non-zero cell becomes an edge. Now we can use all of `networkx`'s built-in functions on it!
+What just happened? `nx.from_numpy_array()` reads our connectivity matrix and creates a **Graph object**. Technically, each row/column becomes a node, and each non-zero cell becomes an edge. But practically, this is just the only format that NetworkX likes, and so we'll respect its preferences!!! And once we do, we can then use all of `networkx`'s built-in functions on it!
 
 For example, computing density is as simple as:
 
@@ -69,7 +69,7 @@ d = nx.density(G)
 print(f"Density of brain 1: {d:.4f}")
 ```
 
-Now let's compute the density for all 20 brains:
+Now let's compute the density for all 20 brains in a loop:
 
 ``` python
 densities = []
@@ -103,11 +103,13 @@ plt.show()
 
 As you can see, the densities are **not identical** across our brains. This means we need to **threshold** them to make them comparable.
 
+We also highlighted the minimum density: In this case 0.1822. Any idea why!?? If not... keep on reading!
+
 ### Thresholding to a Common Density
 
 Thresholding is straightforward: we simply keep the **strongest connections** and discard the weakest ones, until all networks have the same density.
 
-But what density should we target? We use the **minimum density** across all brains. Why? Because we can only *remove* connections (we can't invent new ones!), so the sparsest brain sets the limit for everyone.
+But what density should we target? We use the **minimum density** across all brains. Why? Because we can only *remove* connections (we can't invent new ones!), so the sparsest brain sets the limit for everyone. That's why we highlighted it earlier!!
 
 We'll use a handy function from the `netneurotools` package:
 
@@ -119,7 +121,6 @@ target_density = min(densities)
 
 # threshold_network expects a percentage (0-100), not a proportion!
 target_retain = target_density * 100
-print(f"Thresholding all brains to density = {target_density:.4f} (retain = {target_retain:.2f}%)")
 
 # Threshold each brain
 brains_thresholded = np.zeros_like(brains)
@@ -127,11 +128,6 @@ brains_thresholded = np.zeros_like(brains)
 for i in range(num_brains):
     brains_thresholded[i] = threshold_network(brains[i],
                                               retain=target_retain)
-    
-    # Verify: check the new density
-    G = nx.from_numpy_array(brains_thresholded[i])
-    new_density = nx.density(G)
-    print(f"Brain {i+1:2d}: {densities[i]:.4f} → {new_density:.4f}")
 ```
 
 The `retain` argument tells the function what proportion of edges to keep, and since we set it to the minimum density, every brain now has exactly the same number of connections. We are on a level playing field!
@@ -172,6 +168,7 @@ If any network is disconnected, we have a few options:
 
 1.  **Discard it**. Simply exclude it from further analysis. This is the simplest approach, but we lose data.
 2.  **Threshold less aggressively**. Use a slightly higher target density to preserve connectivity. This approach might "save" some networks by making them more dense, but if you do this, the sparser networks will need to be excluded from the analysis!!! So either way, you'll end up losing some data.
+3.  **Add a minimal number of connections** to reconnect the disconnected parts of the network. This is a bit hacky, but the only way to keep all the data!!!
 :::
 
 ## Summary
@@ -181,14 +178,12 @@ Let's save our preprocessed networks for use in later tutorials:
 ``` python
 # Save the preprocessed networks
 np.save("brain_networks_20_preprocessed.npy", brains_thresholded)
-print(f"Saved preprocessed networks with shape {brains_thresholded.shape}")
-print(f"All networks now have density = {target_density:.4f}")
 ```
 
 Here is what we accomplished:
 
 | Check | What we did | Why it matters |
-|------------------|------------------------|------------------------------|
+|-------------------|------------------------|------------------------------|
 | **Density** | Thresholded all networks to the minimum density | Ensures fair comparison: one brain having more connections doesn't skew results |
 | **Connectivity** | Verified all networks are fully connected | Ensures our later analyses work correctly on every brain |
 
