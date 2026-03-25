@@ -106,5 +106,60 @@
       "Brain Networks",
       "Preprocessing"
     ]
+  },
+  {
+    "objectID": "CONTENT/Preprocessing.html#loading-the-data",
+    "href": "CONTENT/Preprocessing.html#loading-the-data",
+    "title": "Preprocessing",
+    "section": "Loading the Data",
+    "text": "Loading the Data\nFirst, let’s load our 20 brain networks:\nimport numpy as np\n\n# Load the brain networks\nbrains = np.load(\"brain_networks_20.npy\")\nnum_brains = brains.shape[0]\nnum_nodes = brains.shape[1]\n\nprint(f\"Loaded {num_brains} brains with {num_nodes} nodes each.\")",
+    "crumbs": [
+      "Brain Networks",
+      "Preprocessing"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Preprocessing.html#what-is-density",
+    "href": "CONTENT/Preprocessing.html#what-is-density",
+    "title": "Preprocessing",
+    "section": "What is density?",
+    "text": "What is density?\nThe density of a network is simply the proportion of all possible connections that actually exist. If a network with 100 nodes had every single possible connection, its density would be 1.0 (or 100%). In practice, brain networks are sparse: most possible connections don’t exist, so densities are typically around 10-30%.\nWhy does this matter? Imagine comparing two people’s brains, but one has 900 connections and the other has 1100. The second brain isn’t necessarily wired differently; It might just have more connections overall. If we want to compare the organisation of two networks, they need to start on a level playing field: the same density!!!",
+    "crumbs": [
+      "Brain Networks",
+      "Preprocessing"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Preprocessing.html#introducing-networkx",
+    "href": "CONTENT/Preprocessing.html#introducing-networkx",
+    "title": "Preprocessing",
+    "section": "Introducing NetworkX",
+    "text": "Introducing NetworkX\nTo work with networks in Python, we will use a library called networkx. The first thing we need to learn is how to convert our matrix into a network object that networkx can understand:\nimport networkx as nx\n\n# Take the first brain as an example\nbrain_0 = brains[0]\n\n# Convert the numpy matrix into a NetworkX graph\nG = nx.from_numpy_array(brain_0)\n\nprint(f\"This graph has {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.\")\nWhat just happened? nx.from_numpy_array() reads our connectivity matrix and creates a Graph object. Each row/column becomes a node, and each non-zero cell becomes an edge. Now we can use all of networkx’s built-in functions on it!\nFor example, computing density is as simple as:\nd = nx.density(G)\nprint(f\"Density of brain 1: {d:.4f}\")\nNow let’s compute the density for all 20 brains:\ndensities = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    d = nx.density(G)\n    densities.append(d)\n    print(f\"Brain {i+1:2d}: density = {d:.4f}\")\n\nprint(f\"\\nRange: {min(densities):.4f} to {max(densities):.4f}\")\nLet’s also visualise the distribution:\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots(figsize=(8, 4))\nax.hist(densities, bins=10, color='firebrick', edgecolor='black', alpha=0.8)\nax.set_xlabel('Density', fontsize=13)\nax.set_ylabel('Number of brains', fontsize=13)\nax.set_title('Density Distribution Across 20 Brains', fontsize=14, fontweight='bold')\nax.axvline(min(densities), color='black', linestyle='--', linewidth=1.5, label=f'Min = {min(densities):.4f}')\nax.legend()\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nAs you can see, the densities are not identical across our brains. This means we need to threshold them to make them comparable.\n\nThresholding to a Common Density\nThresholding is straightforward: we simply keep the strongest connections and discard the weakest ones, until all networks have the same density.\nBut what density should we target? We use the minimum density across all brains. Why? Because we can only remove connections (we can’t invent new ones!), so the sparsest brain sets the limit for everyone.\nWe’ll use a handy function from the netneurotools package:\nfrom netneurotools.networks import threshold_network\n\n# Our target: the minimum density across all brains\ntarget_density = min(densities)\nprint(f\"Thresholding all brains to density = {target_density:.4f}\")\n\n# Threshold each brain\nbrains_thresholded = np.zeros_like(brains)\n\nfor i in range(num_brains):\n    brains_thresholded[i] = threshold_network(brains[i],\n                                              retain=target_density)\n    \n    # Verify: check the new density\n    G = nx.from_numpy_array(brains_thresholded[i])\n    new_density = nx.density(G)\n    print(f\"Brain {i+1:2d}: {densities[i]:.4f} → {new_density:.4f}\")\nThe retain argument tells the function what proportion of edges to keep, and since we set it to the minimum density, every brain now has exactly the same number of connections. We are on a level playing field!",
+    "crumbs": [
+      "Brain Networks",
+      "Preprocessing"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Preprocessing.html#step-2-checking-connectivity",
+    "href": "CONTENT/Preprocessing.html#step-2-checking-connectivity",
+    "title": "Preprocessing",
+    "section": "Step 2: Checking Connectivity",
+    "text": "Step 2: Checking Connectivity\nThe second check is whether each network is fully connected. What does this mean? Imagine the brain network as a road system: a fully connected network means you can drive from any city to any other city, even if it takes multiple roads. A disconnected network means there are some cities that are completely cut off, no road leads to them.\nWhy is this a problem? Many of the network analyses we will run later assume you can travel between any two regions. If some regions are isolated, those analyses can break or give us nonsensical results.\nLet’s check:\n# Check connectivity for each thresholded brain\ndisconnected = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains_thresholded[i])\n    connected = nx.is_connected(G)\n    num_components = nx.number_connected_components(G)\n    \n    status = \"✓ Connected\" if connected else f\"✗ DISCONNECTED ({num_components} components)\"\n    print(f\"Brain {i+1:2d}: {status}\")\n    \n    if not connected:\n        disconnected.append(i)\n\nif len(disconnected) == 0:\n    print(\"\\n🎉 All networks are fully connected!\")\nelse:\n    print(f\"\\n⚠️  {len(disconnected)} network(s) are disconnected: {[d+1 for d in disconnected]}\")\n\n\n\n\n\n\nWarningWhat if a network is disconnected?\n\n\n\nIf any network is disconnected, we have a few options:\n\nDiscard it. Simply exclude it from further analysis. This is the simplest approach, but we lose data.\nThreshold less aggressively. Use a slightly higher target density to preserve connectivity. This approach might “save” some networks by making them more dense, but if you do this, the sparser networks will need to be excluded from the analysis!!! So either way, you’ll end up losing some data.",
+    "crumbs": [
+      "Brain Networks",
+      "Preprocessing"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Preprocessing.html#summary",
+    "href": "CONTENT/Preprocessing.html#summary",
+    "title": "Preprocessing",
+    "section": "Summary",
+    "text": "Summary\nLet’s save our preprocessed networks for use in later tutorials:\n# Save the preprocessed networks\nnp.save(\"brain_networks_20_preprocessed.npy\", brains_thresholded)\nprint(f\"Saved preprocessed networks with shape {brains_thresholded.shape}\")\nprint(f\"All networks now have density = {target_density:.4f}\")\nHere is what we accomplished:\n\n\n\n\n\n\n\n\nCheck\nWhat we did\nWhy it matters\n\n\n\n\nDensity\nThresholded all networks to the minimum density\nEnsures fair comparison: one brain having more connections doesn’t skew results\n\n\nConnectivity\nVerified all networks are fully connected\nEnsures our later analyses work correctly on every brain\n\n\n\nOur data is now clean and ready for analysis!!!!",
+    "crumbs": [
+      "Brain Networks",
+      "Preprocessing"
+    ]
   }
 ]

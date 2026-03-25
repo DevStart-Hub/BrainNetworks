@@ -54,7 +54,7 @@ However, there are different ways of installing PyTorch depending on whether you
 Finally, we will need some more, smaller packages useful for data wrangling and plotting:
 
 ``` bash
-pip install pandas; matplotlib; nilearn; seaborn
+pip install pandas; matplotlib; nilearn; seaborn; netneuroto
 ```
 
 # Loading our first brain network

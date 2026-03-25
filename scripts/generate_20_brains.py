@@ -61,28 +61,77 @@ for i in range(num_brains):
     
     print(f"\nBrain {i+1}/{num_brains}: eta={eta:.3f}, gamma={gamma:.3f}, density={density_values[i]:.3f}")
     
-    binary_params = BinaryGenerativeParameters(
-        eta=eta,
-        gamma=gamma,
-        lambdah=0.0,
-        distance_relationship_type='powerlaw',
-        preferential_relationship_type='powerlaw',
-        heterochronicity_relationship_type='powerlaw',
-        generative_rule=MatchingIndex(),
-        num_iterations=num_connections,
-    )
+    connected = False
+    attempt = 0
     
-    model = GenerativeNetworkModel(
-        binary_parameters=binary_params,
-        num_simulations=1,
-        distance_matrix=distance_matrix,
-    )
+    while not connected:
+        attempt += 1
+        
+        binary_params = BinaryGenerativeParameters(
+            eta=eta,
+            gamma=gamma,
+            lambdah=0.0,
+            distance_relationship_type='powerlaw',
+            preferential_relationship_type='powerlaw',
+            heterochronicity_relationship_type='powerlaw',
+            generative_rule=MatchingIndex(),
+            num_iterations=num_connections,
+        )
+        
+        model = GenerativeNetworkModel(
+            binary_parameters=binary_params,
+            num_simulations=1,
+            distance_matrix=distance_matrix,
+        )
+        
+        model.run_model()
+        
+        adj = model.adjacency_matrix.squeeze(0).cpu().numpy()
+        
+        # Check connectivity
+        import networkx as nx
+        G = nx.from_numpy_array(adj)
+        connected = nx.is_connected(G)
+        
+        if not connected:
+            n_components = nx.number_connected_components(G)
+            print(f"  Attempt {attempt}: disconnected ({n_components} components), regenerating...")
+        
+        if attempt > 50:
+            print(f"  WARNING: Could not generate connected network after 50 attempts, using last result.")
+            break
     
-    model.run_model()
+    print(f"  ✓ Connected after {attempt} attempt(s)")
     
-    adj = model.adjacency_matrix.squeeze(0).cpu().numpy()
-    all_brains[i] = adj
-    print(f"  -> {int(adj.sum()/2)} edges")
+    # ----- Convert binary to weighted using distances -----
+    # Biologically, shorter distances between brain regions tend to have
+    # MORE white matter streamlines (stronger connections). We simulate this
+    # using an inverse-distance relationship with some noise.
+    
+    rng = np.random.default_rng(seed=i)
+    max_dist = dist_np[dist_np > 0].max()
+    
+    # Normalise distances to [0, 1] range
+    dist_norm = dist_np / max_dist
+    
+    # Inverse distance: shorter distance -> higher streamline count
+    # Scale to roughly 5-500 streamlines
+    raw_weights = 500 * (1 - dist_norm) ** 2
+    
+    # Add some noise (±20%) to make it more realistic
+    noise_factor = rng.uniform(0.8, 1.2, size=raw_weights.shape)
+    weights = raw_weights * noise_factor
+    
+    # Apply only where connections exist, clip to minimum 5 streamlines
+    weighted_adj = adj * weights
+    weighted_adj = np.clip(weighted_adj, 0, None)
+    weighted_adj[weighted_adj > 0] = np.maximum(weighted_adj[weighted_adj > 0], 5)
+    
+    # Make sure it stays symmetric
+    weighted_adj = (weighted_adj + weighted_adj.T) / 2
+    
+    all_brains[i] = weighted_adj
+    print(f"  -> {int((adj > 0).sum()/2)} edges, weight range: {weighted_adj[weighted_adj > 0].min():.0f}-{weighted_adj[weighted_adj > 0].max():.0f} streamlines")
 
 # ============================================================
 # 4. Generate stress scores
