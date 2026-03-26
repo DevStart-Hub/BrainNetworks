@@ -74,6 +74,7 @@ website:
           - CONTENT/Installation.qmd
           - CONTENT/ResearchQuestion.qmd
           - CONTENT/Preprocessing.qmd
+          - CONTENT/Topology.qmd
 
   ## Footer
   page-footer:

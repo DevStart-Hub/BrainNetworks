@@ -138,9 +138,9 @@ for i in range(num_brains):
 # ============================================================
 # Higher index = weaker constraints = more stochastic = higher stress
 # We create a simple linear mapping with some noise
-np.random.seed(42)
-base_stress = np.linspace(2, 18, num_brains)  # Smooth gradient from low to high
-noise = np.random.normal(0, 1.5, num_brains)   # Add some noise
+np.random.seed(1)
+base_stress = np.linspace(4, 16, num_brains)  # Smooth gradient from low to high
+noise = np.random.normal(0, 6, num_brains)   # Add some noise
 stress_scores = np.clip(base_stress + noise, 0, 20)  # Clip to 0-20 range
 stress_scores = np.round(stress_scores, 1)
 

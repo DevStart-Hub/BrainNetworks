@@ -134,7 +134,7 @@
     "href": "CONTENT/Preprocessing.html#introducing-networkx",
     "title": "Preprocessing",
     "section": "Introducing NetworkX",
-    "text": "Introducing NetworkX\nTo work with networks in Python, we will use a library called networkx. The first thing we need to learn is how to convert our matrix into a network object that networkx can understand:\nimport networkx as nx\n\n# Take the first brain as an example\nbrain_0 = brains[0]\n\n# Convert the numpy matrix into a NetworkX graph\nG = nx.from_numpy_array(brain_0)\n\nprint(f\"This graph has {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.\")\nWhat just happened? nx.from_numpy_array() reads our connectivity matrix and creates a Graph object. Each row/column becomes a node, and each non-zero cell becomes an edge. Now we can use all of networkx’s built-in functions on it!\nFor example, computing density is as simple as:\nd = nx.density(G)\nprint(f\"Density of brain 1: {d:.4f}\")\nNow let’s compute the density for all 20 brains:\ndensities = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    d = nx.density(G)\n    densities.append(d)\n    print(f\"Brain {i+1:2d}: density = {d:.4f}\")\n\nprint(f\"\\nRange: {min(densities):.4f} to {max(densities):.4f}\")\nLet’s also visualise the distribution:\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots(figsize=(8, 4))\nax.hist(densities, bins=10, color='firebrick', edgecolor='black', alpha=0.8)\nax.set_xlabel('Density', fontsize=13)\nax.set_ylabel('Number of brains', fontsize=13)\nax.set_title('Density Distribution Across 20 Brains', fontsize=14, fontweight='bold')\nax.axvline(min(densities), color='black', linestyle='--', linewidth=1.5, label=f'Min = {min(densities):.4f}')\nax.legend()\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nAs you can see, the densities are not identical across our brains. This means we need to threshold them to make them comparable.\n\nThresholding to a Common Density\nThresholding is straightforward: we simply keep the strongest connections and discard the weakest ones, until all networks have the same density.\nBut what density should we target? We use the minimum density across all brains. Why? Because we can only remove connections (we can’t invent new ones!), so the sparsest brain sets the limit for everyone.\nWe’ll use a handy function from the netneurotools package:\nfrom netneurotools.networks import threshold_network\n\n# Our target: the minimum density across all brains\ntarget_density = min(densities)\n\n# threshold_network expects a percentage (0-100), not a proportion!\ntarget_retain = target_density * 100\nprint(f\"Thresholding all brains to density = {target_density:.4f} (retain = {target_retain:.2f}%)\")\n\n# Threshold each brain\nbrains_thresholded = np.zeros_like(brains)\n\nfor i in range(num_brains):\n    brains_thresholded[i] = threshold_network(brains[i],\n                                              retain=target_retain)\n    \n    # Verify: check the new density\n    G = nx.from_numpy_array(brains_thresholded[i])\n    new_density = nx.density(G)\n    print(f\"Brain {i+1:2d}: {densities[i]:.4f} → {new_density:.4f}\")\nThe retain argument tells the function what proportion of edges to keep, and since we set it to the minimum density, every brain now has exactly the same number of connections. We are on a level playing field!",
+    "text": "Introducing NetworkX\nTo work with networks in Python, we will use a library called networkx. The first thing we need to learn is how to convert our matrix into a network object that networkx can understand:\nimport networkx as nx\n\n# Take the first brain as an example\nbrain_0 = brains[0]\n\n# Convert the numpy matrix into a NetworkX graph\nG = nx.from_numpy_array(brain_0)\n\nprint(f\"This graph has {G.number_of_nodes()} nodes and {G.number_of_edges()} edges.\")\nWhat just happened? nx.from_numpy_array() reads our connectivity matrix and creates a Graph object. Technically, each row/column becomes a node, and each non-zero cell becomes an edge. But practically, this is just the only format that NetworkX likes, and so we’ll respect its preferences!!! And once we do, we can then use all of networkx’s built-in functions on it!\nFor example, computing density is as simple as:\nd = nx.density(G)\nprint(f\"Density of brain 1: {d:.4f}\")\nNow let’s compute the density for all 20 brains in a loop:\ndensities = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    d = nx.density(G)\n    densities.append(d)\n    print(f\"Brain {i+1:2d}: density = {d:.4f}\")\n\nprint(f\"\\nRange: {min(densities):.4f} to {max(densities):.4f}\")\nLet’s also visualise the distribution:\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots(figsize=(8, 4))\nax.hist(densities, bins=10, color='firebrick', edgecolor='black', alpha=0.8)\nax.set_xlabel('Density', fontsize=13)\nax.set_ylabel('Number of brains', fontsize=13)\nax.set_title('Density Distribution Across 20 Brains', fontsize=14, fontweight='bold')\nax.axvline(min(densities), color='black', linestyle='--', linewidth=1.5, label=f'Min = {min(densities):.4f}')\nax.legend()\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nAs you can see, the densities are not identical across our brains. This means we need to threshold them to make them comparable.\nWe also highlighted the minimum density: In this case 0.1822. Any idea why!?? If not… keep on reading!\n\nThresholding to a Common Density\nThresholding is straightforward: we simply keep the strongest connections and discard the weakest ones, until all networks have the same density.\nBut what density should we target? We use the minimum density across all brains. Why? Because we can only remove connections (we can’t invent new ones!), so the sparsest brain sets the limit for everyone. That’s why we highlighted it earlier!!\nWe’ll use a handy function from the netneurotools package:\nfrom netneurotools.networks import threshold_network\n\n# Our target: the minimum density across all brains\ntarget_density = min(densities)\n\n# threshold_network expects a percentage (0-100), not a proportion!\ntarget_retain = target_density * 100\n\n# Threshold each brain\nbrains_thresholded = np.zeros_like(brains)\n\nfor i in range(num_brains):\n    brains_thresholded[i] = threshold_network(brains[i],\n                                              retain=target_retain)\nThe retain argument tells the function what proportion of edges to keep, and since we set it to the minimum density, every brain now has exactly the same number of connections. We are on a level playing field!",
     "crumbs": [
       "Brain Networks",
       "Preprocessing"
@@ -145,7 +145,7 @@
     "href": "CONTENT/Preprocessing.html#step-2-checking-connectivity",
     "title": "Preprocessing",
     "section": "Step 2: Checking Connectivity",
-    "text": "Step 2: Checking Connectivity\nThe second check is whether each network is fully connected. What does this mean? Imagine the brain network as a road system: a fully connected network means you can drive from any city to any other city, even if it takes multiple roads. A disconnected network means there are some cities that are completely cut off, no road leads to them.\nWhy is this a problem? Many of the network analyses we will run later assume you can travel between any two regions. If some regions are isolated, those analyses can break or give us nonsensical results.\nLet’s check:\n# Check connectivity for each thresholded brain\ndisconnected = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains_thresholded[i])\n    connected = nx.is_connected(G)\n    num_components = nx.number_connected_components(G)\n    \n    status = \"✓ Connected\" if connected else f\"✗ DISCONNECTED ({num_components} components)\"\n    print(f\"Brain {i+1:2d}: {status}\")\n    \n    if not connected:\n        disconnected.append(i)\n\nif len(disconnected) == 0:\n    print(\"\\n🎉 All networks are fully connected!\")\nelse:\n    print(f\"\\n⚠️  {len(disconnected)} network(s) are disconnected: {[d+1 for d in disconnected]}\")\n\n\n\n\n\n\nWarningWhat if a network is disconnected?\n\n\n\nIf any network is disconnected, we have a few options:\n\nDiscard it. Simply exclude it from further analysis. This is the simplest approach, but we lose data.\nThreshold less aggressively. Use a slightly higher target density to preserve connectivity. This approach might “save” some networks by making them more dense, but if you do this, the sparser networks will need to be excluded from the analysis!!! So either way, you’ll end up losing some data.",
+    "text": "Step 2: Checking Connectivity\nThe second check is whether each network is fully connected. What does this mean? Imagine the brain network as a road system: a fully connected network means you can drive from any city to any other city, even if it takes multiple roads. A disconnected network means there are some cities that are completely cut off, no road leads to them.\nWhy is this a problem? Many of the network analyses we will run later assume you can travel between any two regions. If some regions are isolated, those analyses can break or give us nonsensical results.\nLet’s check:\n# Check connectivity for each thresholded brain\ndisconnected = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains_thresholded[i])\n    connected = nx.is_connected(G)\n    num_components = nx.number_connected_components(G)\n    \n    status = \"✓ Connected\" if connected else f\"✗ DISCONNECTED ({num_components} components)\"\n    print(f\"Brain {i+1:2d}: {status}\")\n    \n    if not connected:\n        disconnected.append(i)\n\nif len(disconnected) == 0:\n    print(\"\\n🎉 All networks are fully connected!\")\nelse:\n    print(f\"\\n⚠️  {len(disconnected)} network(s) are disconnected: {[d+1 for d in disconnected]}\")\n\n\n\n\n\n\nWarningWhat if a network is disconnected?\n\n\n\nIf any network is disconnected, we have a few options:\n\nDiscard it. Simply exclude it from further analysis. This is the simplest approach, but we lose data.\nThreshold less aggressively. Use a slightly higher target density to preserve connectivity. This approach might “save” some networks by making them more dense, but if you do this, the sparser networks will need to be excluded from the analysis!!! So either way, you’ll end up losing some data.\nAdd a minimal number of connections to reconnect the disconnected parts of the network. This is a bit hacky, but the only way to keep all the data!!!",
     "crumbs": [
       "Brain Networks",
       "Preprocessing"
@@ -156,10 +156,131 @@
     "href": "CONTENT/Preprocessing.html#summary",
     "title": "Preprocessing",
     "section": "Summary",
-    "text": "Summary\nLet’s save our preprocessed networks for use in later tutorials:\n# Save the preprocessed networks\nnp.save(\"brain_networks_20_preprocessed.npy\", brains_thresholded)\nprint(f\"Saved preprocessed networks with shape {brains_thresholded.shape}\")\nprint(f\"All networks now have density = {target_density:.4f}\")\nHere is what we accomplished:\n\n\n\n\n\n\n\n\nCheck\nWhat we did\nWhy it matters\n\n\n\n\nDensity\nThresholded all networks to the minimum density\nEnsures fair comparison: one brain having more connections doesn’t skew results\n\n\nConnectivity\nVerified all networks are fully connected\nEnsures our later analyses work correctly on every brain\n\n\n\nOur data is now clean and ready for analysis!!!!",
+    "text": "Summary\nLet’s save our preprocessed networks for use in later tutorials:\n# Save the preprocessed networks\nnp.save(\"brain_networks_20_preprocessed.npy\", brains_thresholded)\nHere is what we accomplished:\n\n\n\n\n\n\n\n\nCheck\nWhat we did\nWhy it matters\n\n\n\n\nDensity\nThresholded all networks to the minimum density\nEnsures fair comparison: one brain having more connections doesn’t skew results\n\n\nConnectivity\nVerified all networks are fully connected\nEnsures our later analyses work correctly on every brain\n\n\n\nOur data is now clean and ready for analysis!!!!",
     "crumbs": [
       "Brain Networks",
       "Preprocessing"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html",
+    "href": "CONTENT/Topology.html",
+    "title": "Topology",
+    "section": "",
+    "text": "Now that we have imported and cleaned up our networks, we are ready to look into their topological properties!!!!\nLet’s remember our main goal here: we want to see if there is any correlation between brain networks and early life stress. So now we have to find a way to describe and compare these networks in some way: Which one is more efficient? Which one has more hubs? We can answer these questions and more by looking at their topology!\nTopology is the study of the shape and structure of a network. By quantifying topology, we can boil a messy, tangled network down into a handful of meaningful numbers we can actually compare across people!\nTopological measures are endless, and super confusing. When we started working on these metrics, we’d hear every time a new word: betweenness centrality, clustering coefficient, path length, modularity, rich-club coefficient, efficiency… It felt like a never-ending list!!!\nLuckily for us, many other people have described topological measures before! And a handful of them turn out to be especially informative for brain networks. In this tutorial we will focus on four key metrics:\nLet’s build up our intuition with a simple toy network first, then apply these measures to our real brain data!",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#a-toy-network",
+    "href": "CONTENT/Topology.html#a-toy-network",
+    "title": "Topology",
+    "section": "A toy network",
+    "text": "A toy network\nTo make things concrete, let’s look at a small example network. The yellow nodes are the two “nodes of interest”. We’ll use them throughout to illustrate each metric.\n\n\n\n\n\nNotice anything? The network has two distinct regions: a loose “star” shape on the left, and a denser, more interconnected cluster on the right. The two regions are connected by a single bridge edge in the middle. This kind of structure, with local clusters connected by bridges, turns out to be very common in brain networks!",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#degree",
+    "href": "CONTENT/Topology.html#degree",
+    "title": "Topology",
+    "section": "Degree",
+    "text": "Degree\nThe simplest topological measure is degree: the number of edges connected to a node. In the context of brain networks, a high-degree region is sometimes called a hub: a brain area that talks directly to many other areas.\nIn the figure below, the yellow/orange edges highlight the connections of the two yellow nodes:\n\n\n\n\n\nThe left yellow node has degree 4: it connects to its three close neighbours plus the bridge edge leading to the right cluster. And the right yellow node also has degree 4!\n\nComputing degree in Python\nWith networkx, degree is trivial to compute:\nimport numpy as np\nimport networkx as nx\n\n# Load the preprocessed brains\nbrains = np.load(\"brain_networks_20_preprocessed.npy\")\nnum_brains = brains.shape[0]\n\n# Example: degree of every node in the first brain\nG = nx.from_numpy_array(brains[0])\ndegrees = dict(G.degree())\nprint(f\"Mean degree: {np.mean(list(degrees.values())):.2f}\")\nWe are usually less interested in a single node’s degree than in the average degree across the whole network, or the shape of the degree distribution across the whole network (are degrees roughly equal across nodes, or do a few mega-hubs dominate?).\nFor now, let’s compute the mean degree across all 20 brains:\nmean_degrees = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    mean_deg = np.mean([d for _, d in G.degree()])\n    mean_degrees.append(mean_deg)\n    print(f\"Brain {i+1:2d}: mean degree = {mean_deg:.2f}\")",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#betweenness-centrality",
+    "href": "CONTENT/Topology.html#betweenness-centrality",
+    "title": "Topology",
+    "section": "Betweenness Centrality",
+    "text": "Betweenness Centrality\nDegree tells us who is popular (many direct connections), but it misses something important: a node can be strategically positioned even without being especially well-connected. Think of a small airport that is the only hub between two continents: it handles an enormous amount of traffic despite being tiny!\nBetweenness centrality captures exactly this idea. For each node, it counts what fraction of all shortest paths between other pairs of nodes pass through it. Wait a minute, what’s a shortest path you ask!? Well, we have an example ready for you here below: if you want to connect the two green nodes to each other, what is the smallest amount of nodes you must go through?\n\n\n\n\n\nJust 2! And we’re passing through the left yellow node!!! This means this node might have high beteenness centrality. Actually, every single path from any of its three close neighbours to anywhere on the right side of the network must pass through it. It is an absolute bottleneck!\nInstead, the right yellow node is not as important. If we look closely, there is NO shortest path between two nodes that passes through it!!\n\nComputing betweenness in Python\nbetweenness_all = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    bc = nx.betweenness_centrality(G, normalized=True)\n    mean_bc = np.mean(list(bc.values()))\n    betweenness_all.append(mean_bc)\n    print(f\"Brain {i+1:2d}: mean betweenness = {mean_bc:.4f}\")\n\n\n\n\n\n\nNoteWhat does normalized=True mean?\n\n\n\nWith normalized=True, NetworkX divides each node’s raw betweenness count by the total number of node pairs in the network. This makes the values comparable across networks of different sizes. Since all our brains have 100 nodes, it does not matter much here, but it is good practice!",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#clustering-coefficient",
+    "href": "CONTENT/Topology.html#clustering-coefficient",
+    "title": "Topology",
+    "section": "Clustering Coefficient",
+    "text": "Clustering Coefficient\nSo far we have looked at how many connections a node has (degree) and how strategically placed it is (betweenness). The clustering coefficient asks a different question: are a node’s neighbours also connected to each other?\nImagine a group of friends. If all your friends also know each other, your social network is highly clustered: you live in a tight-knit community. If none of your friends know each other, your clustering is zero: you are a bridge between disconnected social circles.\n\n\n\n\n\n\nWarningThis example does not apply to Francesco and Tommaso because they have no friends\n\n\n\n\n\n\nIf we look at the two yellow nodes, we can color with orange the connections between their neighbors:\n\n\n\n\n\nThe nodes in the right cluster are well connected to each other. This gives them high clustering. By contrast, look at the left yellow node: its three close neighbours have no edges between them at all!! They are connected to the hub but not to each other… so the hub has low clustering!\nThis difference maps beautifully onto brain organisation. Tightly clustered brain regions tend to form functional modules (groups of regions that work closely together on a shared task). The brain is known to have many such modules: a visual module, a motor module, a default mode network… And high clustering is one of its signatures.\n\nComputing clustering in Python\nclustering_all = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    clust = nx.clustering(G)\n    mean_clust = np.mean(list(clust.values()))\n    clustering_all.append(mean_clust)\n    print(f\"Brain {i+1:2d}: mean clustering = {mean_clust:.4f}\")",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#characteristic-path-length",
+    "href": "CONTENT/Topology.html#characteristic-path-length",
+    "title": "Topology",
+    "section": "Characteristic Path Length",
+    "text": "Characteristic Path Length\nThe last metric we will cover is characteristic path length. For any two nodes in the network, we can ask: what is the shortest possible route from one to the other (counting the number of edges we have to cross)? The characteristic path length is simply the average of these shortest paths across all pairs of nodes.\nA network with short average path lengths is very efficient — information can travel quickly from anywhere to anywhere. This is the famous “six degrees of separation” idea: even in a huge social network, any two people are connected by surprisingly short chains.\nIn brain networks, short path length is associated with global integration — the brain’s ability to rapidly share and combine information across distant regions. Short path length together with high clustering defines what is known as a small-world network, a property that real brain networks are famously known for!\n\nComputing path length in Python\npath_length_all = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    L = nx.average_shortest_path_length(G)\n    path_length_all.append(L)\n    print(f\"Brain {i+1:2d}: path length = {L:.4f}\")\n\n\n\n\n\n\nWarningPath length can be slow!\n\n\n\nnx.average_shortest_path_length() needs to compute shortest paths between every pair of nodes. For a 100-node network this is 4,950 pairs — manageable, but noticeably slower than degree or clustering. For much larger networks it can become very slow!\nA related and often preferred measure is global efficiency, defined as the average of the inverse shortest path lengths. It has the advantage of handling disconnected networks gracefully (where path length would be infinite), and is faster in some implementations:\nefficiency_all = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n    eff = nx.global_efficiency(G)\n    efficiency_all.append(eff)",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#putting-it-all-together",
+    "href": "CONTENT/Topology.html#putting-it-all-together",
+    "title": "Topology",
+    "section": "Putting it all together",
+    "text": "Putting it all together\nNow let’s compute all four metrics at once for all 20 brains and store them neatly:\nimport pandas as pd\n\nresults = []\n\nfor i in range(num_brains):\n    G = nx.from_numpy_array(brains[i])\n\n    mean_deg  = np.mean([d for _, d in G.degree()])\n    mean_bc   = np.mean(list(nx.betweenness_centrality(G, normalized=True).values()))\n    mean_clust = np.mean(list(nx.clustering(G).values()))\n    path_len  = nx.average_shortest_path_length(G)\n\n    results.append({\n        \"brain\":        i + 1,\n        \"degree\":       mean_deg,\n        \"betweenness\":  mean_bc,\n        \"clustering\":   mean_clust,\n        \"path_length\":  path_len,\n    })\n\ndf = pd.DataFrame(results)\nAnd here’s how they look when plotted! \n\n\n\n\n\n\nNoteDegree and density\n\n\n\nWait a second, what’s with degree!?? Why is it the same for all brain networks!?\nIf you remember, we thresholded all our networks to the same density in the previous tutorial… So every brain will have the same mean degree! This is expected: density and mean degree are mathematically linked. The interesting variation is not in the average degree but in how degree is distributed across nodes: some brains might have more extreme hubs than others even at the same density. We’ll see this in one of the following tutorials!",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#do-these-metrics-relate-to-early-life-stress",
+    "href": "CONTENT/Topology.html#do-these-metrics-relate-to-early-life-stress",
+    "title": "Topology",
+    "section": "Do these metrics relate to early life stress?",
+    "text": "Do these metrics relate to early life stress?\nRemember our research question: do individuals who experienced higher early life stress show different brain network organisation? Now that we have our topological metrics, we can take a first look!\nfrom scipy import stats\n\nstress = np.load(\"stress_scores.npy\")\n\nmetrics = [\"degree\", \"betweenness\", \"clustering\", \"path_length\"]\n\nprint(\"Correlation with early life stress:\\n\")\nfor m in metrics:\n    r, p = stats.pearsonr(df[m], stress)\n    print(f\"  {m:&gt;15s}: r = {r:+.3f},  p = {p:.3f}\")\n\n\n\n\n\n\n\n\n\n\n\nImportantThis is just an example!\n\n\n\nRemember: we have 20 participants. The idea here is to have a small toy dataset that it’s easy to play with. But with such a small sample, any correlation we find here should be treated as a very preliminary observation, not a definitive result.",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#summary",
+    "href": "CONTENT/Topology.html#summary",
+    "title": "Topology",
+    "section": "Summary",
+    "text": "Summary\n\n\n\n\n\n\n\n\nMetric\nWhat it measures\nBrain interpretation\n\n\n\n\nDegree\nNumber of direct connections\nHub structure; highly connected regions\n\n\nBetweenness\nFraction of shortest paths passing through a node\nBridge/broker regions; critical relay stations\n\n\nClustering\nInterconnectedness of neighbours\nLocal modularity; functional communities\n\n\nPath Length\nAverage shortest route between node pairs\nGlobal integration efficiency\n\n\n\nThese four metrics give us a rich, multi-faceted description of each brain network. In the next tutorial, we will go one step further and try to generate synthetic networks that reproduce these properties — using Generative Network Models. See you there!!",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Preprocessing.html#step-1-checking-density",
+    "href": "CONTENT/Preprocessing.html#step-1-checking-density",
+    "title": "Preprocessing",
+    "section": "Step 1: Checking Density",
+    "text": "Step 1: Checking Density\n\nWhat is density?\nThe density of a network is simply the proportion of all possible connections that actually exist. If a network with 100 nodes had every single possible connection, its density would be 1.0 (or 100%). In practice, brain networks are sparse: most possible connections don’t exist, so densities are typically around 10-30%.\nWhy does this matter? Imagine comparing two people’s brains, but one has 900 connections and the other has 1100. The second brain isn’t necessarily wired differently; It might just have more connections overall. If we want to compare the organisation of two networks, they need to start on a level playing field: the same density!!!",
+    "crumbs": [
+      "Brain Networks",
+      "Preprocessing"
+    ]
+  },
+  {
+    "objectID": "CONTENT/Topology.html#edge-length",
+    "href": "CONTENT/Topology.html#edge-length",
+    "title": "Topology",
+    "section": "Edge Length",
+    "text": "Edge Length\nThe last metric we will cover is edge length. Unlike the previous three measures, this one is not purely topological; it brings in the actual physical geometry of the brain!\nRemember: each node in our network is a brain region with a real 3D location in the brain (in MNI coordinates). Each edge represents a white matter tract connecting two of those regions. The length of an edge is simply the Euclidean distance between the two regions it connects: how far apart they physically are in the brain.\nWhy does this matter? The brain has limited space and wiring is metabolically expensive. Longer axons cost more energy to build and maintain, so the brain generally prefers short-range connections. A network dominated by short edges is metabolically cheap but has limited reach. A network with more long-range edges is more expensive but can integrate information across the whole brain much more efficiently.\nThis is also deeply relevant to Generative Network Models, but we’ll worry about this later!!!\n\nComputing edge length in Python\nWe have a file with the 3D coordinates of all 100 brain regions, and a precomputed distance matrix. Let’s load them:\n# Load node coordinates (100 x 3: x, y, z in MNI space)\ncoords = np.load(\"coordinates.npy\")\n\n# Load the precomputed pairwise Euclidean distance matrix (100 x 100)\nD = np.load(\"distance_matrix.npy\")\n\n\n\n\n\n\nNoteWhat’s in the distance matrix?\n\n\n\ndistance_matrix.npy contains the Euclidean distances between all 100 brain regions, in millimetres. Entry D[i, j] is simply np.sqrt(sum((coords[i] - coords[j])**2)). We precomputed it so you don’t have to recompute it every time, but it is trivial to recompute yourself if needed!\n\n\nTo get the mean edge length for a brain, we just look up the distance for every existing edge and average them:\nedge_length_all = []\n\nfor i in range(num_brains):\n    # Find all connected pairs (upper triangle only, to avoid double-counting)\n    edges = np.triu(brains[i], k=1) &gt; 0\n    mean_len = D[edges].mean()\n    edge_length_all.append(mean_len)\n    print(f\"Brain {i+1:2d}: mean edge length = {mean_len:.2f} mm\")\nThat’s it! Just averaging the distances of existing edges.",
+    "crumbs": [
+      "Brain Networks",
+      "Topology"
     ]
   }
 ]

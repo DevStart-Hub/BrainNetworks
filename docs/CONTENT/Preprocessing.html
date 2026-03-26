@@ -264,13 +264,13 @@ cookieconsent.run({
   <li><a href="#step-1-checking-density" id="toc-step-1-checking-density" class="nav-link" data-scroll-target="#step-1-checking-density">Step 1: Checking Density</a>
   <ul class="collapse">
   <li><a href="#what-is-density" id="toc-what-is-density" class="nav-link" data-scroll-target="#what-is-density">What is density?</a></li>
+  </ul></li>
   <li><a href="#introducing-networkx" id="toc-introducing-networkx" class="nav-link" data-scroll-target="#introducing-networkx">Introducing NetworkX</a>
   <ul class="collapse">
   <li><a href="#thresholding-to-a-common-density" id="toc-thresholding-to-a-common-density" class="nav-link" data-scroll-target="#thresholding-to-a-common-density">Thresholding to a Common Density</a></li>
   </ul></li>
   <li><a href="#step-2-checking-connectivity" id="toc-step-2-checking-connectivity" class="nav-link" data-scroll-target="#step-2-checking-connectivity">Step 2: Checking Connectivity</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -327,12 +327,13 @@ cookieconsent.run({
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Loaded </span><span class="sc">{</span>num_brains<span class="sc">}</span><span class="ss"> brains with </span><span class="sc">{</span>num_nodes<span class="sc">}</span><span class="ss"> nodes each."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="step-1-checking-density" class="level1">
-<h1>Step 1: Checking Density</h1>
-<section id="what-is-density" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-density">What is density?</h2>
+<section id="step-1-checking-density" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-checking-density">Step 1: Checking Density</h2>
+<section id="what-is-density" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-density">What is density?</h3>
 <p>The <strong>density</strong> of a network is simply the proportion of all possible connections that actually exist. If a network with 100 nodes had <em>every single possible</em> connection, its density would be 1.0 (or 100%). In practice, brain networks are <strong>sparse</strong>: most possible connections don’t exist, so densities are typically around 10-30%.</p>
 <p>Why does this matter? Imagine comparing two people’s brains, but one has 900 connections and the other has 1100. The second brain isn’t necessarily <em>wired differently</em>; It might just have <em>more connections overall</em>. If we want to compare the <strong>organisation</strong> of two networks, they need to start on a level playing field: the same density!!!</p>
+</section>
 </section>
 <section id="introducing-networkx" class="level2">
 <h2 class="anchored" data-anchor-id="introducing-networkx">Introducing NetworkX</h2>
@@ -346,11 +347,11 @@ cookieconsent.run({
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.from_numpy_array(brain_0)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"This graph has </span><span class="sc">{</span>G<span class="sc">.</span>number_of_nodes()<span class="sc">}</span><span class="ss"> nodes and </span><span class="sc">{</span>G<span class="sc">.</span>number_of_edges()<span class="sc">}</span><span class="ss"> edges."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>What just happened? <code>nx.from_numpy_array()</code> reads our connectivity matrix and creates a <strong>Graph object</strong>. Each row/column becomes a node, and each non-zero cell becomes an edge. Now we can use all of <code>networkx</code>’s built-in functions on it!</p>
+<p>What just happened? <code>nx.from_numpy_array()</code> reads our connectivity matrix and creates a <strong>Graph object</strong>. Technically, each row/column becomes a node, and each non-zero cell becomes an edge. But practically, this is just the only format that NetworkX likes, and so we’ll respect its preferences!!! And once we do, we can then use all of <code>networkx</code>’s built-in functions on it!</p>
 <p>For example, computing density is as simple as:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> nx.density(G)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Density of brain 1: </span><span class="sc">{</span>d<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Now let’s compute the density for all 20 brains:</p>
+<p>Now let’s compute the density for all 20 brains in a loop:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>densities <span class="op">=</span> []</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_brains):</span>
@@ -378,10 +379,11 @@ cookieconsent.run({
 </figure>
 </div>
 <p>As you can see, the densities are <strong>not identical</strong> across our brains. This means we need to <strong>threshold</strong> them to make them comparable.</p>
+<p>We also highlighted the minimum density: In this case 0.1822. Any idea why!?? If not… keep on reading!</p>
 <section id="thresholding-to-a-common-density" class="level3">
 <h3 class="anchored" data-anchor-id="thresholding-to-a-common-density">Thresholding to a Common Density</h3>
 <p>Thresholding is straightforward: we simply keep the <strong>strongest connections</strong> and discard the weakest ones, until all networks have the same density.</p>
-<p>But what density should we target? We use the <strong>minimum density</strong> across all brains. Why? Because we can only <em>remove</em> connections (we can’t invent new ones!), so the sparsest brain sets the limit for everyone.</p>
+<p>But what density should we target? We use the <strong>minimum density</strong> across all brains. Why? Because we can only <em>remove</em> connections (we can’t invent new ones!), so the sparsest brain sets the limit for everyone. That’s why we highlighted it earlier!!</p>
 <p>We’ll use a handy function from the <code>netneurotools</code> package:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> netneurotools.networks <span class="im">import</span> threshold_network</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -390,19 +392,13 @@ cookieconsent.run({
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold_network expects a percentage (0-100), not a proportion!</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>target_retain <span class="op">=</span> target_density <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Thresholding all brains to density = </span><span class="sc">{</span>target_density<span class="sc">:.4f}</span><span class="ss"> (retain = </span><span class="sc">{</span>target_retain<span class="sc">:.2f}</span><span class="ss">%)"</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Threshold each brain</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>brains_thresholded <span class="op">=</span> np.zeros_like(brains)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_brains):</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    brains_thresholded[i] <span class="op">=</span> threshold_network(brains[i],</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                                              retain<span class="op">=</span>target_retain)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Verify: check the new density</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> nx.from_numpy_array(brains_thresholded[i])</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    new_density <span class="op">=</span> nx.density(G)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Brain </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">:2d}</span><span class="ss">: </span><span class="sc">{</span>densities[i]<span class="sc">:.4f}</span><span class="ss"> → </span><span class="sc">{</span>new_density<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Threshold each brain</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>brains_thresholded <span class="op">=</span> np.zeros_like(brains)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_brains):</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    brains_thresholded[i] <span class="op">=</span> threshold_network(brains[i],</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                                              retain<span class="op">=</span>target_retain)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>retain</code> argument tells the function what proportion of edges to keep, and since we set it to the minimum density, every brain now has exactly the same number of connections. We are on a level playing field!</p>
 </section>
 </section>
@@ -443,6 +439,7 @@ cookieconsent.run({
 <ol type="1">
 <li><strong>Discard it</strong>. Simply exclude it from further analysis. This is the simplest approach, but we lose data.</li>
 <li><strong>Threshold less aggressively</strong>. Use a slightly higher target density to preserve connectivity. This approach might “save” some networks by making them more dense, but if you do this, the sparser networks will need to be excluded from the analysis!!! So either way, you’ll end up losing some data.</li>
+<li><strong>Add a minimal number of connections</strong> to reconnect the disconnected parts of the network. This is a bit hacky, but the only way to keep all the data!!!</li>
 </ol>
 </div>
 </div>
@@ -451,15 +448,13 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>Let’s save our preprocessed networks for use in later tutorials:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the preprocessed networks</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>np.save(<span class="st">"brain_networks_20_preprocessed.npy"</span>, brains_thresholded)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Saved preprocessed networks with shape </span><span class="sc">{</span>brains_thresholded<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"All networks now have density = </span><span class="sc">{</span>target_density<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>np.save(<span class="st">"brain_networks_20_preprocessed.npy"</span>, brains_thresholded)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Here is what we accomplished:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
+<col style="width: 26%">
 <col style="width: 33%">
-<col style="width: 41%">
+<col style="width: 40%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -486,7 +481,6 @@ cookieconsent.run({
 
 <!-- -->
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1135,7 +1129,7 @@ cookieconsent.run({
 <span id="cb9-183"><a href="#cb9-183" aria-hidden="true" tabindex="-1"></a>Here is what we accomplished:</span>
 <span id="cb9-184"><a href="#cb9-184" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-185"><a href="#cb9-185" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Check <span class="pp">|</span> What we did <span class="pp">|</span> Why it matters <span class="pp">|</span></span>
-<span id="cb9-186"><a href="#cb9-186" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------------|------------------------|------------------------------|</span></span>
+<span id="cb9-186"><a href="#cb9-186" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------------|------------------------|-----------------------------|</span></span>
 <span id="cb9-187"><a href="#cb9-187" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Density** <span class="pp">|</span> Thresholded all networks to the minimum density <span class="pp">|</span> Ensures fair comparison: one brain having more connections doesn't skew results <span class="pp">|</span></span>
 <span id="cb9-188"><a href="#cb9-188" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Connectivity** <span class="pp">|</span> Verified all networks are fully connected <span class="pp">|</span> Ensures our later analyses work correctly on every brain <span class="pp">|</span></span>
 <span id="cb9-189"><a href="#cb9-189" aria-hidden="true" tabindex="-1"></a></span>

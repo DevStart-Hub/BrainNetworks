@@ -183,7 +183,7 @@ np.save("brain_networks_20_preprocessed.npy", brains_thresholded)
 Here is what we accomplished:
 
 | Check | What we did | Why it matters |
-|-------------------|------------------------|------------------------------|
+|-------------------|------------------------|-----------------------------|
 | **Density** | Thresholded all networks to the minimum density | Ensures fair comparison: one brain having more connections doesn't skew results |
 | **Connectivity** | Verified all networks are fully connected | Ensures our later analyses work correctly on every brain |
 
