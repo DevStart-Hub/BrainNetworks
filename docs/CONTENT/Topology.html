@@ -516,7 +516,7 @@ cookieconsent.run({
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    })</span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(results)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And here’s how they look when plotted! <img src="../images/BrainNetworks/topology_descriptive.png" class="img-fluid quarto-figure quarto-figure-center" style="width:90.0%"></p>
+<p>And here’s how they look when plotted! <img src="../images/BrainNetworks/topology_descriptive.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -547,9 +547,13 @@ cookieconsent.run({
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>m<span class="sc">:&gt;15s}</span><span class="ss">: r = </span><span class="sc">{</span>r<span class="sc">:+.3f}</span><span class="ss">,  p = </span><span class="sc">{</span>p<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="../images/BrainNetworks/topology_stress_correlations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="../images/BrainNetworks/topology_stress_correlations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a></p>
+<p><a href="../images/BrainNetworks/topology_stress_correlations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="../images/BrainNetworks/topology_stress_correlations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
 </figure>
 </div>
+<p>AFTER 5 FULL TUTORIALS, FINALLY SOME RESULTS!!! Let’s interpret them!</p>
+<p>Well, degree doesn’t really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty weak, and only one correlation (Betweenness Centrality) reaches significance!</p>
+<p>If we were to interpret this result, we’d say that participants with GREATER early life stress end up having brains that have LOWER betweenness centrality. If we interpret this in light of the adaptive stochasticity hypothesis, this is (weak) evidence favouring the idea that brains shaped by adversity develop in a more stochastic, less constrained way: with fewer critical bottleneck regions and a more distributed, decentralised architecture</p>
+<p>These results are a bit weak and messy though… That’s why we need better modelling tools, just like generative network models!!!! See you on the other side!!!</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1275,13 +1279,21 @@ cookieconsent.run({
 <span id="cb9-240"><a href="#cb9-240" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-241"><a href="#cb9-241" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/topology_stress_correlations.png)</span>{width="100%" fig-align="center"}</span>
 <span id="cb9-242"><a href="#cb9-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
-<span id="cb9-244"><a href="#cb9-244" aria-hidden="true" tabindex="-1"></a><span class="fu">## This is just an example!</span></span>
-<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a>Remember: we have 20 participants. The idea here is to have a small toy dataset that it's easy to play with. But with such a small sample, any correlation we find here should be treated as a very preliminary observation, not a definitive result.</span>
-<span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a>AFTER 5 FULL TUTORIALS, FINALLY SOME RESULTS!!! Let's interpret them!</span>
+<span id="cb9-244"><a href="#cb9-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a>Well, degree doesn't really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty weak, and only one correlation (Betweenness Centrality) reaches significance! </span>
+<span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a>If we were to interpret this result, we'd say that participants with GREATER early life stress end up having brains that have LOWER betweenness centrality. If we interpret this in light of the adaptive stochasticity hypothesis, this is (weak) evidence favouring the idea that brains shaped by adversity develop in a more stochastic, less constrained way: with fewer critical bottleneck regions and a more distributed, decentralised architecture</span>
 <span id="cb9-248"><a href="#cb9-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-249"><a href="#cb9-249" aria-hidden="true" tabindex="-1"></a>##</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb9-249"><a href="#cb9-249" aria-hidden="true" tabindex="-1"></a>These results are a bit weak and messy though... That's why we need better modelling tools, just like generative network models!!!! See you on the other side!!!</span>
+<span id="cb9-250"><a href="#cb9-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-251"><a href="#cb9-251" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
+<span id="cb9-252"><a href="#cb9-252" aria-hidden="true" tabindex="-1"></a><span class="fu">## This is just an example!</span></span>
+<span id="cb9-253"><a href="#cb9-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a>Remember: we have 20 participants. The idea here is to have a small toy dataset that it's easy to play with. But with such a small sample, any correlation we find here should be treated as a very preliminary observation, not a definitive result.</span>
+<span id="cb9-255"><a href="#cb9-255" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-256"><a href="#cb9-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-257"><a href="#cb9-257" aria-hidden="true" tabindex="-1"></a>##</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

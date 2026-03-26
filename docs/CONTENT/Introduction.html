@@ -249,6 +249,12 @@ cookieconsent.run({
  <span class="menu-text">Preprocessing</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CONTENT/Topology.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Topology</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -342,7 +348,8 @@ cookieconsent.run({
 </figure>
 </div>
 <p>To solve this, we use a <strong>parcellation</strong>. Instead of looking at millions of individual fibers, we divide the brain into distinct groups or “areas” (like mapping a country into states). Then, we simply count each <strong>streamline</strong> (a mathematical line estimating a bundle of white matter fibers) that leaves one area and reaches another.</p>
-<p>By doing this, we instantly simplify the mess into a much cleaner <strong>network</strong>! If you look closely at this new network, you’ll see two main things:</p>
+<p>By doing this, we instantly simplify the mess into a much cleaner <strong>network</strong>! <img src="../images/BrainNetworks/brain_connectome_generated.png" class="img-fluid quarto-figure quarto-figure-center" style="width:60.0%"></p>
+<p>If you look closely at this new network, you’ll see two main things:</p>
 <ul>
 <li><p><strong>Nodes</strong>: Represented as circles, they indicate distinct brain areas.</p></li>
 <li><p><strong>Edges</strong>: Represented as straight lines, each indicating the connection between two nodes.</p></li>
@@ -891,41 +898,44 @@ cookieconsent.run({
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>To solve this, we use a **parcellation**. Instead of looking at millions of individual fibers, we divide the brain into distinct groups or "areas" (like mapping a country into states). Then, we simply count each **streamline** (a mathematical line estimating a bundle of white matter fibers) that leaves one area and reaches another.</span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>By doing this, we instantly simplify the mess into a much cleaner **network**! If you look closely at this new network, you'll see two main things:</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Nodes**: Represented as circles, they indicate distinct brain areas.</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Edges**: Represented as straight lines, each indicating the connection between two nodes.</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>By organizing things into nodes and edges, we have created a **graph**! A graph is simply a mathematical structure used to model relations between objects. This is incredibly useful because there is an entire branch of mathematics called **Graph Theory** that has been studying graphs for *centuries* (since 1736, to be exact!).</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="fu">### From 3D Graphs to 2D Matrices</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>Okay, our 3D graph of nodes and edges is much better than the original white matter mess. But let's be honest... looking at a 3D glass brain is *still* visually overwhelming. The lines overlap, cross each other, and become a giant, jumbled ball of yarn! We can't actually see where all the specific connections go.</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>What if we moved from a messy 3D graph into a clean and ordered 2D grid?</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>Imagine a simple spreadsheet. We put our brain areas on the rows, and the same brain areas on the columns. Inside, we color each cell of this grid depending on *how strong* the connection is between those two areas (based on the streamline count).</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/binary_matrix_heatmap.png)</span>{width="70%" fig-align="center"}</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>This 2D grid is called a **Connectivity Matrix**. Suddenly, everything is perfectly visible! The brain went from an absolute mess to something beautifully structured.</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>If we look at this matrix, we can instantly see structural patterns. For example, you might notice that the upper-left and lower-right quadrants of the spreadsheet have way more color than the rest of the grid! Why? Because there are many more *intra-hemispheric* connections (left-to-left or right-to-right) than *inter-hemispheric* connections (crossing from one hemisphere to the other).</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>We are already learning deep truths about how the brain is biologically organized just by looking at this matrix!</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>Because we turned the brain into a graph and its matrix, we can ask very cool questions about it, such as:</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>*Does this network contain **hubs**?* (Super-connected areas, like major airport terminals).</span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>*What is the **shortest path** for information to travel from the visual area to the motor area?*</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>Without even realizing it, we are already doing **Network Topology** (studying the structural shape of the network)!!! This is what we will explore in intense detail in a following tutorial, but before we do that...</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>**Let's get everything installed!**</span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>Before we can start measuring graphs and understand networks, we need to set up our Python environment and install the tools we need! We will walk through exactly how to install the <span class="in">`GenerativeNetworkModels`</span> package and anything else we need (like <span class="in">`nilearn`</span> or <span class="in">`networkx`</span>) in the next tutorial. See you there!!</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>By doing this, we instantly simplify the mess into a much cleaner **network**! </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/brain_connectome_generated.png)</span>{width="60%" fig-align="center"}</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>If you look closely at this new network, you'll see two main things:</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Nodes**: Represented as circles, they indicate distinct brain areas.</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Edges**: Represented as straight lines, each indicating the connection between two nodes.</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>By organizing things into nodes and edges, we have created a **graph**! A graph is simply a mathematical structure used to model relations between objects. This is incredibly useful because there is an entire branch of mathematics called **Graph Theory** that has been studying graphs for *centuries* (since 1736, to be exact!).</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="fu">### From 3D Graphs to 2D Matrices</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>Okay, our 3D graph of nodes and edges is much better than the original white matter mess. But let's be honest... looking at a 3D glass brain is *still* visually overwhelming. The lines overlap, cross each other, and become a giant, jumbled ball of yarn! We can't actually see where all the specific connections go.</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>What if we moved from a messy 3D graph into a clean and ordered 2D grid?</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>Imagine a simple spreadsheet. We put our brain areas on the rows, and the same brain areas on the columns. Inside, we color each cell of this grid depending on *how strong* the connection is between those two areas (based on the streamline count).</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/binary_matrix_heatmap.png)</span>{width="70%" fig-align="center"}</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>This 2D grid is called a **Connectivity Matrix**. Suddenly, everything is perfectly visible! The brain went from an absolute mess to something beautifully structured.</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>If we look at this matrix, we can instantly see structural patterns. For example, you might notice that the upper-left and lower-right quadrants of the spreadsheet have way more color than the rest of the grid! Why? Because there are many more *intra-hemispheric* connections (left-to-left or right-to-right) than *inter-hemispheric* connections (crossing from one hemisphere to the other).</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>We are already learning deep truths about how the brain is biologically organized just by looking at this matrix!</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>Because we turned the brain into a graph and its matrix, we can ask very cool questions about it, such as:</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>*Does this network contain **hubs**?* (Super-connected areas, like major airport terminals).</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>*What is the **shortest path** for information to travel from the visual area to the motor area?*</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>Without even realizing it, we are already doing **Network Topology** (studying the structural shape of the network)!!! This is what we will explore in intense detail in a following tutorial, but before we do that...</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>**Let's get everything installed!**</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>Before we can start measuring graphs and understand networks, we need to set up our Python environment and install the tools we need! We will walk through exactly how to install the <span class="in">`GenerativeNetworkModels`</span> package and anything else we need (like <span class="in">`nilearn`</span> or <span class="in">`networkx`</span>) in the next tutorial. See you there!!</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
