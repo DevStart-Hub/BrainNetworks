@@ -48,8 +48,7 @@ While this 3D web of fibers is beautiful, it is also **super messy**. There are 
 
 To solve this, we use a **parcellation**. Instead of looking at millions of individual fibers, we divide the brain into distinct groups or "areas" (like mapping a country into states). Then, we simply count each **streamline** (a mathematical line estimating a bundle of white matter fibers) that leaves one area and reaches another.
 
-By doing this, we instantly simplify the mess into a much cleaner **network**! 
-![](../images/BrainNetworks/brain_connectome_generated.png){width="60%" fig-align="center"}
+By doing this, we instantly simplify the mess into a much cleaner **network**! ![](../images/BrainNetworks/brain_connectome_generated.png){width="60%" fig-align="center"}
 
 If you look closely at this new network, you'll see two main things:
 

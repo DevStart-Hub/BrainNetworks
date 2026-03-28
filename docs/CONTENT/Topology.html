@@ -68,6 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../CONTENT/WhatIsGNM.html" rel="next">
 <link href="../CONTENT/Preprocessing.html" rel="prev">
 <link href="../resources/ICON.png" rel="icon" type="image/png">
 <script src="../site_libs/cookie-consent/cookie-consent.js"></script>
@@ -252,6 +253,29 @@ cookieconsent.run({
   <div class="sidebar-item-container"> 
   <a href="../CONTENT/Topology.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Topology</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Generative Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CONTENT/WhatIsGNM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s a GNM?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CONTENT/ModelFitting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Fitting</span></a>
   </div>
 </li>
       </ul>
@@ -1035,6 +1059,9 @@ cookieconsent.run({
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../CONTENT/WhatIsGNM.html" class="pagination-link" aria-label="What's a GNM?">
+        <span class="nav-page-text">What’s a GNM?</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
@@ -1249,13 +1276,13 @@ cookieconsent.run({
 <span id="cb9-210"><a href="#cb9-210" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-211"><a href="#cb9-211" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(results)</span>
 <span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a>And here's how they look when plotted!</span>
-<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/topology_descriptive.png)</span>{width="100%" fig-align="center"}</span>
+<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a>And here's how they look when plotted! <span class="al">![](../images/BrainNetworks/topology_descriptive.png)</span>{width="100%" fig-align="center"}</span>
 <span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
 <span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a><span class="fu">## Degree and density</span></span>
 <span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a>Wait a second, what's with degree!?? Why is it the same for all brain networks!? </span>
+<span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a>Wait a second, what's with degree!?? Why is it the same for all brain networks!?</span>
 <span id="cb9-220"><a href="#cb9-220" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-221"><a href="#cb9-221" aria-hidden="true" tabindex="-1"></a>If you remember, we thresholded all our networks to the same density in the previous tutorial... So every brain will have the *same* mean degree! This is expected: density and mean degree are mathematically linked. The interesting variation is not in the *average* degree but in how degree is *distributed* across nodes: some brains might have more extreme hubs than others even at the same density. We'll see this in one of the following tutorials!</span>
 <span id="cb9-222"><a href="#cb9-222" aria-hidden="true" tabindex="-1"></a>:::</span>
@@ -1281,7 +1308,7 @@ cookieconsent.run({
 <span id="cb9-242"><a href="#cb9-242" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a>AFTER 5 FULL TUTORIALS, FINALLY SOME RESULTS!!! Let's interpret them!</span>
 <span id="cb9-244"><a href="#cb9-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a>Well, degree doesn't really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty weak, and only one correlation (Betweenness Centrality) reaches significance! </span>
+<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a>Well, degree doesn't really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty weak, and only one correlation (Betweenness Centrality) reaches significance!</span>
 <span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a>If we were to interpret this result, we'd say that participants with GREATER early life stress end up having brains that have LOWER betweenness centrality. If we interpret this in light of the adaptive stochasticity hypothesis, this is (weak) evidence favouring the idea that brains shaped by adversity develop in a more stochastic, less constrained way: with fewer critical bottleneck regions and a more distributed, decentralised architecture</span>
 <span id="cb9-248"><a href="#cb9-248" aria-hidden="true" tabindex="-1"></a></span>

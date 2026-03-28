@@ -75,6 +75,11 @@ website:
           - CONTENT/ResearchQuestion.qmd
           - CONTENT/Preprocessing.qmd
           - CONTENT/Topology.qmd
+      - section: "Generative Models"
+        contents:
+          - CONTENT/WhatIsGNM.qmd
+          - CONTENT/ModelSpecification.qmd
+          - CONTENT/ModelFitting.qmd
 
   ## Footer
   page-footer:

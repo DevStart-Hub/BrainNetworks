@@ -28,5 +28,14 @@
   },
   "CONTENT/Topology.qmd": {
     "Topology.html": "ae07cd74"
+  },
+  "CONTENT/WhatIsGNM.qmd": {
+    "WhatIsGNM.html": "b11ba924"
+  },
+  "CONTENT/ModelFitting.qmd": {
+    "ModelFitting.html": "4dcb561c"
+  },
+  "CONTENT/ModelSpecification.qmd": {
+    "ModelSpecification.html": "ddc42558"
   }
 }

@@ -210,13 +210,13 @@ for i in range(num_brains):
 
 df = pd.DataFrame(results)
 ```
-And here's how they look when plotted!
-![](../images/BrainNetworks/topology_descriptive.png){width="100%" fig-align="center"}
+
+And here's how they look when plotted! ![](../images/BrainNetworks/topology_descriptive.png){width="100%" fig-align="center"}
 
 ::: callout-note
 ## Degree and density
 
-Wait a second, what's with degree!?? Why is it the same for all brain networks!? 
+Wait a second, what's with degree!?? Why is it the same for all brain networks!?
 
 If you remember, we thresholded all our networks to the same density in the previous tutorial... So every brain will have the *same* mean degree! This is expected: density and mean degree are mathematically linked. The interesting variation is not in the *average* degree but in how degree is *distributed* across nodes: some brains might have more extreme hubs than others even at the same density. We'll see this in one of the following tutorials!
 :::
@@ -242,7 +242,7 @@ for m in metrics:
 
 AFTER 5 FULL TUTORIALS, FINALLY SOME RESULTS!!! Let's interpret them!
 
-Well, degree doesn't really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty weak, and only one correlation (Betweenness Centrality) reaches significance! 
+Well, degree doesn't really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty weak, and only one correlation (Betweenness Centrality) reaches significance!
 
 If we were to interpret this result, we'd say that participants with GREATER early life stress end up having brains that have LOWER betweenness centrality. If we interpret this in light of the adaptive stochasticity hypothesis, this is (weak) evidence favouring the idea that brains shaped by adversity develop in a more stochastic, less constrained way: with fewer critical bottleneck regions and a more distributed, decentralised architecture
 

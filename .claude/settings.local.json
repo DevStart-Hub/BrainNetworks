@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/fp02/AppData/Local/anaconda3/envs/GNM/Lib/site-packages/gnm/fitting/**)",
+      "Read(//c/Users/fp02/AppData/Local/anaconda3/envs/GNM/Lib/site-packages/gnm/**)",
+      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/GNM/python.exe\" scripts/sweep.py)",
+      "Read(//c/Users/fp02/AppData/Local/anaconda3/envs/GNM/Scripts/**)",
+      "Read(//c/Users/fp02/AppData/Local/anaconda3/envs/GNM/**)",
+      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/GNM/python.exe\" -c \"import pandas; import gnm; print\\(''imports ok''\\)\")",
+      "Read(//c/Users/fp02/AppData/Local/anaconda3/envs/**)",
+      "Bash(for env:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $env ===\")",
+      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/$env/python.exe\" -c \"import pandas, gnm; print\\(''OK''\\)\")",
+      "Bash(done)",
+      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/gnm_box/python.exe\" scripts/sweep.py)"
+    ]
+  }
+}

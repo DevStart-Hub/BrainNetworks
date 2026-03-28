@@ -282,5 +282,280 @@
       "Brain Networks",
       "Topology"
     ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html",
+    "href": "CONTENT/WhatIsGNM.html",
+    "title": "What’s a GNM?",
+    "section": "",
+    "text": "Remember where we left off? After five full tutorials, we finally correlated our topology metrics with early life stress and the results were… underwhelming. One significant correlation, a few weak trends, and a lot of noise.\nThat’s not necessarily a failure. It actually tells us something important: a handful of summary statistics may not be enough to capture the full richness of how brains are organised.\nSo what else can we do?\nWhat if instead of just describing a brain network, we tried to grow one? What if we could find a simple set of rules that explains how the brain wires itself, and then see whether those rules differ between people with different early life experiences?\nThat’s exactly what Generative Network Models (GNMs) let us do. With GNMs, we start with an empty network and keep adding connections. How do we decide where to add connections, you may ask!? We follow what we call wiring rules. While there are many rules that people have used and new ones we could come up with, here’s the two rules we will follow:\nSo when we have to decide what brain regions (nodes) should connect, we won’t guess at random but follow these rules!",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#the-big-idea",
+    "href": "CONTENT/WhatIsGNM.html#the-big-idea",
+    "title": "What’s a GNM?",
+    "section": "The big idea",
+    "text": "The big idea\nThink about how the brain develops. Neurons grow axons, axons find their targets, synapses form and are pruned. The end result — the connectivity matrix — is the outcome of a long developmental process governed by biological principles.\nGNMs capture this idea in a beautifully simple way: start with an empty network and iteratively add connections, following a wiring rule. At each step, the probability of forming a new connection between two regions depends on two things:\n\nHow far apart they are — because wiring is metabolically expensive and the brain prefers cheap, short-range connections where possible.\nHow topologically similar they already are — because regions that share many common neighbours tend to get connected (think of it as “if your friends are my friends, we’ll probably meet”).\n\nBy tuning just two numbers, you can generate artificial networks that reproduce the topology of real brains with striking accuracy. That’s the magic of GNMs.",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#a-simple-recipe-for-growing-a-brain",
+    "href": "CONTENT/WhatIsGNM.html#a-simple-recipe-for-growing-a-brain",
+    "title": "What’s a GNM?",
+    "section": "A simple recipe for growing a brain",
+    "text": "A simple recipe for growing a brain\nLet’s turn on the math side of things just for a second. We usually try to keep the tutorials as math-free as possible, but when using GNMs, you will see this formula down here so often that we might just as well get over it and understand it as best as we can!! So here it is:\n\\[ P_{ij} \\propto D_{ij}^{\\eta} \\cdot K_{ij}^{\\gamma} \\]That’s it. The whole model lives in that one equation. If we think of i and j as two nodes, P is the probability that they will connect. That’s what we use the wiring rules for, to decide if two nodes will connect!\nOn the right side of the sign, we have the letters D and K. In a sense, these are the rules. D is for the distance rule, and K is for the “same friends” rules. Because scientists have to use complicated words and “similar friends” was too easy, so they called this “homophily”.\n\n\n\n\n\n\nNoteFun fact\n\n\n\n“Similar friends” and “homophily” actually have the same exact meaning!!\nThe word “friend” originates from the Old English frēond, meaning “one who loves”.\nThe word homophily comes from the greek words “homo”, which means same, and “philia”, which means love!!!\n\n\nAnd then there are two more greek letters, \\(\\eta\\) (eta) and \\(\\gamma\\) (gamma). These two are the elements that tell us how important each rules is! We’ll come on these in a bit.\nIf all seems clear so far, here’s the catch: Do you remember how it is simpler to treat brain networks as connectivity matrices? Well, P, D and K are also matrices!!!!\nIf you’re head hasn’t exploded and you’re still alive, you’re in luck, because an easy example to understand what this means is coming up next.",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#the-two-key-parameters",
+    "href": "CONTENT/WhatIsGNM.html#the-two-key-parameters",
+    "title": "What’s a GNM?",
+    "section": "The two key parameters",
+    "text": "The two key parameters\n\neta (η): the distance penalty\n\\(\\eta\\) controls how strongly distance discourages connection formation. Because it appears as an exponent of a distance term, \\(\\eta\\) is always negative (or zero): larger distances should make connections less likely, not more.\n\nA very negative \\(\\eta\\) (e.g., \\(-5\\)) creates a strongly local network: almost all edges are short-range, and the brain looks like a collection of isolated local clusters.\nA \\(\\eta\\) close to zero relaxes this constraint: long-range connections are almost as likely as short ones, and the network becomes more globally integrated.\n\nIn biological terms, \\(\\eta\\) captures the metabolic cost of wiring: how strongly the brain economises on axon length.\n\n\ngamma (γ): topological preference\n\\(\\gamma\\) controls how strongly the Matching Index influences wiring. Unlike \\(\\eta\\), \\(\\gamma\\) can be positive or negative:\n\nA positive \\(\\gamma\\) means nodes prefer to connect to regions that already share many neighbours — a tendency called homophily or clustering-promoting wiring.\nA negative \\(\\gamma\\) means the opposite: nodes prefer to connect to regions in different neighbourhoods, promoting a more star-like, hub-dominated architecture.\n\\(\\gamma\\) near zero makes the topological term irrelevant: only distance matters.\n\nIn biological terms, \\(\\gamma\\) captures the developmental tendency to form clusters or hubs during brain wiring.\n\n\n\n\n\n\nNotePositive or negative — what’s more realistic?\n\n\n\nReal brains tend to have a positive \\(\\gamma\\), consistent with a clustering-promoting developmental programme. But there is real variation across individuals — and that variation is exactly what we want to capture!",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#how-the-parameters-shape-the-network",
+    "href": "CONTENT/WhatIsGNM.html#how-the-parameters-shape-the-network",
+    "title": "What’s a GNM?",
+    "section": "How the parameters shape the network",
+    "text": "How the parameters shape the network\nThe figure below shows you three examples: on the left, \\(\\eta\\) is quite negative and \\(\\gamma\\) is zero; on the right, \\(\\eta\\) is almost zero and \\(\\gamma\\) is quite high; In the center, \\(\\eta\\) is negative and \\(\\gamma\\) is positive.\n\n\n\n\n\nThis is just to show you that by tweaking these parameters we get networks that look very different. The goal now is to keep tweaking these parameters until we get networks that look as much as possible as brains!!!! Isn’t this exciting!? See you in the next tutorial :)",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#generating-your-first-network",
+    "href": "CONTENT/WhatIsGNM.html#generating-your-first-network",
+    "title": "What’s a GNM?",
+    "section": "Generating your first network",
+    "text": "Generating your first network\nLet’s see GNMs in action. The gnm package makes this remarkably easy:\nimport torch\nfrom gnm import defaults, generative_rules, fitting\n\n# Load the built-in distance matrix and a reference network\ndistance_matrix = defaults.get_distance_matrix()\nreal_network    = defaults.get_binary_network()\n\n# How many connections should our synthetic network have?\nnum_connections = int(real_network.sum().item() / 2)\nprint(f\"Target connections: {num_connections}\")\nNow define a single set of parameters and grow one network:\nfrom gnm.fitting import BinaryParameters, BinarySweepParameters, SweepConfig\nfrom gnm import generative_rules\n\n# Choose eta and gamma values to try\nbinary_params = BinarySweepParameters(\n    eta   = torch.Tensor([-3.0]),\n    gamma = torch.Tensor([0.3]),\n    lambdah = torch.Tensor([0.0]),\n    distance_relationship_type        = [\"powerlaw\"],\n    preferential_relationship_type    = [\"powerlaw\"],\n    heterochronicity_relationship_type= [\"powerlaw\"],\n    generative_rule = [generative_rules.MatchingIndex()],\n    num_iterations  = [num_connections],\n)\n\n\n\n\n\n\nNoteWhy powerlaw?\n\n\n\nThe distance and topological terms can be applied as a powerlaw (\\(D^\\eta\\)) or as an exponential (\\(e^{\\eta D}\\)). Both are used in the literature. The powerlaw is the most common choice for the Matching Index rule — it produces more realistic networks for most brain datasets.",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#measuring-fit-the-energy-function",
+    "href": "CONTENT/WhatIsGNM.html#measuring-fit-the-energy-function",
+    "title": "What’s a GNM?",
+    "section": "Measuring fit: the energy function",
+    "text": "Measuring fit: the energy function\nHow do we know if a generated network looks like a real brain? We compare their distributions of key topological properties: degree, clustering coefficient, and edge length.\nFor each property, we compute a Kolmogorov-Smirnov (KS) statistic — essentially, how far apart the two distributions are. The overall energy is the worst (maximum) KS value across all three properties:\n\\[\nE(\\eta, \\gamma) = \\max\\left[\\text{KS}_\\text{degree},\\; \\text{KS}_\\text{clustering},\\; \\text{KS}_\\text{edge length}\\right]\n\\]\nA low energy means the generated network closely matches the real one. A high energy means it doesn’t. Our goal is to find the \\((\\eta, \\gamma)\\) combination that minimises the energy.\nfrom gnm import evaluation\n\n# Define the three KS criteria\ncriteria = [\n    evaluation.DegreeKS(),\n    evaluation.ClusteringKS(),\n    evaluation.EdgeLengthKS(distance_matrix),\n]\n\n# The energy is the maximum KS across the three\nenergy = evaluation.MaxCriteria(criteria)",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#why-this-is-so-much-richer-than-topology",
+    "href": "CONTENT/WhatIsGNM.html#why-this-is-so-much-richer-than-topology",
+    "title": "What’s a GNM?",
+    "section": "Why this is so much richer than topology",
+    "text": "Why this is so much richer than topology\nTopology metrics give us a single number per brain per metric: mean degree, mean clustering, and so on. Useful, but blunt.\nGNMs give us something fundamentally different: two parameters that describe the generative process itself. Instead of asking “what does this brain look like?”, we are asking “how was this brain built?”.\nThis matters for three reasons:\n\nParsimony: two numbers (\\(\\eta\\), \\(\\gamma\\)) capture a huge amount of network structure.\nInterpretability: \\(\\eta\\) and \\(\\gamma\\) have clear biological meanings (wiring cost and developmental preference).\nSensitivity: individual differences in \\(\\eta\\) and \\(\\gamma\\) may be more strongly linked to early life experiences than any single topology metric.\n\nIn the next tutorial, we’ll do exactly this: sweep over the full parameter space, find the lowest-energy model for our 20 brains, and start asking what the best-fitting parameters tell us about brain development.\nSee you there!\n\n\n\n\n\n\nImportantThis is just an example!\n\n\n\nRemember: we are working with a toy dataset of 20 participants. Any results here are illustrative, not statistically conclusive. The point is to build your intuition for how GNMs work, not to draw strong scientific conclusions.",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#the-example-of-social-networks",
+    "href": "CONTENT/WhatIsGNM.html#the-example-of-social-networks",
+    "title": "What’s a GNM?",
+    "section": "The example of social networks",
+    "text": "The example of social networks\nWhen getting started with GNMs, it can be quite confusing because there are lots of matrices interacting with each other. But once we learn how to read matrices, we will realize that the fundamental operations behind generative models are simpler than it looks! So just for practice, let’s do a very simple generative model of… a social network!\nJust as we can have a connectivity matrix with different brain regions, we can also have a connectivity matrix with people! In our case, we have only four people: Francesco, Greta, Zohran, and Alexandria (in this order):\n\n\n\n\n\nFrom the connectivity matrix, you can see who is connected to whom. Alexandria and Zohran know each other, and so do Alexandria and Greta. But all the other people don’t (Francesco for example doesn’t know anyone!). You can also notice that the matrix is symmetric: that’s just stating the obvious: If Alexandria is friend with Zhoran, Zhoran must be friend with Alexandria!\nBut as we were saying earlier D (Distance) and K (Homophily) can also be expressed with matrices! In this example, the stronger the color the greater the distance/the higher the homophily:\n\n\n\n\n\nFrancesco and Greta both live in Europe, somewhat close, while Zohran and Alexandria both live in New York, so really close to each other. Looking at homophily, we can see that the value is higher for the Greta-Zohran link. Why? Because they both share the same friend, Alexandria!!\nNow, if we multiply the two matrices D (Distance) and K (Homophily), we get the probability that new connections will form. And very important: we think that people are more likely to connect if they are CLOSER together in space, so we have to flip the distance matrix, where higher values are for people that are closer in space!\n\n\n\n\n\nNote that some connections are completely white: Greta-Alexandria and Zohran-Alexandria. That’s because they are already connected (see the first connectivity matrix!), so it does not make sense to connect them again.\nNote also how Francesco-Greta has high probability (because they live close by!) and Greta-Zohran is also relatively high (because they share the same friends).\nAnd we are at the last step. The step where we GENERATE a connection (and where all this modelling approach takes the name from). The logic is simple: it’s like a lottery, but with a bias: if the probability in the P matrix is higher, you’re more likely to connect:\n\n\n\n\n\nAnd there it is!!!!! Our new connection is between Francesco and Greta!\nGNMs do exactly this process, BUT on BRAIN networks instead of social networks, and on much bigger ones: usually about a hundred different brain areas, and not just 4. But the logic is exactly the same, and if you understood it here, you will cruuuisee through brain GNMs!",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/WhatIsGNM.html#the-trade-off-between-distance-and-homophily",
+    "href": "CONTENT/WhatIsGNM.html#the-trade-off-between-distance-and-homophily",
+    "title": "What’s a GNM?",
+    "section": "The trade-off between distance and homophily",
+    "text": "The trade-off between distance and homophily\nLet’s this for a moment about the example we’ve just seen -Dont’ you feel like it’s not always possible to follow BOTH rules! What if you and I have exactly the same friends, but we live on different continents!? According to the distance rule, we will never connect because we are too far! But according to the homophily rule, we should definitely connect because we share the same network of friends!\nThat’s what you call a TRADE-OFF! Luckily for us, we don’t have to listen to both rules to the same amount. We can tweak how much we listen to each rule!! Or basically, how important each rule is. Going back to the maths, that’s what the two parameters \\(\\eta\\) (eta) and \\(\\gamma\\) (gamma) are doing!\nSo let’s go back to brains, and see in more details what these two parameters do.\n\nEta (η): the distance penalty\n\\(\\eta\\) controls how strongly distance discourages the formation of new connections. Usually, \\(\\eta\\) is negative (or zero): larger distances should make connections less likely, not more.\n\nA very negative \\(\\eta\\) (e.g., \\(-5\\)) creates a strongly local network: almost all edges are short-range, and the brain looks like a collection of isolated local clusters.\nA \\(\\eta\\) close to zero relaxes this constraint: long-range connections are almost as likely as short ones, and the network becomes more globally integrated.\n\nIn biological terms, \\(\\eta\\) captures the metabolic cost of wiring: how strongly the brain saves up on axon length.\n\n\nGamma (γ): topological preference\n\\(\\gamma\\) controls how strongly homophily influences wiring:\n\nA positive \\(\\gamma\\) means nodes prefer to connect to regions that already share many neighbours: a tendency called homophily or clustering-promoting wiring.\n\\(\\gamma\\) near zero makes the topological term irrelevant: only distance matters.\n\nIn biological terms, \\(\\gamma\\) captures the developmental tendency to form clusters or hubs during brain wiring.\n\n\n\n\n\n\nNoteMatching Index\n\n\n\nUp until now, we talked about “homophily”, but that’s just a vague description to say that nodes that share a similar network of nodes are also more likely to connect. The real metric computing this “homophily” is called matching index, and it is simply the number of neighbours that are SHARED by two nodes, divided by the TOTAL number of neighbours (SHARED by both + UNIQUE to each).",
+    "crumbs": [
+      "Generative Models",
+      "What's a GNM?"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html",
+    "href": "CONTENT/ModelFitting.html",
+    "title": "Model Fitting",
+    "section": "",
+    "text": "In the last tutorial we set everything up: we loaded the brains, defined the grid of η and γ values, and configured the sweep. Now we’re ready to actually run it — and then figure out which parameters win!\nBut first, we need to answer one more question: how do we even decide whether a generated network is any good? That is exactly what this tutorial is about.",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#load-the-data",
+    "href": "CONTENT/ModelFitting.html#load-the-data",
+    "title": "Model Fitting",
+    "section": "Load the data",
+    "text": "Load the data\nWe load all 20 preprocessed brains. First-off, we make these networks BINARY. This means that we do not care about how strong the connection is: just whether it is there or not:\n\n0 = the connection is not there\n1 = the connection is there!\n\nLet’s do that:\nimport numpy as np\nimport torch\n\n# Load the preprocessed (thresholded, connected) networks\nbrains = np.load(\"brain_networks_20_preprocessed.npy\")\nnum_brains, num_nodes, _ = brains.shape\n\n# Binarise each brain (connection present = 1, absent = 0)\nbinary_brains = (brains &gt; 0).astype(float)\nbinary_brains_tensor = torch.tensor(binary_brains, dtype=torch.float32)\n\nprint(f\"Loaded {num_brains} brains, each {num_nodes} x {num_nodes}\")\n\n\n\n\n\n\nNote\n\n\n\nYou might have noticed we used torch.tensor(). That’s the specific format required by the GNM toolbox - it’s much better and much faster than numpy, that we have used up until now. So let’s give the toolbox what it wants!!!\n\n\nNext, we load the distance matrix:\ndist_np = np.load(\"distance_matrix.npy\")\ndistance_matrix = torch.tensor(dist_np, dtype=torch.float32)\nThis matrix simply tells us how far from each other each pair of connections is.",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#parameter-sweep",
+    "href": "CONTENT/ModelFitting.html#parameter-sweep",
+    "title": "Model Fitting",
+    "section": "Parameter sweep",
+    "text": "Parameter sweep\nPerfect! We are now ready to start our parameter sweep. The GNM toolbox makes this (hopefully) very easy: it has TWO function called BinarySweepParameters() and SweepConfig() and that’s all we need.\nThis function takes in 6 arguments. If we don’t give it these 6 arguments, it will complain! So before typing any code, let’s understand what there arguments are:\n\nThe first two arguments are eta and gamma values (I hope you know what these are by now!)\nThe next two arguments are distance_relationship_type and preferential_relationship_type. These are just default settings we don’t really have to worry about (Remember when we looked at the GNM formula in the last tutorial? eta and gamma were following a powerlaw in there, and so here we’re just simply giving the instruction: follow the standard GNM formula!)\nnext up, we have generative_rule. Again, here we just want to use the standard rule (homophily) and so we will just tell to the function to use MatchingIndex(), which is the proper name for homophily, if you remember!\nAnd finally, the function wants to know how many connections it needs to generate. We want as many connections as we have in our 20 brains - which, if you remember, have all the same number of connections (same density!)\n\nAmazing, so let’s define all these things and give them to the function:\nfrom gnm import fitting, generative_rules\n\neta_values   = torch.linspace(-5,  0,   10)\ngamma_values = torch.linspace(-0.5, 0.5, 10)\nnum_connections = int(binary_brains_tensor[0].sum().item() / 2)\n\nbinary_sweep_parameters = fitting.BinarySweepParameters(\n    eta    = eta_values,\n    gamma  = gamma_values,\n    distance_relationship_type         = [\"powerlaw\"],\n    preferential_relationship_type     = [\"powerlaw\"],\n    generative_rule  = [generative_rules.MatchingIndex()],\n    num_iterations   = [num_connections],\n)\nSo we defined 10 values for η and 10 values for γ: 100 combinations in total. And we took as many connections as we have in our brain networks. For all the other parameters, we just put the default values we have discussed, so we don’t have to worry about those anymore.\nPerfect! Now that we defined our parameters sweep, it’s time to set just some more details, and we need our second function for that, SweepConfig(). Here, we have to specify:\n\nwhat are the parameters to sweep over (we’ve just defined them!)\nthe distance matrix (easy, we have already imported that one!)\nhow many simulations we want. That’s a very important one. GNMs are probabilistic, which means that the same exact combination of parameters might STILL produce different final synthetic networks. So it’s quite risky to produce just one model for each combination of parameters: what if it’s a weird one that we just got by chance? To be more confident that our synthetic networks are reliable, we produce many of them!\n\nSo here’s the function and its arguments:\nsweep_config = fitting.SweepConfig(\n    binary_sweep_parameters = binary_sweep_parameters,\n    num_simulations         = 10,\n    distance_matrix         = [distance_matrix],\n)\nPerfect, everything has been specified!!! Have you ever heard of parameter landscape? It sounds very fancy. It means all the potential combination of different parameters you want in your models. And you’ve just created one! Congrats for creating your first GNM landscape!\n\n\n\n\n\n\nImportant\n\n\n\nTou might have noticed that here we vary only two paramters: eta and gamma. For those two, we specified multiple values. For all the other parameters, we only specified a fixed default. However, all parameters can be changed! For example we may want to test out other wiring rules, different from homophily. Maybe something like: brain areas are more likely to wire together IF their genes are more similar!\nOnce you figure our the basic workings of GNMs, possibilities to personalise them and explore new things are endless!",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#energy-function",
+    "href": "CONTENT/ModelFitting.html#energy-function",
+    "title": "Model Fitting",
+    "section": "Energy function",
+    "text": "Energy function\nHow do we measure how similar a generated network is to the real one? We compare the distributions of four topological properties:\n\nDegree - are the hubs as prominent as in the real brain?\nBetweenness centrality - are the bottleneck nodes as central?\nClustering coefficient - are the local clusters as tight?\nEdge length - are the connections as short or as long?\n\nIf those four metrics sound familiar, that’s because they are exactly the ones we studied in the Topology tutorial! There we computed them to look for correlations with early life stress. Here we use them to judge how well a generated network reproduces the real brain’s topology.\nFor each property, we compute a Kolmogorov-Smirnov (KS) statistic: a number between 0 and 1 measuring how far apart two distributions are (0 = identical, 1 = completely different).\nThe energy is then the worst of the four KS values:\n\\[E(\\eta, \\gamma) = \\max\\!\\left[\\,\\text{KS}_\\text{degree},\\;\\text{KS}_\\text{betweenness},\\;\\text{KS}_\\text{clustering},\\;\\text{KS}_\\text{edge length}\\,\\right]\\]\nUsing the maximum means we can’t get a low energy by fitting three metrics perfectly while completely ignoring the fourth. The model has to do well on all four simultaneously.\nfrom gnm import evaluation\n\ncriteria = [\n    evaluation.DegreeKS(),\n    evaluation.BetweennessKS(),\n    evaluation.ClusteringKS(),\n    evaluation.EdgeLengthKS(distance_matrix),\n]\n\nenergy = evaluation.MaxCriteria(criteria)",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#step-4---run-the-sweep",
+    "href": "CONTENT/ModelFitting.html#step-4---run-the-sweep",
+    "title": "Model Fitting",
+    "section": "Step 4 - Run the sweep",
+    "text": "Step 4 - Run the sweep\nimport time\n\nDEVICE = torch.device(\"cuda:0\" if torch.cuda.is_available() else \"cpu\")\nprint(f\"Running on: {DEVICE}\")\n\nstart = time.perf_counter()\n\nexperiments = fitting.perform_sweep(\n    sweep_config         = sweep_config,\n    binary_evaluations   = [energy],\n    real_binary_matrices = binary_brains_tensor,\n    save_model           = False,\n    save_run_history     = False,\n)\n\nelapsed = time.perf_counter() - start\nprint(f\"Sweep complete in {elapsed:.1f} s  ({elapsed / (10 * 10 * 10):.3f} s per simulation)\")\n\n\n\n\n\n\nNoteHow long will this take?\n\n\n\nWith 10 η values x 10 γ values x 10 simulations x 20 brains = 20 000 networks in total. On a laptop CPU this typically takes a few minutes. On a GPU it can be 10-100x faster.",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#step-5---find-the-best-fitting-parameters",
+    "href": "CONTENT/ModelFitting.html#step-5---find-the-best-fitting-parameters",
+    "title": "Model Fitting",
+    "section": "Step 5 - Find the best-fitting parameters",
+    "text": "Step 5 - Find the best-fitting parameters\nOnce the sweep is done, we ask: which (η, γ) combination produced the lowest energy across all 20 brains?\noptimal_experiments, optimal_energies = fitting.optimise_evaluation(\n    experiments = experiments,\n    criterion   = energy,\n)\n\nbest_exp    = optimal_experiments[0]\nbest_energy = float(optimal_energies[0])\n\nbest_eta   = float(best_exp.run_config.binary_parameters.eta)\nbest_gamma = float(best_exp.run_config.binary_parameters.gamma)\n\nprint(f\"Best energy : {best_energy:.3f}\")\nprint(f\"Best eta    : {best_eta:.2f}\")\nprint(f\"Best gamma  : {best_gamma:.2f}\")",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#step-6---the-energy-landscape",
+    "href": "CONTENT/ModelFitting.html#step-6---the-energy-landscape",
+    "title": "Model Fitting",
+    "section": "Step 6 - The energy landscape",
+    "text": "Step 6 - The energy landscape\nA single winning pair of numbers is informative, but the full energy landscape - a heatmap of energy across all (η, γ) combinations - tells a richer story. Flat regions mean many parameter combinations give similarly good fits; a sharp, narrow valley means the brain’s wiring rules are precisely constrained.\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Collect (eta, gamma, energy) for every experiment\nrows = []\nfor exp, e_val in zip(optimal_experiments, optimal_energies):\n    rows.append({\n        \"eta\":    float(exp.run_config.binary_parameters.eta),\n        \"gamma\":  float(exp.run_config.binary_parameters.gamma),\n        \"energy\": float(e_val),\n    })\n\ndf_sweep = pd.DataFrame(rows)\n\n# Pivot to a 2-D grid: rows = eta, columns = gamma\nlandscape = df_sweep.pivot(index=\"eta\", columns=\"gamma\", values=\"energy\")\n\nfig, ax = plt.subplots(figsize=(7, 5))\n\nim = ax.imshow(\n    landscape.values,\n    origin=\"lower\",\n    aspect=\"auto\",\n    cmap=\"viridis_r\",\n    extent=[\n        landscape.columns.min(), landscape.columns.max(),\n        landscape.index.min(),   landscape.index.max(),\n    ],\n)\n\nax.scatter(best_gamma, best_eta, color=\"red\", s=120, zorder=5,\n           label=f\"best fit (eta={best_eta:.1f}, gamma={best_gamma:.1f})\")\n\nplt.colorbar(im, ax=ax, label=\"Energy (max KS)\")\nax.set_xlabel(\"gamma (homophily)\", fontsize=12)\nax.set_ylabel(\"eta (distance penalty)\", fontsize=12)\nax.set_title(\"Energy landscape\", fontsize=13)\nax.legend(fontsize=10)\n\nplt.tight_layout()\nplt.savefig(\"../images/GenerativeModels/energy_landscape.png\", dpi=150)\nplt.show()\n\n\n\n\n\nThe landscape shows you at a glance:\n\nWhere in the parameter space the model fits well (bright, low-energy region).\nWhether the optimum is sharp (highly constrained wiring) or flat (many equally plausible wiring rules).\nWhether the best η and γ sit in a biologically plausible region.",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#what-do-the-best-fitting-parameters-tell-us",
+    "href": "CONTENT/ModelFitting.html#what-do-the-best-fitting-parameters-tell-us",
+    "title": "Model Fitting",
+    "section": "What do the best-fitting parameters tell us?",
+    "text": "What do the best-fitting parameters tell us?\nA typical result for human structural brain networks sits somewhere around η between −2 and −3 and γ between 0.2 and 0.4. Let’s think about what that actually means in plain language.\nη between −2 and −3: the brain does strongly penalise long-range connections, but not to the extreme. It is not a pure “connect only your nearest neighbour” strategy. There is room for some long-distance wiring — which is exactly what you need to keep the brain integrated across hemispheres and lobes.\nγ between 0.2 and 0.4: the brain favours homophily: regions that already share neighbours are more likely to become connected. This is the signature of modular, clustered wiring — a developmental programme that builds tight functional communities (visual network, motor network, default mode network) by preferentially connecting regions already embedded in the same neighbourhood.\nTogether, these two parameters capture the famous small-world architecture of the brain: cheap local connections (driven by η) combined with selective long-range bridges between clusters (enabled by γ). All from just two numbers — pretty elegant, isn’t it!?\n\n\n\n\n\n\nImportantThis is a group-level result\n\n\n\nThe best-fitting (η, γ) we found here describes the average pattern across our 20 brains. It answers the question: what single wiring rule best reproduces the observed networks?\nBut individuals differ! In the next tutorial, we will run an individual-level sweep to extract one (η, γ) per person, and then ask whether those individual differences correlate with early life stress.",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#the-energy-function",
+    "href": "CONTENT/ModelFitting.html#the-energy-function",
+    "title": "Model Fitting",
+    "section": "The energy function",
+    "text": "The energy function\nHow do we measure how similar a generated network is to a real brain? The trick is to compare the distributions of four topological properties:\n\nDegree - are the hubs as prominent as in the real brain?\nBetweenness centrality - are the bottleneck nodes as central?\nClustering coefficient - are the local clusters as tight?\nEdge length - are the connections as short or as long?\n\nIf those four metrics sound familiar, it’s because they are exactly the ones we studied in the Topology tutorial! There we computed them to look for correlations with early life stress. Here we reuse them to judge how well a generated network reproduces the real brain’s topology. Handy, right?\nFor each property, we compute a Kolmogorov-Smirnov (KS) statistic: a number between 0 and 1 measuring how far apart two distributions are.\n\n0 = the two distributions are identical (perfect fit!)\n1 = the two distributions are completely different (terrible fit!)\n\nWe then define the energy as the worst of the four KS values:\n\\[E(\\eta, \\gamma) = \\max\\!\\left[\\,\\text{KS}_\\text{degree},\\;\\text{KS}_\\text{betweenness},\\;\\text{KS}_\\text{clustering},\\;\\text{KS}_\\text{edge length}\\,\\right]\\]\nWhy take the maximum? Because we want the model to do well on all four metrics simultaneously. If we used the average instead, a model could cheat: nail three metrics and completely flop on the fourth, and still look okay on average. Taking the worst score instead means there is no escaping: you have to do well everywhere!\nIn code, the GNM toolbox handles all of this in just a few lines:\nfrom gnm import evaluation\n\ncriteria = [\n    evaluation.DegreeKS(),\n    evaluation.BetweennessKS(),\n    evaluation.ClusteringKS(),\n    evaluation.EdgeLengthKS(distance_matrix),\n]\n\nenergy = evaluation.MaxCriteria(criteria)\nWe create a list with our four KS criteria, then wrap them inside MaxCriteria(), which will automatically take the maximum across all four. That’s it — our energy function is ready!",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#running-the-sweep",
+    "href": "CONTENT/ModelFitting.html#running-the-sweep",
+    "title": "Model Fitting",
+    "section": "Running the sweep",
+    "text": "Running the sweep\nNow we can finally press go and launch the parameter sweep. We call fitting.perform_sweep(), and pass it all the pieces we have assembled so far: the sweep configuration, the energy function, and the real brain networks to compare against.\nimport time\n\nDEVICE = torch.device(\"cuda:0\" if torch.cuda.is_available() else \"cpu\")\nprint(f\"Running on: {DEVICE}\")\n\nstart = time.perf_counter()\n\nexperiments = fitting.perform_sweep(\n    sweep_config         = sweep_config,\n    binary_evaluations   = [energy],\n    real_binary_matrices = binary_brains_tensor,\n    save_model           = False,\n    save_run_history     = False,\n)\n\nelapsed = time.perf_counter() - start\nprint(f\"Sweep complete in {elapsed:.1f} s\")\nThe function returns a list called experiments. Each entry in this list corresponds to one specific combination of η and γ. Since we tested 10 values of η × 10 values of γ, we end up with 100 experiments in total.\n\n\n\n\n\n\nNoteHow long will this take?\n\n\n\nWith 10 η values × 10 γ values × 10 simulations = 1000 model runs, each compared against 20 real brains. On a laptop CPU this typically takes a few minutes. On a GPU it can be 10–100x faster. A good excuse for a coffee break!",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#finding-the-best-parameters",
+    "href": "CONTENT/ModelFitting.html#finding-the-best-parameters",
+    "title": "Model Fitting",
+    "section": "Finding the best parameters",
+    "text": "Finding the best parameters\nNow comes the fun part: which combination of η and γ produced the synthetic networks that best match the real brains?\nEach experiment in our list already contains the energy scores. For a given experiment, the scores are stored as a matrix with shape [simulations × brains] — one energy value for each of our 10 simulations and each of our 20 brains. To summarise each experiment down to a single number, we take the mean across both simulations and brains:\nimport numpy as np\n\nenergy_key = str(energy)\n\nmean_energies = [\n    float(exp.evaluation_results.binary_evaluations[energy_key].mean())\n    for exp in experiments\n]\nWe now have one mean energy score per parameter configuration. We just need to find which one is smallest:\nbest_idx    = int(np.argmin(mean_energies))\nbest_exp    = experiments[best_idx]\nbest_energy = mean_energies[best_idx]\n\nbest_eta   = float(best_exp.run_config.binary_parameters.eta)\nbest_gamma = float(best_exp.run_config.binary_parameters.gamma)\n\nprint(f\"Best energy : {best_energy:.3f}\")\nprint(f\"Best eta    : {best_eta:.2f}\")\nprint(f\"Best gamma  : {best_gamma:.2f}\")\n\n\n\n\n\n\nNote\n\n\n\nWe used str(energy) to look up the scores inside the experiment. The toolbox stores evaluation results in a dictionary where the key is the name of the energy function — str(energy) gives us exactly that name. Think of it as asking the toolbox: “show me the scores for this specific energy function.”",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelFitting.html#the-energy-landscape",
+    "href": "CONTENT/ModelFitting.html#the-energy-landscape",
+    "title": "Model Fitting",
+    "section": "The energy landscape",
+    "text": "The energy landscape\nA single winning pair of numbers is informative, but the full energy landscape — a heatmap of energy across all η and γ combinations — tells a much richer story.\nSince each experiment in our list corresponds to exactly one (η, γ) pair, we can directly build a tidy dataframe and pivot it into a 2-D grid:\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nrows = []\nfor exp, e_val in zip(experiments, mean_energies):\n    rows.append({\n        \"eta\":    float(exp.run_config.binary_parameters.eta),\n        \"gamma\":  float(exp.run_config.binary_parameters.gamma),\n        \"energy\": e_val,\n    })\n\ndf_sweep  = pd.DataFrame(rows)\nlandscape = df_sweep.pivot(index=\"eta\", columns=\"gamma\", values=\"energy\")\n\nfig, ax = plt.subplots(figsize=(7, 5))\n\nim = ax.imshow(\n    landscape.values,\n    origin=\"lower\",\n    aspect=\"auto\",\n    cmap=\"viridis_r\",\n    extent=[\n        landscape.columns.min(), landscape.columns.max(),\n        landscape.index.min(),   landscape.index.max(),\n    ],\n)\n\nax.scatter(best_gamma, best_eta, color=\"red\", s=120, zorder=5,\n           label=\"Best Fit\")\n\nplt.colorbar(im, ax=ax, label=\"Energy (max KS)\")\nax.set_xlabel(\"gamma (homophily)\", fontsize=12)\nax.set_ylabel(\"eta (distance penalty)\", fontsize=12)\nax.set_title(\"Energy landscape\", fontsize=13)\nax.legend(fontsize=10)\n\nplt.tight_layout()\nplt.savefig(\"../images/GenerativeModels/energy_landscape.png\", dpi=150)\nplt.show()\n\n\n\n\n\nThe landscape shows you at a glance:\n\nWhere the model fits well — the bright (low-energy) region shows the combinations of η and γ that produce synthetic networks closest to the real ones.\nHow precise the optimum is — a sharp, narrow valley means the brain’s wiring is tightly constrained by these two parameters. A flat bright region means many different combinations work almost equally well.\nWhether the best parameters are biologically plausible — we’ll talk about what “plausible” means in the next section!",
+    "crumbs": [
+      "Generative Models",
+      "Model Fitting"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelSpecification.html",
+    "href": "CONTENT/ModelSpecification.html",
+    "title": "Model Specification",
+    "section": "",
+    "text": "Now that we know what a GNM is how it works, we are ready to put all we’ve learned into practice!!!\nWe have seen that by changing the values of η (eta) and γ (gamma), we can produce synthetic networks that vary in their topology. The goal now is to find the combination of η and γ that produces a synthetic network that looks as much as possible as the real ones. To do that, we must generate networks for each combination of η and γ, and then check which one is more similar to the real brains. We call this process a parameter sweep.\nTo to this, we will use our fantastic GNM toolbox!!!! If you remember, we have set it up already in the Installation tutorial, so we can now just simply use it as any other python package.\nBefore getting into all that, let’s import our data.",
+    "crumbs": [
+      "Generative Models",
+      "Model Specification"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelSpecification.html#load-the-data",
+    "href": "CONTENT/ModelSpecification.html#load-the-data",
+    "title": "Model Specification",
+    "section": "Load the data",
+    "text": "Load the data\nWe load all 20 preprocessed brains. First-off, we make these networks BINARY. This means that we do not care about how strong the connection is: just whether it is there or not:\n\n0 = the connection is not there\n1 = the connection is there!\n\nLet’s do that:\nimport numpy as np\nimport torch\n\n# Load the preprocessed (thresholded, connected) networks\nbrains = np.load(\"brain_networks_20_preprocessed.npy\")\nnum_brains, num_nodes, _ = brains.shape\n\n# Binarise each brain (connection present = 1, absent = 0)\nbinary_brains = (brains &gt; 0).astype(float)\nbinary_brains_tensor = torch.tensor(binary_brains, dtype=torch.float32)\n\nprint(f\"Loaded {num_brains} brains, each {num_nodes} x {num_nodes}\")\n\n\n\n\n\n\nNote\n\n\n\nYou might have noticed we used torch.tensor(). That’s the specific format required by the GNM toolbox - it’s much better and much faster than numpy, that we have used up until now. So let’s give the toolbox what it wants!!!\n\n\nNext, we load the distance matrix:\ndist_np = np.load(\"distance_matrix.npy\")\ndistance_matrix = torch.tensor(dist_np, dtype=torch.float32)\nThis matrix simply tells us how far from each other each pair of connections is.",
+    "crumbs": [
+      "Generative Models",
+      "Model Specification"
+    ]
+  },
+  {
+    "objectID": "CONTENT/ModelSpecification.html#parameter-sweep",
+    "href": "CONTENT/ModelSpecification.html#parameter-sweep",
+    "title": "Model Specification",
+    "section": "Parameter sweep",
+    "text": "Parameter sweep\nPerfect! We are now ready to start our parameter sweep. The GNM toolbox makes this (hopefully) very easy: it has TWO function called BinarySweepParameters() and SweepConfig() and that’s all we need.\nThis function takes in 6 arguments. If we don’t give it these 6 arguments, it will complain! So before typing any code, let’s understand what there arguments are:\n\nThe first two arguments are eta and gamma values (I hope you know what these are by now!)\nThe next two arguments are distance_relationship_type and preferential_relationship_type. These are just default settings we don’t really have to worry about (Remember when we looked at the GNM formula in the last tutorial? eta and gamma were following a powerlaw in there, and so here we’re just simply giving the instruction: follow the standard GNM formula!)\nnext up, we have generative_rule. Again, here we just want to use the standard rule (homophily) and so we will just tell to the function to use MatchingIndex(), which is the proper name for homophily, if you remember!\nAnd finally, the function wants to know how many connections it needs to generate. We want as many connections as we have in our 20 brains - which, if you remember, have all the same number of connections (same density!)\n\nAmazing, so let’s define all these things and give them to the function:\nfrom gnm import fitting, generative_rules\n\neta_values   = torch.linspace(-5,  0,   10)\ngamma_values = torch.linspace(-0.5, 0.5, 10)\nnum_connections = int(binary_brains_tensor[0].sum().item() / 2)\n\nbinary_sweep_parameters = fitting.BinarySweepParameters(\n    eta    = eta_values,\n    gamma  = gamma_values,\n    distance_relationship_type         = [\"powerlaw\"],\n    preferential_relationship_type     = [\"powerlaw\"],\n    generative_rule  = [generative_rules.MatchingIndex()],\n    num_iterations   = [num_connections],\n)\nSo we defined 10 values for η and 10 values for γ: 100 combinations in total. And we took as many connections as we have in our brain networks. For all the other parameters, we just put the default values we have discussed, so we don’t have to worry about those anymore.\nPerfect! Now that we defined our parameters sweep, it’s time to set just some more details, and we need our second function for that, SweepConfig(). Here, we have to specify:\n\nwhat are the parameters to sweep over (we’ve just defined them!)\nthe distance matrix (easy, we have already imported that one!)\nhow many simulations we want. That’s a very important one. GNMs are probabilistic, which means that the same exact combination of parameters might STILL produce different final synthetic networks. So it’s quite risky to produce just one model for each combination of parameters: what if it’s a weird one that we just got by chance? To be more confident that our synthetic networks are reliable, we produce many of them!\n\nSo here’s the function and its arguments:\nsweep_config = fitting.SweepConfig(\n    binary_sweep_parameters = binary_sweep_parameters,\n    num_simulations         = 10,\n    distance_matrix         = [distance_matrix],\n)\nPerfect, everything has been specified!!! Have you ever heard of parameter landscape? It sounds very fancy. It means all the potential combination of different parameters you want in your models. And you’ve just created one! Congrats for creating your first GNM landscape!\n\n\n\n\n\n\nImportant\n\n\n\nTou might have noticed that here we vary only two paramters: eta and gamma. For those two, we specified multiple values. For all the other parameters, we only specified a fixed default. However, all parameters can be changed! For example we may want to test out other wiring rules, different from homophily. Maybe something like: brain areas are more likely to wire together IF their genes are more similar!\nOnce you figure our the basic workings of GNMs, possibilities to personalise them and explore new things are endless!",
+    "crumbs": [
+      "Generative Models",
+      "Model Specification"
+    ]
   }
 ]

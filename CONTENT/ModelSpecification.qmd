@@ -1,0 +1,123 @@
+---
+title: "Model Specification"
+author-meta: "Francesco Poli"
+date: "28/03/2026"
+description-meta: "Setting up a Generative Network Model parameter sweep: loading brain data, defining the eta and gamma grid, and configuring the GNM toolbox ready for fitting."
+
+categories:
+  - Python
+  - Generative Models
+  - GNM
+  - Model Fitting
+---
+
+Now that we know what a GNM is how it works, we are ready to put all we've learned into practice!!!
+
+We have seen that by changing the values of η (eta) and γ (gamma), we can produce synthetic networks that vary in their topology. The goal now is to find the combination of η and γ that produces a synthetic network that looks as much as possible as the real ones. To do that, we must generate networks for each combination of η and γ, and then check which one is more similar to the real brains. We call this process a **parameter sweep**.
+
+To to this, we will use our fantastic GNM toolbox!!!! If you remember, we have set it up already in the Installation tutorial, so we can now just simply use it as any other python package.
+
+::: callout-note
+## When we started working on GNMs, it was super complicated to run these models. Most of the code was in MATLAB (which is not open-source, and so we hate it!!!) and it was also super slow. So we made a brand new python package, the GNM toolbox!!!! This way, you don't have to painfully go through complicated MATLAB scripts ever in your life!
+:::
+
+Before getting into all that, let's import our data.
+
+## Load the data
+
+We load all 20 preprocessed brains. First-off, we make these networks BINARY. This means that we do not care about how strong the connection is: just whether it is there or not:
+
+-   0 = the connection is not there
+
+-   1 = the connection is there!
+
+Let's do that:
+
+``` python
+import numpy as np
+import torch
+
+# Load the preprocessed (thresholded, connected) networks
+brains = np.load("brain_networks_20_preprocessed.npy")
+num_brains, num_nodes, _ = brains.shape
+
+# Binarise each brain (connection present = 1, absent = 0)
+binary_brains = (brains > 0).astype(float)
+binary_brains_tensor = torch.tensor(binary_brains, dtype=torch.float32)
+
+print(f"Loaded {num_brains} brains, each {num_nodes} x {num_nodes}")
+```
+
+::: callout-note
+You might have noticed we used `torch.tensor()`. That's the specific format required by the GNM toolbox - it's much better and much faster than numpy, that we have used up until now. So let's give the toolbox what it wants!!!
+:::
+
+Next, we load the distance matrix:
+
+``` python
+dist_np = np.load("distance_matrix.npy")
+distance_matrix = torch.tensor(dist_np, dtype=torch.float32)
+```
+
+This matrix simply tells us how far from each other each pair of connections is.
+
+## Parameter sweep
+
+Perfect! We are now ready to start our parameter sweep. The GNM toolbox makes this (hopefully) very easy: it has TWO function called `BinarySweepParameters()` and `SweepConfig()` and that's all we need.
+
+This function takes in 6 arguments. If we don't give it these 6 arguments, it will complain! So before typing any code, let's understand what there arguments are:
+
+-   The first two arguments are `eta` and `gamma` values (I hope you know what these are by now!)
+
+-   The next two arguments are `distance_relationship_type` and `preferential_relationship_type`. These are just default settings we don't really have to worry about (Remember when we looked at the GNM formula in the last tutorial? eta and gamma were following a powerlaw in there, and so here we're just simply giving the instruction: *follow the standard GNM formula!*)
+
+-   next up, we have `generative_rule`. Again, here we just want to use the standard rule (homophily) and so we will just tell to the function to use `MatchingIndex()`, which is the proper name for homophily, if you remember!
+
+-   And finally, the function wants to know how many connections it needs to generate. We want as many connections as we have in our 20 brains - which, if you remember, have all the same number of connections (same density!)
+
+Amazing, so let's define all these things and give them to the function:
+
+``` python
+from gnm import fitting, generative_rules
+
+eta_values   = torch.linspace(-5,  0,   10)
+gamma_values = torch.linspace(-0.5, 0.5, 10)
+num_connections = int(binary_brains_tensor[0].sum().item() / 2)
+
+binary_sweep_parameters = fitting.BinarySweepParameters(
+    eta    = eta_values,
+    gamma  = gamma_values,
+    distance_relationship_type         = ["powerlaw"],
+    preferential_relationship_type     = ["powerlaw"],
+    generative_rule  = [generative_rules.MatchingIndex()],
+    num_iterations   = [num_connections],
+)
+```
+
+So we defined 10 values for η and 10 values for γ: 100 combinations in total. And we took as many connections as we have in our brain networks. For all the other parameters, we just put the default values we have discussed, so we don't have to worry about those anymore.
+
+Perfect! Now that we defined our parameters sweep, it's time to set just some more details, and we need our second function for that, `SweepConfig()`. Here, we have to specify:
+
+-   what are the parameters to sweep over (we've just defined them!)
+
+-   the distance matrix (easy, we have already imported that one!)
+
+-   how many simulations we want. That's a very important one. GNMs are probabilistic, which means that the same exact combination of parameters might STILL produce different final synthetic networks. So it's quite risky to produce just one model for each combination of parameters: what if it's a weird one that we just got by chance? To be more confident that our synthetic networks are reliable, we produce many of them!
+
+So here's the function and its arguments:
+
+``` python
+sweep_config = fitting.SweepConfig(
+    binary_sweep_parameters = binary_sweep_parameters,
+    num_simulations         = 10,
+    distance_matrix         = [distance_matrix],
+)
+```
+
+Perfect, everything has been specified!!! Have you ever heard of parameter landscape? It sounds very fancy. It means all the potential combination of different parameters you want in your models. And you've just created one! Congrats for creating your first GNM landscape!
+
+::: callout-important
+Tou might have noticed that here we vary only two paramters: eta and gamma. For those two, we specified multiple values. For all the other parameters, we only specified a fixed default. However, all parameters can be changed! For example we may want to test out other wiring rules, different from homophily. Maybe something like: brain areas are more likely to wire together IF their genes are more similar!
+
+Once you figure our the basic workings of GNMs, possibilities to personalise them and explore new things are endless!
+:::
