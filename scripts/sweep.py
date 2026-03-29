@@ -6,9 +6,11 @@ Run from the project root:
     python scripts/sweep.py
 
 Outputs:
+    resources/GenerativeModels/experiments.pkl
     images/GenerativeModels/energy_landscape.png
 """
 
+import pickle
 import time
 import numpy as np
 import torch
@@ -92,6 +94,11 @@ elapsed = time.perf_counter() - start
 n_configs = n_eta * n_gamma
 print(f"Sweep complete in {elapsed:.1f} s  ({elapsed / (n_configs * n_simulations):.3f} s per simulation)")
 
+pkl_path = "./resources/GenerativeModels/experiments.pkl"
+with open(pkl_path, "wb") as f:
+    pickle.dump(experiments, f)
+print(f"Saved experiments to {pkl_path}")
+
 # ============================================================
 # 5. Find the best-fitting parameters
 # ============================================================
@@ -126,7 +133,7 @@ for exp, e_val in zip(experiments, mean_energies):
         "energy": e_val,
     })
 
-df_sweep = pd.DataFrame(rows)
+df_sweep  = pd.DataFrame(rows)
 landscape = df_sweep.pivot(index="eta", columns="gamma", values="energy")
 
 fig, ax = plt.subplots(figsize=(7, 5))
@@ -143,7 +150,7 @@ im = ax.imshow(
 )
 
 ax.scatter(best_gamma, best_eta, color="red", s=120, zorder=5,
-           label=f"Best Fit")
+           label="Best Fit")
 
 plt.colorbar(im, ax=ax, label="Energy (max KS)")
 ax.set_xlabel("gamma (homophily)", fontsize=12)

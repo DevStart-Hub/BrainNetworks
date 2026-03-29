@@ -13,7 +13,8 @@
       "Bash(echo \"=== $env ===\")",
       "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/$env/python.exe\" -c \"import pandas, gnm; print\\(''OK''\\)\")",
       "Bash(done)",
-      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/gnm_box/python.exe\" scripts/sweep.py)"
+      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/gnm_box/python.exe\" scripts/sweep.py)",
+      "Bash(\"/c/Users/fp02/AppData/Local/anaconda3/envs/gnm_box/python.exe\" scripts/plot_ks_example.py)"
     ]
   }
 }
