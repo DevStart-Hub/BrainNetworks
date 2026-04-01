@@ -8,7 +8,7 @@
 
 <meta name="author" content="Francesco Poli">
 <meta name="dcterms.date" content="2028-04-03">
-<meta name="description" content="Moving from group-level to individual-level GNM parameter estimation: running a fine-grained sweep, extracting per-brain eta and gamma, and testing whether individual wiring rules relate to early life stress.">
+<meta name="description" content="Moving from group-level to individual-level GNM parameter estimation: plotting individual optima on the energy landscape, running a fine-grained sweep, and testing whether individual wiring rules relate to early life stress.">
 
 <title>Individual Differences – DevStart</title>
 <style>
@@ -301,13 +301,13 @@ cookieconsent.run({
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-plan" id="toc-the-plan" class="nav-link active" data-scroll-target="#the-plan">The plan</a></li>
-  <li><a href="#load-the-data" id="toc-load-the-data" class="nav-link" data-scroll-target="#load-the-data">Load the data</a></li>
-  <li><a href="#find-the-group-optimum" id="toc-find-the-group-optimum" class="nav-link" data-scroll-target="#find-the-group-optimum">Find the group optimum</a></li>
-  <li><a href="#the-fine-grained-sweep" id="toc-the-fine-grained-sweep" class="nav-link" data-scroll-target="#the-fine-grained-sweep">The fine-grained sweep</a></li>
-  <li><a href="#extracting-individual-estimates" id="toc-extracting-individual-estimates" class="nav-link" data-scroll-target="#extracting-individual-estimates">Extracting individual estimates</a></li>
-  <li><a href="#correlating-with-early-life-stress" id="toc-correlating-with-early-life-stress" class="nav-link" data-scroll-target="#correlating-with-early-life-stress">Correlating with early life stress</a></li>
-  <li><a href="#what-do-the-results-mean" id="toc-what-do-the-results-mean" class="nav-link" data-scroll-target="#what-do-the-results-mean">What do the results mean?</a></li>
+  <li><a href="#our-20-brains" id="toc-our-20-brains" class="nav-link active" data-scroll-target="#our-20-brains">Our 20 brains</a></li>
+  <li><a href="#from-group-to-individual" id="toc-from-group-to-individual" class="nav-link" data-scroll-target="#from-group-to-individual">From group to individual</a></li>
+  <li><a href="#a-finer-sweep" id="toc-a-finer-sweep" class="nav-link" data-scroll-target="#a-finer-sweep">A finer sweep</a></li>
+  <li><a href="#checking-the-fine-grid-optima" id="toc-checking-the-fine-grid-optima" class="nav-link" data-scroll-target="#checking-the-fine-grid-optima">Checking the fine-grid optima</a></li>
+  <li><a href="#build-the-individual-dataframe" id="toc-build-the-individual-dataframe" class="nav-link" data-scroll-target="#build-the-individual-dataframe">Build the individual dataframe</a></li>
+  <li><a href="#do-the-wiring-rules-relate-to-early-life-stress" id="toc-do-the-wiring-rules-relate-to-early-life-stress" class="nav-link" data-scroll-target="#do-the-wiring-rules-relate-to-early-life-stress">Do the wiring rules relate to early life stress?</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -346,116 +346,171 @@ cookieconsent.run({
 
 
 <p>In the last tutorial we found the combination of η and γ that best describes the <em>average</em> brain across all 20 participants. But that’s just the beginning of the story!</p>
-<p>Think about it: we’ve been summarising 20 different brains with a single pair of numbers. In reality, each brain follows its own wiring rules. Some people might have a stronger distance penalty, meaning their brains are built more locally. Others might show stronger homophily, meaning their brains have tighter clusters. And if those individual differences in wiring rules are meaningful, they might relate to something biologically or psychologically important — like early life stress.</p>
-<p>That’s the big question for this tutorial: <strong>do people who experienced more early life stress grow their brain networks using different wiring rules?</strong></p>
-<section id="the-plan" class="level2">
-<h2 class="anchored" data-anchor-id="the-plan">The plan</h2>
-<p>The approach is straightforward:</p>
-<ol type="1">
-<li>Take the group optimum we found in the last tutorial as our starting point</li>
-<li>Run a new, finer sweep centred on that optimum</li>
-<li>For each brain, extract the (η, γ) that best fits <em>that individual</em></li>
-<li>Correlate those individual estimates with early life stress scores</li>
-</ol>
-<p>The key difference from the last tutorial is step 3: instead of averaging energy across all brains and picking one winner, we let each brain pick its own winner. Let’s walk through it!</p>
+<p>Think about it: we’ve been summarising 20 different brains with a single pair of numbers. In reality, each brain follows its own wiring rules. Some people might have a stronger distance penalty, meaning their brains are built more locally. Others might show stronger homophily, meaning their brains have tighter clusters. And if those individual differences in wiring rules are meaningful, they might relate to something biologically important.</p>
+<p>If you remember from the <a href="../CONTENT/ResearchQuestion.html">Research Question</a> tutorial, the central prediction of the <strong>Adaptive Stochasticity Hypothesis</strong> is that brains shaped by adversity develop in a more stochastic, less constrained way. So our research question is: <strong>do people who experienced more early life stress end up having brains wired differently?</strong></p>
+<p>Now we can finally tackle it head on!</p>
+<section id="our-20-brains" class="level2">
+<h2 class="anchored" data-anchor-id="our-20-brains">Our 20 brains</h2>
+<p>Let’s start by reminding ourselves of what we are working with. Here are the 20 brain networks we have been working with throughout these tutorials:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="../images/BrainNetworks/all_20_brains_4x5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../images/BrainNetworks/all_20_brains_4x5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
+</figure>
+</div>
+<p>Each panel shows a different individual’s connectivity matrix. They all look similar at a glance, but the differences between them are exactly what we want to capture. The key question is: are those differences related to early life stress?</p>
 </section>
-<section id="load-the-data" class="level2">
-<h2 class="anchored" data-anchor-id="load-the-data">Load the data</h2>
-<p>We start exactly as before: load the 20 preprocessed brains and the distance matrix. This time we also load the early life stress scores, one per participant.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>brains <span class="op">=</span> np.load(<span class="st">"brain_networks_20_preprocessed.npy"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>num_brains, num_nodes, _ <span class="op">=</span> brains.shape</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>binary_brains <span class="op">=</span> (brains <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>binary_brains_tensor <span class="op">=</span> torch.tensor(binary_brains, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>dist_np <span class="op">=</span> np.load(<span class="st">"distance_matrix.npy"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="op">=</span> torch.tensor(dist_np, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>stress_scores <span class="op">=</span> np.load(<span class="st">"stress_scores.npy"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>num_connections <span class="op">=</span> <span class="bu">int</span>(binary_brains_tensor[<span class="dv">0</span>].<span class="bu">sum</span>().item() <span class="op">/</span> <span class="dv">2</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Loaded </span><span class="sc">{</span>num_brains<span class="sc">}</span><span class="ss"> brains and </span><span class="sc">{</span>num_brains<span class="sc">}</span><span class="ss"> stress scores"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="from-group-to-individual" class="level2">
+<h2 class="anchored" data-anchor-id="from-group-to-individual">From group to individual</h2>
+<p>In the last tutorial, we averaged energy across all 20 brains to find the single best-fitting (η, γ). Now we want to be more specific: for <em>each brain separately</em>, we pick the parameter configuration that gave that brain the lowest energy.</p>
+<p>We don’t need to run a new sweep for this! All the info is already in the experiments from last time. Let’s load them:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    group_experiments <span class="op">=</span> pickle.load(f)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For each brain, we find the combination of parameters that leads to the lowest (the best) energy by averaging over simulations (there is some extra code to rebuild the group-level landscape so we can use it for background colors in the plot):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-brain coarse optima</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>per_brain_energy  <span class="op">=</span> torch.stack(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    [exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>) <span class="cf">for</span> exp <span class="kw">in</span> group_experiments]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># [n_configs, n_brains]</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>best_config_per_brain <span class="op">=</span> per_brain_energy.argmin(dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>ind_eta_c   <span class="op">=</span> [group_experiments[<span class="bu">int</span>(idx)][<span class="st">'eta'</span>]   <span class="cf">for</span> idx <span class="kw">in</span> best_config_per_brain]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ind_gamma_c <span class="op">=</span> [group_experiments[<span class="bu">int</span>(idx)][<span class="st">'gamma'</span>] <span class="cf">for</span> idx <span class="kw">in</span> best_config_per_brain]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Rebuild landscape and group optimum for plotting</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>mean_energies_group <span class="op">=</span> [<span class="bu">float</span>(exp[<span class="st">'energy_tensor'</span>].mean()) <span class="cf">for</span> exp <span class="kw">in</span> group_experiments]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>rows_group <span class="op">=</span> [{<span class="st">"eta"</span>: exp[<span class="st">'eta'</span>], <span class="st">"gamma"</span>: exp[<span class="st">'gamma'</span>], <span class="st">"energy"</span>: e}</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> exp, e <span class="kw">in</span> <span class="bu">zip</span>(group_experiments, mean_energies_group)]</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>landscape   <span class="op">=</span> pd.DataFrame(rows_group).pivot(index<span class="op">=</span><span class="st">"eta"</span>, columns<span class="op">=</span><span class="st">"gamma"</span>, values<span class="op">=</span><span class="st">"energy"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>best_idx    <span class="op">=</span> <span class="bu">int</span>(np.argmin(mean_energies_group))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>group_eta   <span class="op">=</span> group_experiments[best_idx][<span class="st">'eta'</span>]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>group_gamma <span class="op">=</span> group_experiments[best_idx][<span class="st">'gamma'</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> Counter(<span class="bu">zip</span>(ind_eta_c, ind_gamma_c))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    landscape.values,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="st">"lower"</span>, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"viridis_r"</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>[</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        landscape.columns.<span class="bu">min</span>(), landscape.columns.<span class="bu">max</span>(),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        landscape.index.<span class="bu">min</span>(),   landscape.index.<span class="bu">max</span>(),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta_val, gamma_val), n <span class="kw">in</span> counts.items():</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    ax.scatter(gamma_val, eta_val, marker<span class="op">=</span><span class="st">"x"</span>, s<span class="op">=</span><span class="dv">140</span>, color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>               linewidths<span class="op">=</span><span class="fl">2.5</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        ax.text(gamma_val <span class="op">+</span> <span class="fl">0.02</span>, eta_val <span class="op">+</span> <span class="fl">0.1</span>, <span class="bu">str</span>(n),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, zorder<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>ax.scatter(group_gamma, group_eta, s<span class="op">=</span><span class="dv">150</span>, color<span class="op">=</span><span class="st">"red"</span>, zorder<span class="op">=</span><span class="dv">7</span>, label<span class="op">=</span><span class="st">"Group optimum"</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">"Energy (max KS)"</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"gamma (homophily)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eta (distance penalty)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Individual optima on coarse grid"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_landscape_coarse.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="../images/GenerativeModels/individual_landscape_coarse.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="../images/GenerativeModels/individual_landscape_coarse.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+<p>Do you see the problem? The red numbers next to the Xs show how many participants are stacked at the exact same point! With a coarse 10×10 grid, many individuals end up sharing the same (η, γ) even though their true optima may be slightly different. <strong>We are losing precision.</strong></p>
 </section>
-<section id="find-the-group-optimum" class="level2">
-<h2 class="anchored" data-anchor-id="find-the-group-optimum">Find the group optimum</h2>
-<p>We then load the group-level experiments we saved in the last tutorial, and extract the group optimum. We need it to centre our new, finer sweep!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gnm <span class="im">import</span> evaluation</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    group_experiments <span class="op">=</span> pickle.load(f)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>criteria <span class="op">=</span> [</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    evaluation.DegreeKS(),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    evaluation.BetweennessKS(),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    evaluation.ClusteringKS(),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    evaluation.EdgeLengthKS(distance_matrix),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>energy <span class="op">=</span> evaluation.MaxCriteria(criteria)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>energy_key <span class="op">=</span> <span class="bu">str</span>(energy)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>mean_energies <span class="op">=</span> [</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">float</span>(exp.evaluation_results.binary_evaluations[energy_key].mean())</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp <span class="kw">in</span> group_experiments</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>best_idx    <span class="op">=</span> <span class="bu">int</span>(np.argmin(mean_energies))</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>best_exp    <span class="op">=</span> group_experiments[best_idx]</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>group_eta   <span class="op">=</span> <span class="bu">float</span>(best_exp.run_config.binary_parameters.eta)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>group_gamma <span class="op">=</span> <span class="bu">float</span>(best_exp.run_config.binary_parameters.gamma)</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Group optimum: eta = </span><span class="sc">{</span>group_eta<span class="sc">:.2f}</span><span class="ss">, gamma = </span><span class="sc">{</span>group_gamma<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="the-fine-grained-sweep" class="level2">
-<h2 class="anchored" data-anchor-id="the-fine-grained-sweep">The fine-grained sweep</h2>
-<p>Now for the new sweep. The group sweep covered a wide region of the parameter space (η from -5 to 0, γ from -0.5 to 0.5). For individual fitting, we do something smarter: we zoom in on the region around the group optimum.</p>
-<p>Why is this better? Two reasons:</p>
-<ul>
-<li><strong>Precision</strong>: a finer grid means we can pick up subtle differences between individuals that would be invisible on a coarse grid.</li>
-<li><strong>Speed</strong>: by covering a smaller range, we can afford more grid points and more simulations, giving us more reliable estimates.</li>
-</ul>
-<p>We also run more simulations than before — remember, GNMs are probabilistic, so more simulations means more stable estimates for each individual:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gnm <span class="im">import</span> fitting, generative_rules</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>n_eta   <span class="op">=</span> <span class="dv">15</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>n_gamma <span class="op">=</span> <span class="dv">15</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>n_sims  <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>eta_values   <span class="op">=</span> torch.linspace(group_eta   <span class="op">-</span> <span class="fl">2.0</span>, group_eta   <span class="op">+</span> <span class="fl">2.0</span>, n_eta).clamp(<span class="op">-</span><span class="dv">7</span>, <span class="dv">0</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>gamma_values <span class="op">=</span> torch.linspace(group_gamma <span class="op">-</span> <span class="fl">0.3</span>, group_gamma <span class="op">+</span> <span class="fl">0.3</span>, n_gamma).clamp(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>binary_sweep_parameters <span class="op">=</span> fitting.BinarySweepParameters(</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    eta    <span class="op">=</span> eta_values,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    gamma  <span class="op">=</span> gamma_values,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    distance_relationship_type         <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    preferential_relationship_type     <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    generative_rule  <span class="op">=</span> [generative_rules.MatchingIndex()],</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    num_iterations   <span class="op">=</span> [num_connections],</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>sweep_config <span class="op">=</span> fitting.SweepConfig(</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    binary_sweep_parameters <span class="op">=</span> binary_sweep_parameters,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    num_simulations         <span class="op">=</span> n_sims,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    distance_matrix         <span class="op">=</span> [distance_matrix],</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>We then run the sweep in exactly the same way as before:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<section id="a-finer-sweep" class="level2">
+<h2 class="anchored" data-anchor-id="a-finer-sweep">A finer sweep</h2>
+<p>To fix this, we run a second, more targeted sweep. Looking at the coarse landscape, the interesting action is clearly happening in a narrower region: roughly η between −3 and −0.5, and γ between 0 and 0.5. So that’s exactly where we sweep:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Choose the sweep range carefully!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is no automatic rule for picking the fine-sweep range. We chose η ∈ [−3, −0.5] and γ ∈ [0, 0.5] by eye, based on where the coarse landscape placed most individual optima. For your own dataset, you will need to do the same inspection.</p>
+<p>One thing that is <strong>critical</strong>: after extracting the per-brain optima, make sure no participant ends up with their best point right on the <em>border</em> of the parameter space. If someone’s best (η, γ) is at the minimum or maximum value you tested, their true optimum might be <em>beyond</em> that boundary and you are artificially clamping them. When this happens, widen the range in that direction and re-run.</p>
+</div>
+</div>
+<p>For this we need to load the brain networks, distance matrix (and, since we’ll need them later, the stress scores too):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>brains <span class="op">=</span> np.load(<span class="st">"brain_networks_20_preprocessed.npy"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>num_brains, num_nodes, _ <span class="op">=</span> brains.shape</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>binary_brains <span class="op">=</span> (brains <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>binary_brains_tensor <span class="op">=</span> torch.tensor(binary_brains, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>dist_np <span class="op">=</span> np.load(<span class="st">"distance_matrix.npy"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="op">=</span> torch.tensor(dist_np, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>stress_scores <span class="op">=</span> np.load(<span class="st">"stress_scores.npy"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>num_connections <span class="op">=</span> <span class="bu">int</span>(binary_brains_tensor[<span class="dv">0</span>].<span class="bu">sum</span>().item() <span class="op">/</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gnm <span class="im">import</span> fitting, generative_rules, evaluation</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>experiments <span class="op">=</span> fitting.perform_sweep(</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    sweep_config         <span class="op">=</span> sweep_config,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    binary_evaluations   <span class="op">=</span> [energy],</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    real_binary_matrices <span class="op">=</span> binary_brains_tensor,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    save_model           <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    save_run_history     <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sweep complete in </span><span class="sc">{</span>elapsed<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>criteria <span class="op">=</span> [</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    evaluation.DegreeKS(),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    evaluation.BetweennessKS(),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    evaluation.ClusteringKS(),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    evaluation.EdgeLengthKS(distance_matrix),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>energy <span class="op">=</span> evaluation.MaxCriteria(criteria)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>n_eta   <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>n_gamma <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>n_sims  <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>eta_values   <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="fl">3.0</span>, <span class="op">-</span><span class="fl">0.5</span>, n_eta)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>gamma_values <span class="op">=</span> torch.linspace( <span class="fl">0.0</span>,  <span class="fl">0.5</span>, n_gamma)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>binary_sweep_parameters <span class="op">=</span> fitting.BinarySweepParameters(</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    eta    <span class="op">=</span> eta_values,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    gamma  <span class="op">=</span> gamma_values,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    distance_relationship_type         <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    preferential_relationship_type     <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    generative_rule  <span class="op">=</span> [generative_rules.MatchingIndex()],</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    num_iterations   <span class="op">=</span> [num_connections],</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>sweep_config <span class="op">=</span> fitting.SweepConfig(</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    binary_sweep_parameters <span class="op">=</span> binary_sweep_parameters,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    num_simulations         <span class="op">=</span> n_sims,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    distance_matrix         <span class="op">=</span> [distance_matrix],</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We increased <code>n_eta</code> and <code>n_gamma</code> to 30 each (instead of 10), and we also increased <code>n_sims</code> to 30. More simulations mean more stable estimates for each individual, which is important when we’re trying to detect subtle differences between people.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>raw_fine <span class="op">=</span> fitting.perform_sweep(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    sweep_config         <span class="op">=</span> sweep_config,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    binary_evaluations   <span class="op">=</span> [energy],</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    real_binary_matrices <span class="op">=</span> binary_brains_tensor,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    save_model           <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    save_run_history     <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sweep complete in </span><span class="sc">{</span>elapsed<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to plain dicts (same format as the group experiments)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>energy_key <span class="op">=</span> <span class="bu">str</span>(energy)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>experiments_fine <span class="op">=</span> [</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:           <span class="bu">float</span>(exp.run_config.binary_parameters.eta),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:         <span class="bu">float</span>(exp.run_config.binary_parameters.gamma),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"energy_tensor"</span>: exp.evaluation_results.binary_evaluations[energy_key],</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp <span class="kw">in</span> raw_fine</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -466,114 +521,150 @@ cookieconsent.run({
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>With 15 × 15 = 225 parameter combinations × 20 simulations = 4500 model runs. This is more than the group sweep, but still manageable on a CPU. Download the pre-computed results below to skip the wait!</p>
+<p>30 × 30 = 900 parameter combinations × 30 simulations = 27 000 model runs. On a normal laptop, you may want to run it before leaving work and come back for the results the morning after!</p>
+<p>So for now, download the pre-computed results below!</p>
 <p><a href="../resources/GenerativeModels/individual_experiments.pkl" download="" class="btn btn-primary btn-sm" style="margin-top:6px;">⬇ Download individual_experiments.pkl</a></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"individual_experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    experiments <span class="op">=</span> pickle.load(f)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"individual_experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    experiments_fine <span class="op">=</span> pickle.load(f)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
-<section id="extracting-individual-estimates" class="level2">
-<h2 class="anchored" data-anchor-id="extracting-individual-estimates">Extracting individual estimates</h2>
-<p>Here is where the magic happens. Instead of taking the mean energy across all brains and finding one global winner, we now ask: <em>for each brain separately, which (η, γ) gives the lowest energy?</em></p>
-<p>The GNM toolbox has a function for exactly this: <code>optimise_evaluation()</code>. You’ve seen it before! But now, instead of thinking about it as a way to find the best overall configuration, notice what it actually returns: <strong>one experiment per brain</strong> — specifically, the parameter configuration that best fits that individual.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>optimal_experiments, optimal_energies <span class="op">=</span> fitting.optimise_evaluation(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    experiments <span class="op">=</span> experiments,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    criterion   <span class="op">=</span> energy,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Now we just read off the (η, γ) from each brain’s best-fitting experiment:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> brain_idx, (opt_exp, opt_energy) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(optimal_experiments, optimal_energies)):</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"brain"</span>:       brain_idx,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:         <span class="bu">float</span>(opt_exp.run_config.binary_parameters.eta),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:       <span class="bu">float</span>(opt_exp.run_config.binary_parameters.gamma),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"best_energy"</span>: <span class="bu">float</span>(opt_energy),</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stress"</span>:      <span class="bu">float</span>(stress_scores[brain_idx]),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>df_ind <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_ind)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>We now have a dataframe with one row per participant, telling us their individual η, γ, best energy, and stress score.</p>
-</section>
-<section id="correlating-with-early-life-stress" class="level2">
-<h2 class="anchored" data-anchor-id="correlating-with-early-life-stress">Correlating with early life stress</h2>
-<p>Now for the key question: do individual differences in wiring rules relate to early life stress?</p>
-<p>We test this with a simple <strong>Pearson correlation</strong> — the same kind we used in the Topology tutorial. We check both parameters separately:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>r_eta,   p_eta   <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"eta"</span>])</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>r_gamma, p_gamma <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"gamma"</span>])</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"eta   vs stress: r = </span><span class="sc">{</span>r_eta<span class="sc">:.2f}</span><span class="ss">,  p = </span><span class="sc">{</span>p_eta<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"gamma vs stress: r = </span><span class="sc">{</span>r_gamma<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>p_gamma<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And we visualise the results with scatter plots:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>BLUE <span class="op">=</span> <span class="st">"#2E86AB"</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, param, r_val, p_val, ylabel <span class="kw">in</span> <span class="bu">zip</span>(</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    axes,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"eta"</span>,               <span class="st">"gamma"</span>],</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    [r_eta,               r_gamma],</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    [p_eta,               p_gamma],</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"η (distance penalty)"</span>, <span class="st">"γ (homophily)"</span>],</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    ax.scatter(df_ind[<span class="st">"stress"</span>], df_ind[param], color<span class="op">=</span>BLUE, s<span class="op">=</span><span class="dv">70</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    m, b <span class="op">=</span> np.polyfit(df_ind[<span class="st">"stress"</span>], df_ind[param], <span class="dv">1</span>)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    xs <span class="op">=</span> np.linspace(df_ind[<span class="st">"stress"</span>].<span class="bu">min</span>(), df_ind[<span class="st">"stress"</span>].<span class="bu">max</span>(), <span class="dv">100</span>)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    ax.plot(xs, m <span class="op">*</span> xs <span class="op">+</span> b, color<span class="op">=</span><span class="st">"red"</span>, lw<span class="op">=</span><span class="fl">1.8</span>)</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Early life stress score"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"r = </span><span class="sc">{</span>r_val<span class="sc">:.2f}</span><span class="ss">,  p = </span><span class="sc">{</span>p_val<span class="sc">:.3f}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_correlations.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="checking-the-fine-grid-optima" class="level2">
+<h2 class="anchored" data-anchor-id="checking-the-fine-grid-optima">Checking the fine-grid optima</h2>
+<p>Let’s extract the individual optima from the fine sweep and verify that participants are now spread across distinct grid points:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-brain fine optima: same logic as before</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>per_brain_fine   <span class="op">=</span> torch.stack(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    [exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>) <span class="cf">for</span> exp <span class="kw">in</span> experiments_fine]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># [n_configs, n_brains]</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>best_config_fine <span class="op">=</span> per_brain_fine.argmin(dim<span class="op">=</span><span class="dv">0</span>)  <span class="co"># [n_brains]</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>ind_eta_f   <span class="op">=</span> [experiments_fine[<span class="bu">int</span>(idx)][<span class="st">'eta'</span>]   <span class="cf">for</span> idx <span class="kw">in</span> best_config_fine]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>ind_gamma_f <span class="op">=</span> [experiments_fine[<span class="bu">int</span>(idx)][<span class="st">'gamma'</span>] <span class="cf">for</span> idx <span class="kw">in</span> best_config_fine]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>counts_fine <span class="op">=</span> Counter(<span class="bu">zip</span>(ind_eta_f, ind_gamma_f))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Unique fine optima: </span><span class="sc">{</span><span class="bu">len</span>(counts_fine)<span class="sc">}</span><span class="ss"> out of </span><span class="sc">{</span>num_brains<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mean_energies_fine <span class="op">=</span> [<span class="bu">float</span>(exp[<span class="st">'energy_tensor'</span>].mean()) <span class="cf">for</span> exp <span class="kw">in</span> experiments_fine]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>rows_fine   <span class="op">=</span> [</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"eta"</span>: exp[<span class="st">'eta'</span>], <span class="st">"gamma"</span>: exp[<span class="st">'gamma'</span>], <span class="st">"energy"</span>: e}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp, e <span class="kw">in</span> <span class="bu">zip</span>(experiments_fine, mean_energies_fine)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>df_fine        <span class="op">=</span> pd.DataFrame(rows_fine)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>landscape_fine <span class="op">=</span> df_fine.pivot(index<span class="op">=</span><span class="st">"eta"</span>, columns<span class="op">=</span><span class="st">"gamma"</span>, values<span class="op">=</span><span class="st">"energy"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    landscape_fine.values,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="st">"lower"</span>, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"viridis_r"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>[</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        landscape_fine.columns.<span class="bu">min</span>(), landscape_fine.columns.<span class="bu">max</span>(),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        landscape_fine.index.<span class="bu">min</span>(),   landscape_fine.index.<span class="bu">max</span>(),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta_val, gamma_val), n <span class="kw">in</span> counts_fine.items():</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    ax.scatter(gamma_val, eta_val, marker<span class="op">=</span><span class="st">"x"</span>, s<span class="op">=</span><span class="dv">140</span>, color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>               linewidths<span class="op">=</span><span class="fl">2.5</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        ax.text(gamma_val <span class="op">+</span> <span class="fl">0.006</span>, eta_val <span class="op">+</span> <span class="fl">0.05</span>, <span class="bu">str</span>(n),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, zorder<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">"Energy (max KS)"</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"gamma (homophily)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eta (distance penalty)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Individual optima on fine grid"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_landscape_fine.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="../images/GenerativeModels/individual_correlations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../images/GenerativeModels/individual_correlations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a></p>
+<p><a href="../images/GenerativeModels/individual_landscape_fine.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="../images/GenerativeModels/individual_landscape_fine.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></a></p>
 </figure>
 </div>
+<p>Much better! The individual optima are now spread across distinct grid points. We can actually see the individual differences we were after! You can notice that there are still a couple of individuals with the same values, but that’s ok! After all, some people might actually have similar brains!</p>
 </section>
-<section id="what-do-the-results-mean" class="level2">
-<h2 class="anchored" data-anchor-id="what-do-the-results-mean">What do the results mean?</h2>
-<p>The two panels tell us whether early life stress is linked to differences in wiring rules. Let’s think about what each parameter means biologically:</p>
-<p><strong>A correlation with η</strong> would mean that people with more early life stress have a different <em>spatial</em> wiring strategy. A more negative η means the brain is more strongly constrained by distance — it mostly connects nearby regions. A less negative η means the brain is more willing to form long-range connections. So if stress correlates with η, it would suggest that early adversity changes how much the developing brain “cares about” physical distance when laying down its connections.</p>
-<p><strong>A correlation with γ</strong> would mean that stress is linked to differences in <em>homophily</em> — how strongly the brain’s wiring builds on itself, connecting regions that already share neighbours. Stronger homophily builds tighter, more segregated modules; weaker homophily produces a more integrated, less clustered network. A stress-related shift in γ would suggest that adversity affects how modular the brain becomes during development.</p>
+<section id="build-the-individual-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="build-the-individual-dataframe">Build the individual dataframe</h2>
+<p>Now we collect everything into a tidy dataframe: one row per participant, with their individual η, γ, energy, and stress score:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rows_ind <span class="op">=</span> []</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> brain_idx, idx <span class="kw">in</span> <span class="bu">enumerate</span>(best_config_fine):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    best_exp <span class="op">=</span> experiments_fine[<span class="bu">int</span>(idx)]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    rows_ind.append({</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"brain"</span>:       brain_idx,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:         best_exp[<span class="st">'eta'</span>],</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:       best_exp[<span class="st">'gamma'</span>],</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"best_energy"</span>: <span class="bu">float</span>(best_exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>)[brain_idx]),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stress"</span>:      <span class="bu">float</span>(stress_scores[brain_idx]),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>df_ind <span class="op">=</span> pd.DataFrame(rows_ind)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_ind)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="do-the-wiring-rules-relate-to-early-life-stress" class="level2">
+<h2 class="anchored" data-anchor-id="do-the-wiring-rules-relate-to-early-life-stress">Do the wiring rules relate to early life stress?</h2>
+<p>Now the big question. Just like we did in the <a href="../CONTENT/Topology.html">Topology tutorial</a>, we correlate each parameter with the stress scores using a Pearson correlation and visualise the result with a regression plot:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>r_eta,   p_eta   <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"eta"</span>])</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>r_gamma, p_gamma <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"gamma"</span>])</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>COLORS <span class="op">=</span> [<span class="st">"#C0392B"</span>, <span class="st">"#2980B9"</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, param, r_val, p_val, ylabel, color <span class="kw">in</span> <span class="bu">zip</span>(</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    axes,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"eta"</span>,                 <span class="st">"gamma"</span>],</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    [r_eta,                 r_gamma],</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    [p_eta,                 p_gamma],</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"η (distance penalty)"</span>, <span class="st">"γ (homophily)"</span>],</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    COLORS,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    sns.regplot(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span>df_ind[<span class="st">"stress"</span>], y<span class="op">=</span>df_ind[param],</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        ax<span class="op">=</span>ax,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        scatter_kws<span class="op">=</span>{<span class="st">"color"</span>: color, <span class="st">"edgecolors"</span>: <span class="st">"white"</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"linewidths"</span>: <span class="fl">0.6</span>, <span class="st">"s"</span>: <span class="dv">60</span>, <span class="st">"zorder"</span>: <span class="dv">3</span>},</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        line_kws<span class="op">=</span>{<span class="st">"color"</span>: color, <span class="st">"linewidth"</span>: <span class="dv">2</span>},</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        ci<span class="op">=</span><span class="dv">95</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>color,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    p_str <span class="op">=</span> <span class="ss">f"p = </span><span class="sc">{</span>p_val<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">if</span> p_val <span class="op">&gt;=</span> <span class="fl">0.001</span> <span class="cf">else</span> <span class="st">"p &lt; 0.001"</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"r = </span><span class="sc">{</span>r_val<span class="sc">:+.2f}</span><span class="ss">,  </span><span class="sc">{</span>p_str<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Early life stress score"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"GNM Parameters vs. Early Life Stress"</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_correlations.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="../images/GenerativeModels/individual_correlations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="../images/GenerativeModels/individual_correlations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a></p>
+</figure>
+</div>
+<p>Both the correlations are significant!!! Early life stress is linked to individual differences in wiring rules!!</p>
+<p><strong>A correlation with η</strong> means that people with more early life stress have a different <em>spatial</em> wiring strategy. A less negative η means the brain is more willing to form long-range connections, which is consistent with the Adaptive Stochasticity Hypothesis: adversity might loosen the distance constraint, allowing for a more diffuse, stochastic developmental process.</p>
+<p><strong>A correlation with γ</strong> means that stress is linked to differences in <em>homophily</em>. Weaker homophily produces a more integrated, less clustered network and this is again consistent with a more stochastic developmental programme that does not lock in tight local communities.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>What if the correlations are not significant?
+<span class="screen-reader-only">Important</span>GNMs are playing a different game
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>That is a completely valid outcome! Remember: we’ve been working with only 20 brains, which gives us limited statistical power. Real studies in this area typically use hundreds of participants. With 20 people, you would need a very strong correlation to reach significance.</p>
-<p>What matters here is understanding the logic: we’ve moved from describing the brain with a handful of topology metrics to describing it with two interpretable wiring parameters. And whether the result is significant or not, we’re asking a much richer question than we could with topology alone.</p>
+<p>This is just an example! What matters here is understanding the logic: we have moved from describing the brain with a handful of topology metrics to capturing its wiring principles with two interpretable parameters. We are asking a much richer and more mechanistic question than we could with topology alone.</p>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>From two numbers to a whole story
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>It’s worth stepping back and appreciating what we’ve done across these tutorials. We started with raw connectivity matrices and ended up with two numbers per person that capture how their brain wires itself. Those numbers are not arbitrary: they describe real developmental processes, they have a biological interpretation, and they can be compared across individuals and related to life experiences.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>It’s worth stepping back and appreciating what we’ve done across these tutorials. We started with raw connectivity matrices and ended up with two numbers per person that capture how their brain wires itself. Those numbers can be compared across individuals and related to life experiences.</p>
 <p>That’s the power of Generative Network Models!</p>
-</div>
-</div>
 
 
 <!-- -->
@@ -1041,358 +1132,354 @@ cookieconsent.run({
   <div class="nav-page nav-page-next">
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Individual Differences"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="an">author-meta:</span><span class="co"> "Francesco Poli"</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "28/03/2026"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="an">description-meta:</span><span class="co"> "Moving from group-level to individual-level GNM parameter estimation: plotting individual optima on the energy landscape, running a fine-grained sweep, and testing whether individual wiring rules relate to early life stress."</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Python</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Generative Models</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - GNM</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Individual Differences</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>In the last tutorial we found the combination of η and γ that best describes the *average* brain across all 20 participants. But that's just the beginning of the story!</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>Think about it: we've been summarising 20 different brains with a single pair of numbers. In reality, each brain follows its own wiring rules. Some people might have a stronger distance penalty, meaning their brains are built more locally. Others might show stronger homophily, meaning their brains have tighter clusters. And if those individual differences in wiring rules are meaningful, they might relate to something biologically important.</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>If you remember from the <span class="co">[</span><span class="ot">Research Question</span><span class="co">](ResearchQuestion.qmd)</span> tutorial, the central prediction of the **Adaptive Stochasticity Hypothesis** is that brains shaped by adversity develop in a more stochastic, less constrained way. So our research question is: **do people who experienced more early life stress end up having brains wired differently?**</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>Now we can finally tackle it head on!</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Our 20 brains</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>Let's start by reminding ourselves of what we are working with. Here are the 20 brain networks we have been working with throughout these tutorials:</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/all_20_brains_4x5.png)</span>{width="85%" fig-align="center"}</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>Each panel shows a different individual's connectivity matrix. They all look similar at a glance, but the differences between them are exactly what we want to capture. The key question is: are those differences related to early life stress?</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## From group to individual</span></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>In the last tutorial, we averaged energy across all 20 brains to find the single best-fitting (η, γ). Now we want to be more specific: for *each brain separately*, we pick the parameter configuration that gave that brain the lowest energy.</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>We don't need to run a new sweep for this! All the info is already in the experiments from last time. Let's load them:</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    group_experiments <span class="op">=</span> pickle.load(f)</span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>For each brain, we find the config with the lowest energy by averaging the energy tensor over simulations and then taking the argmin across configs. We also rebuild the landscape and group optimum — only needed so we can overlay them on the plot:</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-brain coarse optima</span></span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>per_brain_energy  <span class="op">=</span> torch.stack(</span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>    [exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>) <span class="cf">for</span> exp <span class="kw">in</span> group_experiments]</span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># [n_configs, n_brains]</span></span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>best_config_per_brain <span class="op">=</span> per_brain_energy.argmin(dim<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>ind_eta_c   <span class="op">=</span> [group_experiments[<span class="bu">int</span>(idx)][<span class="st">'eta'</span>]   <span class="cf">for</span> idx <span class="kw">in</span> best_config_per_brain]</span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>ind_gamma_c <span class="op">=</span> [group_experiments[<span class="bu">int</span>(idx)][<span class="st">'gamma'</span>] <span class="cf">for</span> idx <span class="kw">in</span> best_config_per_brain]</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Rebuild landscape and group optimum for plotting</span></span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>mean_energies_group <span class="op">=</span> [<span class="bu">float</span>(exp[<span class="st">'energy_tensor'</span>].mean()) <span class="cf">for</span> exp <span class="kw">in</span> group_experiments]</span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>rows_group <span class="op">=</span> [{<span class="st">"eta"</span>: exp[<span class="st">'eta'</span>], <span class="st">"gamma"</span>: exp[<span class="st">'gamma'</span>], <span class="st">"energy"</span>: e}</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> exp, e <span class="kw">in</span> <span class="bu">zip</span>(group_experiments, mean_energies_group)]</span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>landscape   <span class="op">=</span> pd.DataFrame(rows_group).pivot(index<span class="op">=</span><span class="st">"eta"</span>, columns<span class="op">=</span><span class="st">"gamma"</span>, values<span class="op">=</span><span class="st">"energy"</span>)</span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>best_idx    <span class="op">=</span> <span class="bu">int</span>(np.argmin(mean_energies_group))</span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>group_eta   <span class="op">=</span> group_experiments[best_idx][<span class="st">'eta'</span>]</span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>group_gamma <span class="op">=</span> group_experiments[best_idx][<span class="st">'gamma'</span>]</span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> Counter(<span class="bu">zip</span>(ind_eta_c, ind_gamma_c))</span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
-<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(</span>
-<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>    landscape.values,</span>
-<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="st">"lower"</span>, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"viridis_r"</span>,</span>
-<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>[</span>
-<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>        landscape.columns.<span class="bu">min</span>(), landscape.columns.<span class="bu">max</span>(),</span>
-<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>        landscape.index.<span class="bu">min</span>(),   landscape.index.<span class="bu">max</span>(),</span>
-<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta_val, gamma_val), n <span class="kw">in</span> counts.items():</span>
-<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>    ax.scatter(gamma_val, eta_val, marker<span class="op">=</span><span class="st">"x"</span>, s<span class="op">=</span><span class="dv">140</span>, color<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>               linewidths<span class="op">=</span><span class="fl">2.5</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">1</span>:</span>
-<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>        ax.text(gamma_val <span class="op">+</span> <span class="fl">0.02</span>, eta_val <span class="op">+</span> <span class="fl">0.1</span>, <span class="bu">str</span>(n),</span>
-<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, zorder<span class="op">=</span><span class="dv">6</span>)</span>
-<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>ax.scatter(group_gamma, group_eta, s<span class="op">=</span><span class="dv">150</span>, color<span class="op">=</span><span class="st">"red"</span>, zorder<span class="op">=</span><span class="dv">7</span>, label<span class="op">=</span><span class="st">"Group optimum"</span>)</span>
-<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">"Energy (max KS)"</span>)</span>
-<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"gamma (homophily)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eta (distance penalty)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Individual optima on coarse grid"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
-<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_landscape_coarse.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
-<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/GenerativeModels/individual_landscape_coarse.png)</span>{width="80%" fig-align="center"}</span>
-<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>Do you see the problem? The white numbers next to several markers show how many participants are stacked at the exact same point! With a coarse 10×10 grid, many individuals end up sharing the same (η, γ) even though their true optima may be slightly different. **We are losing precision.**</span>
-<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a><span class="fu">## A finer sweep</span></span>
-<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>To fix this, we run a second, more targeted sweep. Looking at the coarse landscape, the interesting action is clearly happening in a narrower region: roughly η between −3 and −0.5, and γ between 0 and 0.5. So that's exactly where we sweep:</span>
-<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
-<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## Choose the sweep range carefully!</span></span>
-<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>There is no automatic rule for picking the fine-sweep range. We chose η ∈ <span class="sc">\[</span>−3, −0.5<span class="sc">\]</span> and γ ∈ <span class="sc">\[</span>0, 0.5<span class="sc">\]</span> by eye, based on where the coarse landscape placed most individual optima. For your own dataset, you will need to do the same inspection.</span>
-<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>One thing that is **critical**: after extracting the per-brain optima, make sure no participant ends up with their best point right on the *border* of the parameter space. If someone's best (η, γ) is at the minimum or maximum value you tested, their true optimum might be *beyond* that boundary and you are artificially clamping them. When this happens, widen the range in that direction and re-run.</span>
-<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a>For this we need to load the brain networks, distance matrix, and stress scores:</span>
-<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a>brains <span class="op">=</span> np.load(<span class="st">"brain_networks_20_preprocessed.npy"</span>)</span>
-<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a>num_brains, num_nodes, _ <span class="op">=</span> brains.shape</span>
-<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a>binary_brains <span class="op">=</span> (brains <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)</span>
-<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a>binary_brains_tensor <span class="op">=</span> torch.tensor(binary_brains, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a>dist_np <span class="op">=</span> np.load(<span class="st">"distance_matrix.npy"</span>)</span>
-<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="op">=</span> torch.tensor(dist_np, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a>stress_scores <span class="op">=</span> np.load(<span class="st">"stress_scores.npy"</span>)</span>
-<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a>num_connections <span class="op">=</span> <span class="bu">int</span>(binary_brains_tensor[<span class="dv">0</span>].<span class="bu">sum</span>().item() <span class="op">/</span> <span class="dv">2</span>)</span>
-<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gnm <span class="im">import</span> fitting, generative_rules, evaluation</span>
-<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a>criteria <span class="op">=</span> [</span>
-<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a>    evaluation.DegreeKS(),</span>
-<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a>    evaluation.BetweennessKS(),</span>
-<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a>    evaluation.ClusteringKS(),</span>
-<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a>    evaluation.EdgeLengthKS(distance_matrix),</span>
-<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a>energy <span class="op">=</span> evaluation.MaxCriteria(criteria)</span>
-<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a>n_eta   <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a>n_gamma <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a>n_sims  <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a>eta_values   <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="fl">3.0</span>, <span class="op">-</span><span class="fl">0.5</span>, n_eta)</span>
-<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a>gamma_values <span class="op">=</span> torch.linspace( <span class="fl">0.0</span>,  <span class="fl">0.5</span>, n_gamma)</span>
-<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a>binary_sweep_parameters <span class="op">=</span> fitting.BinarySweepParameters(</span>
-<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a>    eta    <span class="op">=</span> eta_values,</span>
-<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a>    gamma  <span class="op">=</span> gamma_values,</span>
-<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a>    distance_relationship_type         <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
-<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a>    preferential_relationship_type     <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
-<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a>    generative_rule  <span class="op">=</span> [generative_rules.MatchingIndex()],</span>
-<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a>    num_iterations   <span class="op">=</span> [num_connections],</span>
-<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a>sweep_config <span class="op">=</span> fitting.SweepConfig(</span>
-<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a>    binary_sweep_parameters <span class="op">=</span> binary_sweep_parameters,</span>
-<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a>    num_simulations         <span class="op">=</span> n_sims,</span>
-<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a>    distance_matrix         <span class="op">=</span> [distance_matrix],</span>
-<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a>We increased <span class="in">`n_eta`</span> and <span class="in">`n_gamma`</span> to 20 each (instead of 10), and we also increased <span class="in">`n_sims`</span> to 20. More simulations mean more stable estimates for each individual, which is important when we're trying to detect subtle differences between people.</span>
-<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb10-168"><a href="#cb10-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-169"><a href="#cb10-169" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
-<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a>raw_fine <span class="op">=</span> fitting.perform_sweep(</span>
-<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a>    sweep_config         <span class="op">=</span> sweep_config,</span>
-<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a>    binary_evaluations   <span class="op">=</span> [energy],</span>
-<span id="cb10-174"><a href="#cb10-174" aria-hidden="true" tabindex="-1"></a>    real_binary_matrices <span class="op">=</span> binary_brains_tensor,</span>
-<span id="cb10-175"><a href="#cb10-175" aria-hidden="true" tabindex="-1"></a>    save_model           <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a>    save_run_history     <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a>elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
-<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sweep complete in </span><span class="sc">{</span>elapsed<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
-<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to plain dicts (same format as the group experiments)</span></span>
-<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a>energy_key <span class="op">=</span> <span class="bu">str</span>(energy)</span>
-<span id="cb10-184"><a href="#cb10-184" aria-hidden="true" tabindex="-1"></a>experiments_fine <span class="op">=</span> [</span>
-<span id="cb10-185"><a href="#cb10-185" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:           <span class="bu">float</span>(exp.run_config.binary_parameters.eta),</span>
-<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:         <span class="bu">float</span>(exp.run_config.binary_parameters.gamma),</span>
-<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a>        <span class="st">"energy_tensor"</span>: exp.evaluation_results.binary_evaluations[energy_key],</span>
-<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp <span class="kw">in</span> raw_fine</span>
-<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-193"><a href="#cb10-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-194"><a href="#cb10-194" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a><span class="fu">## How long will this take?</span></span>
-<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-197"><a href="#cb10-197" aria-hidden="true" tabindex="-1"></a>20 × 20 = 400 parameter combinations × 20 simulations = 8 000 model runs. Download the pre-computed results below!</span>
-<span id="cb10-198"><a href="#cb10-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"../resources/GenerativeModels/individual_experiments.pkl"</span><span class="ot"> download class</span><span class="op">=</span><span class="st">"btn btn-primary btn-sm"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"margin-top:6px;"</span><span class="dt">&gt;</span>⬇ Download individual_experiments.pkl<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
-<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
-<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"individual_experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
-<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a>    experiments_fine <span class="op">=</span> pickle.load(f)</span>
-<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a><span class="fu">## Checking the fine-grid optima</span></span>
-<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-211"><a href="#cb10-211" aria-hidden="true" tabindex="-1"></a>Let's extract the individual optima from the fine sweep and verify that participants are now spread across distinct grid points:</span>
-<span id="cb10-212"><a href="#cb10-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-213"><a href="#cb10-213" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-214"><a href="#cb10-214" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-brain fine optima: same logic as before</span></span>
-<span id="cb10-215"><a href="#cb10-215" aria-hidden="true" tabindex="-1"></a>per_brain_fine   <span class="op">=</span> torch.stack(</span>
-<span id="cb10-216"><a href="#cb10-216" aria-hidden="true" tabindex="-1"></a>    [exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>) <span class="cf">for</span> exp <span class="kw">in</span> experiments_fine]</span>
-<span id="cb10-217"><a href="#cb10-217" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># [n_configs, n_brains]</span></span>
-<span id="cb10-218"><a href="#cb10-218" aria-hidden="true" tabindex="-1"></a>best_config_fine <span class="op">=</span> per_brain_fine.argmin(dim<span class="op">=</span><span class="dv">0</span>)  <span class="co"># [n_brains]</span></span>
-<span id="cb10-219"><a href="#cb10-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-220"><a href="#cb10-220" aria-hidden="true" tabindex="-1"></a>ind_eta_f   <span class="op">=</span> [experiments_fine[<span class="bu">int</span>(idx)][<span class="st">'eta'</span>]   <span class="cf">for</span> idx <span class="kw">in</span> best_config_fine]</span>
-<span id="cb10-221"><a href="#cb10-221" aria-hidden="true" tabindex="-1"></a>ind_gamma_f <span class="op">=</span> [experiments_fine[<span class="bu">int</span>(idx)][<span class="st">'gamma'</span>] <span class="cf">for</span> idx <span class="kw">in</span> best_config_fine]</span>
-<span id="cb10-222"><a href="#cb10-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-223"><a href="#cb10-223" aria-hidden="true" tabindex="-1"></a>counts_fine <span class="op">=</span> Counter(<span class="bu">zip</span>(ind_eta_f, ind_gamma_f))</span>
-<span id="cb10-224"><a href="#cb10-224" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Unique fine optima: </span><span class="sc">{</span><span class="bu">len</span>(counts_fine)<span class="sc">}</span><span class="ss"> out of </span><span class="sc">{</span>num_brains<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb10-225"><a href="#cb10-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-226"><a href="#cb10-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-227"><a href="#cb10-227" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-228"><a href="#cb10-228" aria-hidden="true" tabindex="-1"></a>mean_energies_fine <span class="op">=</span> [<span class="bu">float</span>(exp[<span class="st">'energy_tensor'</span>].mean()) <span class="cf">for</span> exp <span class="kw">in</span> experiments_fine]</span>
-<span id="cb10-229"><a href="#cb10-229" aria-hidden="true" tabindex="-1"></a>rows_fine   <span class="op">=</span> [</span>
-<span id="cb10-230"><a href="#cb10-230" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"eta"</span>: exp[<span class="st">'eta'</span>], <span class="st">"gamma"</span>: exp[<span class="st">'gamma'</span>], <span class="st">"energy"</span>: e}</span>
-<span id="cb10-231"><a href="#cb10-231" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp, e <span class="kw">in</span> <span class="bu">zip</span>(experiments_fine, mean_energies_fine)</span>
-<span id="cb10-232"><a href="#cb10-232" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb10-233"><a href="#cb10-233" aria-hidden="true" tabindex="-1"></a>df_fine        <span class="op">=</span> pd.DataFrame(rows_fine)</span>
-<span id="cb10-234"><a href="#cb10-234" aria-hidden="true" tabindex="-1"></a>landscape_fine <span class="op">=</span> df_fine.pivot(index<span class="op">=</span><span class="st">"eta"</span>, columns<span class="op">=</span><span class="st">"gamma"</span>, values<span class="op">=</span><span class="st">"energy"</span>)</span>
-<span id="cb10-235"><a href="#cb10-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-236"><a href="#cb10-236" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
-<span id="cb10-237"><a href="#cb10-237" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(</span>
-<span id="cb10-238"><a href="#cb10-238" aria-hidden="true" tabindex="-1"></a>    landscape_fine.values,</span>
-<span id="cb10-239"><a href="#cb10-239" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="st">"lower"</span>, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"viridis_r"</span>,</span>
-<span id="cb10-240"><a href="#cb10-240" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>[</span>
-<span id="cb10-241"><a href="#cb10-241" aria-hidden="true" tabindex="-1"></a>        landscape_fine.columns.<span class="bu">min</span>(), landscape_fine.columns.<span class="bu">max</span>(),</span>
-<span id="cb10-242"><a href="#cb10-242" aria-hidden="true" tabindex="-1"></a>        landscape_fine.index.<span class="bu">min</span>(),   landscape_fine.index.<span class="bu">max</span>(),</span>
-<span id="cb10-243"><a href="#cb10-243" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb10-244"><a href="#cb10-244" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-245"><a href="#cb10-245" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta_val, gamma_val), n <span class="kw">in</span> counts_fine.items():</span>
-<span id="cb10-246"><a href="#cb10-246" aria-hidden="true" tabindex="-1"></a>    ax.scatter(gamma_val, eta_val, marker<span class="op">=</span><span class="st">"x"</span>, s<span class="op">=</span><span class="dv">140</span>, color<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb10-247"><a href="#cb10-247" aria-hidden="true" tabindex="-1"></a>               linewidths<span class="op">=</span><span class="fl">2.5</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb10-248"><a href="#cb10-248" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">1</span>:</span>
-<span id="cb10-249"><a href="#cb10-249" aria-hidden="true" tabindex="-1"></a>        ax.text(gamma_val <span class="op">+</span> <span class="fl">0.006</span>, eta_val <span class="op">+</span> <span class="fl">0.05</span>, <span class="bu">str</span>(n),</span>
-<span id="cb10-250"><a href="#cb10-250" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, zorder<span class="op">=</span><span class="dv">6</span>)</span>
-<span id="cb10-251"><a href="#cb10-251" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">"Energy (max KS)"</span>)</span>
-<span id="cb10-252"><a href="#cb10-252" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"gamma (homophily)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-253"><a href="#cb10-253" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eta (distance penalty)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-254"><a href="#cb10-254" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Individual optima on fine grid"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
-<span id="cb10-255"><a href="#cb10-255" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb10-256"><a href="#cb10-256" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_landscape_fine.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
-<span id="cb10-257"><a href="#cb10-257" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb10-258"><a href="#cb10-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-259"><a href="#cb10-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-260"><a href="#cb10-260" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/GenerativeModels/individual_landscape_fine.png)</span>{width="80%" fig-align="center"}</span>
-<span id="cb10-261"><a href="#cb10-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-262"><a href="#cb10-262" aria-hidden="true" tabindex="-1"></a>Much better! The individual optima are now spread across distinct grid points. We can actually see the individual differences we were after!</span>
-<span id="cb10-263"><a href="#cb10-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-264"><a href="#cb10-264" aria-hidden="true" tabindex="-1"></a><span class="fu">## Build the individual dataframe</span></span>
-<span id="cb10-265"><a href="#cb10-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-266"><a href="#cb10-266" aria-hidden="true" tabindex="-1"></a>Now we collect everything into a tidy dataframe: one row per participant, with their individual η, γ, energy, and stress score:</span>
-<span id="cb10-267"><a href="#cb10-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-268"><a href="#cb10-268" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-269"><a href="#cb10-269" aria-hidden="true" tabindex="-1"></a>rows_ind <span class="op">=</span> []</span>
-<span id="cb10-270"><a href="#cb10-270" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> brain_idx, idx <span class="kw">in</span> <span class="bu">enumerate</span>(best_config_fine):</span>
-<span id="cb10-271"><a href="#cb10-271" aria-hidden="true" tabindex="-1"></a>    best_exp <span class="op">=</span> experiments_fine[<span class="bu">int</span>(idx)]</span>
-<span id="cb10-272"><a href="#cb10-272" aria-hidden="true" tabindex="-1"></a>    rows_ind.append({</span>
-<span id="cb10-273"><a href="#cb10-273" aria-hidden="true" tabindex="-1"></a>        <span class="st">"brain"</span>:       brain_idx,</span>
-<span id="cb10-274"><a href="#cb10-274" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:         best_exp[<span class="st">'eta'</span>],</span>
-<span id="cb10-275"><a href="#cb10-275" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:       best_exp[<span class="st">'gamma'</span>],</span>
-<span id="cb10-276"><a href="#cb10-276" aria-hidden="true" tabindex="-1"></a>        <span class="st">"best_energy"</span>: <span class="bu">float</span>(best_exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>)[brain_idx]),</span>
-<span id="cb10-277"><a href="#cb10-277" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stress"</span>:      <span class="bu">float</span>(stress_scores[brain_idx]),</span>
-<span id="cb10-278"><a href="#cb10-278" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb10-279"><a href="#cb10-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-280"><a href="#cb10-280" aria-hidden="true" tabindex="-1"></a>df_ind <span class="op">=</span> pd.DataFrame(rows_ind)</span>
-<span id="cb10-281"><a href="#cb10-281" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_ind)</span>
-<span id="cb10-282"><a href="#cb10-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-283"><a href="#cb10-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-284"><a href="#cb10-284" aria-hidden="true" tabindex="-1"></a><span class="fu">## Do the wiring rules relate to early life stress?</span></span>
-<span id="cb10-285"><a href="#cb10-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-286"><a href="#cb10-286" aria-hidden="true" tabindex="-1"></a>Now the big question. Just like we did in the <span class="co">[</span><span class="ot">Topology tutorial</span><span class="co">](Topology.qmd)</span>, we correlate each parameter with the stress scores using a Pearson correlation and visualise the result with a regression plot:</span>
-<span id="cb10-287"><a href="#cb10-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-288"><a href="#cb10-288" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
-<span id="cb10-289"><a href="#cb10-289" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb10-290"><a href="#cb10-290" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb10-291"><a href="#cb10-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-292"><a href="#cb10-292" aria-hidden="true" tabindex="-1"></a>r_eta,   p_eta   <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"eta"</span>])</span>
-<span id="cb10-293"><a href="#cb10-293" aria-hidden="true" tabindex="-1"></a>r_gamma, p_gamma <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"gamma"</span>])</span>
-<span id="cb10-294"><a href="#cb10-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-295"><a href="#cb10-295" aria-hidden="true" tabindex="-1"></a>COLORS <span class="op">=</span> [<span class="st">"#C0392B"</span>, <span class="st">"#2980B9"</span>]</span>
-<span id="cb10-296"><a href="#cb10-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-297"><a href="#cb10-297" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
-<span id="cb10-298"><a href="#cb10-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-299"><a href="#cb10-299" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, param, r_val, p_val, ylabel, color <span class="kw">in</span> <span class="bu">zip</span>(</span>
-<span id="cb10-300"><a href="#cb10-300" aria-hidden="true" tabindex="-1"></a>    axes,</span>
-<span id="cb10-301"><a href="#cb10-301" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"eta"</span>,                 <span class="st">"gamma"</span>],</span>
-<span id="cb10-302"><a href="#cb10-302" aria-hidden="true" tabindex="-1"></a>    [r_eta,                 r_gamma],</span>
-<span id="cb10-303"><a href="#cb10-303" aria-hidden="true" tabindex="-1"></a>    [p_eta,                 p_gamma],</span>
-<span id="cb10-304"><a href="#cb10-304" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"η (distance penalty)"</span>, <span class="st">"γ (homophily)"</span>],</span>
-<span id="cb10-305"><a href="#cb10-305" aria-hidden="true" tabindex="-1"></a>    COLORS,</span>
-<span id="cb10-306"><a href="#cb10-306" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb10-307"><a href="#cb10-307" aria-hidden="true" tabindex="-1"></a>    sns.regplot(</span>
-<span id="cb10-308"><a href="#cb10-308" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span>df_ind[<span class="st">"stress"</span>], y<span class="op">=</span>df_ind[param],</span>
-<span id="cb10-309"><a href="#cb10-309" aria-hidden="true" tabindex="-1"></a>        ax<span class="op">=</span>ax,</span>
-<span id="cb10-310"><a href="#cb10-310" aria-hidden="true" tabindex="-1"></a>        scatter_kws<span class="op">=</span>{<span class="st">"color"</span>: color, <span class="st">"edgecolors"</span>: <span class="st">"white"</span>,</span>
-<span id="cb10-311"><a href="#cb10-311" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"linewidths"</span>: <span class="fl">0.6</span>, <span class="st">"s"</span>: <span class="dv">60</span>, <span class="st">"zorder"</span>: <span class="dv">3</span>},</span>
-<span id="cb10-312"><a href="#cb10-312" aria-hidden="true" tabindex="-1"></a>        line_kws<span class="op">=</span>{<span class="st">"color"</span>: color, <span class="st">"linewidth"</span>: <span class="dv">2</span>},</span>
-<span id="cb10-313"><a href="#cb10-313" aria-hidden="true" tabindex="-1"></a>        ci<span class="op">=</span><span class="dv">95</span>,</span>
-<span id="cb10-314"><a href="#cb10-314" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>color,</span>
-<span id="cb10-315"><a href="#cb10-315" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-316"><a href="#cb10-316" aria-hidden="true" tabindex="-1"></a>    p_str <span class="op">=</span> <span class="ss">f"p = </span><span class="sc">{</span>p_val<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">if</span> p_val <span class="op">&gt;=</span> <span class="fl">0.001</span> <span class="cf">else</span> <span class="st">"p &lt; 0.001"</span></span>
-<span id="cb10-317"><a href="#cb10-317" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"r = </span><span class="sc">{</span>r_val<span class="sc">:+.2f}</span><span class="ss">,  </span><span class="sc">{</span>p_str<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-318"><a href="#cb10-318" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Early life stress score"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-319"><a href="#cb10-319" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb10-320"><a href="#cb10-320" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
-<span id="cb10-321"><a href="#cb10-321" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-322"><a href="#cb10-322" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"GNM Parameters vs. Early Life Stress"</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb10-323"><a href="#cb10-323" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb10-324"><a href="#cb10-324" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_correlations.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
-<span id="cb10-325"><a href="#cb10-325" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb10-326"><a href="#cb10-326" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-327"><a href="#cb10-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-328"><a href="#cb10-328" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/GenerativeModels/individual_correlations.png)</span>{width="90%" fig-align="center"}</span>
-<span id="cb10-329"><a href="#cb10-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-330"><a href="#cb10-330" aria-hidden="true" tabindex="-1"></a><span class="fu">## What do the results mean?</span></span>
-<span id="cb10-331"><a href="#cb10-331" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-332"><a href="#cb10-332" aria-hidden="true" tabindex="-1"></a>The two panels tell us whether early life stress is linked to individual differences in wiring rules:</span>
-<span id="cb10-333"><a href="#cb10-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-334"><a href="#cb10-334" aria-hidden="true" tabindex="-1"></a>**A correlation with η** would mean that people with more early life stress have a different *spatial* wiring strategy. A less negative η means the brain is more willing to form long-range connections, which is consistent with the Adaptive Stochasticity Hypothesis: adversity might loosen the distance constraint, allowing for a more diffuse, stochastic developmental process.</span>
-<span id="cb10-335"><a href="#cb10-335" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-336"><a href="#cb10-336" aria-hidden="true" tabindex="-1"></a>**A correlation with γ** would mean that stress is linked to differences in *homophily*. Weaker homophily produces a more integrated, less clustered network — again consistent with a more stochastic developmental programme that does not lock in tight local communities.</span>
-<span id="cb10-337"><a href="#cb10-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-338"><a href="#cb10-338" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
-<span id="cb10-339"><a href="#cb10-339" aria-hidden="true" tabindex="-1"></a><span class="fu">## What if the correlations are not significant?</span></span>
-<span id="cb10-340"><a href="#cb10-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-341"><a href="#cb10-341" aria-hidden="true" tabindex="-1"></a>That is a completely valid outcome! Remember: we have only 20 brains, which gives very limited statistical power. Real studies in this area typically use hundreds of participants. With 20 people, you would need an unusually strong effect to reach significance.</span>
-<span id="cb10-342"><a href="#cb10-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-343"><a href="#cb10-343" aria-hidden="true" tabindex="-1"></a>What matters here is understanding the logic: we have moved from describing the brain with a handful of topology metrics to describing it with two interpretable wiring parameters. And whether the result is significant or not, we are asking a much richer and more mechanistic question than we could with topology alone.</span>
-<span id="cb10-344"><a href="#cb10-344" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-345"><a href="#cb10-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-346"><a href="#cb10-346" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb10-347"><a href="#cb10-347" aria-hidden="true" tabindex="-1"></a><span class="fu">## From two numbers to a whole story</span></span>
-<span id="cb10-348"><a href="#cb10-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-349"><a href="#cb10-349" aria-hidden="true" tabindex="-1"></a>It's worth stepping back and appreciating what we've done across these tutorials. We started with raw connectivity matrices and ended up with two numbers per person that capture how their brain wires itself. Those numbers are not arbitrary: they describe real developmental processes, they have a biological interpretation, and they can be compared across individuals and related to life experiences.</span>
-<span id="cb10-350"><a href="#cb10-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-351"><a href="#cb10-351" aria-hidden="true" tabindex="-1"></a>That's the power of Generative Network Models!</span>
-<span id="cb10-352"><a href="#cb10-352" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Individual Differences"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="an">author-meta:</span><span class="co"> "Francesco Poli"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "28/03/2026"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="an">description-meta:</span><span class="co"> "Moving from group-level to individual-level GNM parameter estimation: plotting individual optima on the energy landscape, running a fine-grained sweep, and testing whether individual wiring rules relate to early life stress."</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Python</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Generative Models</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - GNM</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Individual Differences</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>In the last tutorial we found the combination of η and γ that best describes the *average* brain across all 20 participants. But that's just the beginning of the story!</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>Think about it: we've been summarising 20 different brains with a single pair of numbers. In reality, each brain follows its own wiring rules. Some people might have a stronger distance penalty, meaning their brains are built more locally. Others might show stronger homophily, meaning their brains have tighter clusters. And if those individual differences in wiring rules are meaningful, they might relate to something biologically important.</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>If you remember from the <span class="co">[</span><span class="ot">Research Question</span><span class="co">](ResearchQuestion.qmd)</span> tutorial, the central prediction of the **Adaptive Stochasticity Hypothesis** is that brains shaped by adversity develop in a more stochastic, less constrained way. So our research question is: **do people who experienced more early life stress end up having brains wired differently?**</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>Now we can finally tackle it head on!</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Our 20 brains</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>Let's start by reminding ourselves of what we are working with. Here are the 20 brain networks we have been working with throughout these tutorials:</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/BrainNetworks/all_20_brains_4x5.png)</span>{width="85%" fig-align="center"}</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>Each panel shows a different individual's connectivity matrix. They all look similar at a glance, but the differences between them are exactly what we want to capture. The key question is: are those differences related to early life stress?</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## From group to individual</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>In the last tutorial, we averaged energy across all 20 brains to find the single best-fitting (η, γ). Now we want to be more specific: for *each brain separately*, we pick the parameter configuration that gave that brain the lowest energy.</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>We don't need to run a new sweep for this! All the info is already in the experiments from last time. Let's load them:</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    group_experiments <span class="op">=</span> pickle.load(f)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>For each brain, we find the combination of parameters that leads to the lowest (the best) energy by averaging over simulations (there is some extra code to rebuild the group-level landscape so we can use it for background colors in the plot):</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-brain coarse optima</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>per_brain_energy  <span class="op">=</span> torch.stack(</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>    [exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>) <span class="cf">for</span> exp <span class="kw">in</span> group_experiments]</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># [n_configs, n_brains]</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>best_config_per_brain <span class="op">=</span> per_brain_energy.argmin(dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>ind_eta_c   <span class="op">=</span> [group_experiments[<span class="bu">int</span>(idx)][<span class="st">'eta'</span>]   <span class="cf">for</span> idx <span class="kw">in</span> best_config_per_brain]</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>ind_gamma_c <span class="op">=</span> [group_experiments[<span class="bu">int</span>(idx)][<span class="st">'gamma'</span>] <span class="cf">for</span> idx <span class="kw">in</span> best_config_per_brain]</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Rebuild landscape and group optimum for plotting</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>mean_energies_group <span class="op">=</span> [<span class="bu">float</span>(exp[<span class="st">'energy_tensor'</span>].mean()) <span class="cf">for</span> exp <span class="kw">in</span> group_experiments]</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>rows_group <span class="op">=</span> [{<span class="st">"eta"</span>: exp[<span class="st">'eta'</span>], <span class="st">"gamma"</span>: exp[<span class="st">'gamma'</span>], <span class="st">"energy"</span>: e}</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> exp, e <span class="kw">in</span> <span class="bu">zip</span>(group_experiments, mean_energies_group)]</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>landscape   <span class="op">=</span> pd.DataFrame(rows_group).pivot(index<span class="op">=</span><span class="st">"eta"</span>, columns<span class="op">=</span><span class="st">"gamma"</span>, values<span class="op">=</span><span class="st">"energy"</span>)</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>best_idx    <span class="op">=</span> <span class="bu">int</span>(np.argmin(mean_energies_group))</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>group_eta   <span class="op">=</span> group_experiments[best_idx][<span class="st">'eta'</span>]</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>group_gamma <span class="op">=</span> group_experiments[best_idx][<span class="st">'gamma'</span>]</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> Counter(<span class="bu">zip</span>(ind_eta_c, ind_gamma_c))</span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>    landscape.values,</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="st">"lower"</span>, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"viridis_r"</span>,</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>[</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>        landscape.columns.<span class="bu">min</span>(), landscape.columns.<span class="bu">max</span>(),</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>        landscape.index.<span class="bu">min</span>(),   landscape.index.<span class="bu">max</span>(),</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta_val, gamma_val), n <span class="kw">in</span> counts.items():</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>    ax.scatter(gamma_val, eta_val, marker<span class="op">=</span><span class="st">"x"</span>, s<span class="op">=</span><span class="dv">140</span>, color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>               linewidths<span class="op">=</span><span class="fl">2.5</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>        ax.text(gamma_val <span class="op">+</span> <span class="fl">0.02</span>, eta_val <span class="op">+</span> <span class="fl">0.1</span>, <span class="bu">str</span>(n),</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, zorder<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>ax.scatter(group_gamma, group_eta, s<span class="op">=</span><span class="dv">150</span>, color<span class="op">=</span><span class="st">"red"</span>, zorder<span class="op">=</span><span class="dv">7</span>, label<span class="op">=</span><span class="st">"Group optimum"</span>)</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">"Energy (max KS)"</span>)</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"gamma (homophily)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eta (distance penalty)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Individual optima on coarse grid"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_landscape_coarse.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/GenerativeModels/individual_landscape_coarse.png)</span>{width="80%" fig-align="center"}</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>Do you see the problem? The red numbers next to the Xs show how many participants are stacked at the exact same point! With a coarse 10×10 grid, many individuals end up sharing the same (η, γ) even though their true optima may be slightly different. **We are losing precision.**</span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a><span class="fu">## A finer sweep</span></span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>To fix this, we run a second, more targeted sweep. Looking at the coarse landscape, the interesting action is clearly happening in a narrower region: roughly η between −3 and −0.5, and γ between 0 and 0.5. So that's exactly where we sweep:</span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## Choose the sweep range carefully!</span></span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>There is no automatic rule for picking the fine-sweep range. We chose η ∈ <span class="sc">\[</span>−3, −0.5<span class="sc">\]</span> and γ ∈ <span class="sc">\[</span>0, 0.5<span class="sc">\]</span> by eye, based on where the coarse landscape placed most individual optima. For your own dataset, you will need to do the same inspection.</span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>One thing that is **critical**: after extracting the per-brain optima, make sure no participant ends up with their best point right on the *border* of the parameter space. If someone's best (η, γ) is at the minimum or maximum value you tested, their true optimum might be *beyond* that boundary and you are artificially clamping them. When this happens, widen the range in that direction and re-run.</span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>For this we need to load the brain networks, distance matrix (and, since we'll need them later, the stress scores too):</span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a>brains <span class="op">=</span> np.load(<span class="st">"brain_networks_20_preprocessed.npy"</span>)</span>
+<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a>num_brains, num_nodes, _ <span class="op">=</span> brains.shape</span>
+<span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a>binary_brains <span class="op">=</span> (brains <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a>binary_brains_tensor <span class="op">=</span> torch.tensor(binary_brains, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a>dist_np <span class="op">=</span> np.load(<span class="st">"distance_matrix.npy"</span>)</span>
+<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a>distance_matrix <span class="op">=</span> torch.tensor(dist_np, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a>stress_scores <span class="op">=</span> np.load(<span class="st">"stress_scores.npy"</span>)</span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a>num_connections <span class="op">=</span> <span class="bu">int</span>(binary_brains_tensor[<span class="dv">0</span>].<span class="bu">sum</span>().item() <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gnm <span class="im">import</span> fitting, generative_rules, evaluation</span>
+<span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a>criteria <span class="op">=</span> [</span>
+<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a>    evaluation.DegreeKS(),</span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a>    evaluation.BetweennessKS(),</span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a>    evaluation.ClusteringKS(),</span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a>    evaluation.EdgeLengthKS(distance_matrix),</span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a>energy <span class="op">=</span> evaluation.MaxCriteria(criteria)</span>
+<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a>n_eta   <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a>n_gamma <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a>n_sims  <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a>eta_values   <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="fl">3.0</span>, <span class="op">-</span><span class="fl">0.5</span>, n_eta)</span>
+<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a>gamma_values <span class="op">=</span> torch.linspace( <span class="fl">0.0</span>,  <span class="fl">0.5</span>, n_gamma)</span>
+<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>binary_sweep_parameters <span class="op">=</span> fitting.BinarySweepParameters(</span>
+<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>    eta    <span class="op">=</span> eta_values,</span>
+<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a>    gamma  <span class="op">=</span> gamma_values,</span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>    distance_relationship_type         <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
+<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a>    preferential_relationship_type     <span class="op">=</span> [<span class="st">"powerlaw"</span>],</span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>    generative_rule  <span class="op">=</span> [generative_rules.MatchingIndex()],</span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>    num_iterations   <span class="op">=</span> [num_connections],</span>
+<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a>sweep_config <span class="op">=</span> fitting.SweepConfig(</span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a>    binary_sweep_parameters <span class="op">=</span> binary_sweep_parameters,</span>
+<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a>    num_simulations         <span class="op">=</span> n_sims,</span>
+<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a>    distance_matrix         <span class="op">=</span> [distance_matrix],</span>
+<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-163"><a href="#cb11-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a>We increased <span class="in">`n_eta`</span> and <span class="in">`n_gamma`</span> to 30 each (instead of 10), and we also increased <span class="in">`n_sims`</span> to 30. More simulations mean more stable estimates for each individual, which is important when we're trying to detect subtle differences between people.</span>
+<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a>raw_fine <span class="op">=</span> fitting.perform_sweep(</span>
+<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a>    sweep_config         <span class="op">=</span> sweep_config,</span>
+<span id="cb11-173"><a href="#cb11-173" aria-hidden="true" tabindex="-1"></a>    binary_evaluations   <span class="op">=</span> [energy],</span>
+<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a>    real_binary_matrices <span class="op">=</span> binary_brains_tensor,</span>
+<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a>    save_model           <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a>    save_run_history     <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a>elapsed <span class="op">=</span> time.perf_counter() <span class="op">-</span> start</span>
+<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sweep complete in </span><span class="sc">{</span>elapsed<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
+<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to plain dicts (same format as the group experiments)</span></span>
+<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a>energy_key <span class="op">=</span> <span class="bu">str</span>(energy)</span>
+<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a>experiments_fine <span class="op">=</span> [</span>
+<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:           <span class="bu">float</span>(exp.run_config.binary_parameters.eta),</span>
+<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:         <span class="bu">float</span>(exp.run_config.binary_parameters.gamma),</span>
+<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a>        <span class="st">"energy_tensor"</span>: exp.evaluation_results.binary_evaluations[energy_key],</span>
+<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp <span class="kw">in</span> raw_fine</span>
+<span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb11-192"><a href="#cb11-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-194"><a href="#cb11-194" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb11-195"><a href="#cb11-195" aria-hidden="true" tabindex="-1"></a><span class="fu">## How long will this take?</span></span>
+<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-197"><a href="#cb11-197" aria-hidden="true" tabindex="-1"></a>30 × 30 = 900 parameter combinations × 30 simulations = 27 000 model runs. On a normal laptop, you may want to run it before leaving work and come back for the results the morning after!</span>
+<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a>So for now, download the pre-computed results below!</span>
+<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"../resources/GenerativeModels/individual_experiments.pkl"</span><span class="ot"> download class</span><span class="op">=</span><span class="st">"btn btn-primary btn-sm"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"margin-top:6px;"</span><span class="dt">&gt;</span>⬇ Download individual_experiments.pkl<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
+<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-206"><a href="#cb11-206" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"individual_experiments.pkl"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a>    experiments_fine <span class="op">=</span> pickle.load(f)</span>
+<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a><span class="fu">## Checking the fine-grid optima</span></span>
+<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a>Let's extract the individual optima from the fine sweep and verify that participants are now spread across distinct grid points:</span>
+<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a><span class="co"># Per-brain fine optima: same logic as before</span></span>
+<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a>per_brain_fine   <span class="op">=</span> torch.stack(</span>
+<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a>    [exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>) <span class="cf">for</span> exp <span class="kw">in</span> experiments_fine]</span>
+<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># [n_configs, n_brains]</span></span>
+<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a>best_config_fine <span class="op">=</span> per_brain_fine.argmin(dim<span class="op">=</span><span class="dv">0</span>)  <span class="co"># [n_brains]</span></span>
+<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a>ind_eta_f   <span class="op">=</span> [experiments_fine[<span class="bu">int</span>(idx)][<span class="st">'eta'</span>]   <span class="cf">for</span> idx <span class="kw">in</span> best_config_fine]</span>
+<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a>ind_gamma_f <span class="op">=</span> [experiments_fine[<span class="bu">int</span>(idx)][<span class="st">'gamma'</span>] <span class="cf">for</span> idx <span class="kw">in</span> best_config_fine]</span>
+<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a>counts_fine <span class="op">=</span> Counter(<span class="bu">zip</span>(ind_eta_f, ind_gamma_f))</span>
+<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Unique fine optima: </span><span class="sc">{</span><span class="bu">len</span>(counts_fine)<span class="sc">}</span><span class="ss"> out of </span><span class="sc">{</span>num_brains<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-229"><a href="#cb11-229" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-230"><a href="#cb11-230" aria-hidden="true" tabindex="-1"></a>mean_energies_fine <span class="op">=</span> [<span class="bu">float</span>(exp[<span class="st">'energy_tensor'</span>].mean()) <span class="cf">for</span> exp <span class="kw">in</span> experiments_fine]</span>
+<span id="cb11-231"><a href="#cb11-231" aria-hidden="true" tabindex="-1"></a>rows_fine   <span class="op">=</span> [</span>
+<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"eta"</span>: exp[<span class="st">'eta'</span>], <span class="st">"gamma"</span>: exp[<span class="st">'gamma'</span>], <span class="st">"energy"</span>: e}</span>
+<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> exp, e <span class="kw">in</span> <span class="bu">zip</span>(experiments_fine, mean_energies_fine)</span>
+<span id="cb11-234"><a href="#cb11-234" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a>df_fine        <span class="op">=</span> pd.DataFrame(rows_fine)</span>
+<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a>landscape_fine <span class="op">=</span> df_fine.pivot(index<span class="op">=</span><span class="st">"eta"</span>, columns<span class="op">=</span><span class="st">"gamma"</span>, values<span class="op">=</span><span class="st">"energy"</span>)</span>
+<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
+<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(</span>
+<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a>    landscape_fine.values,</span>
+<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a>    origin<span class="op">=</span><span class="st">"lower"</span>, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"viridis_r"</span>,</span>
+<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a>    extent<span class="op">=</span>[</span>
+<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a>        landscape_fine.columns.<span class="bu">min</span>(), landscape_fine.columns.<span class="bu">max</span>(),</span>
+<span id="cb11-244"><a href="#cb11-244" aria-hidden="true" tabindex="-1"></a>        landscape_fine.index.<span class="bu">min</span>(),   landscape_fine.index.<span class="bu">max</span>(),</span>
+<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (eta_val, gamma_val), n <span class="kw">in</span> counts_fine.items():</span>
+<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a>    ax.scatter(gamma_val, eta_val, marker<span class="op">=</span><span class="st">"x"</span>, s<span class="op">=</span><span class="dv">140</span>, color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb11-249"><a href="#cb11-249" aria-hidden="true" tabindex="-1"></a>               linewidths<span class="op">=</span><span class="fl">2.5</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb11-250"><a href="#cb11-250" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb11-251"><a href="#cb11-251" aria-hidden="true" tabindex="-1"></a>        ax.text(gamma_val <span class="op">+</span> <span class="fl">0.006</span>, eta_val <span class="op">+</span> <span class="fl">0.05</span>, <span class="bu">str</span>(n),</span>
+<span id="cb11-252"><a href="#cb11-252" aria-hidden="true" tabindex="-1"></a>                color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, zorder<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb11-253"><a href="#cb11-253" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">"Energy (max KS)"</span>)</span>
+<span id="cb11-254"><a href="#cb11-254" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"gamma (homophily)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-255"><a href="#cb11-255" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eta (distance penalty)"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Individual optima on fine grid"</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-258"><a href="#cb11-258" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_landscape_fine.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-261"><a href="#cb11-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/GenerativeModels/individual_landscape_fine.png)</span>{width="80%" fig-align="center"}</span>
+<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>Much better! The individual optima are now spread across distinct grid points. We can actually see the individual differences we were after! You can notice that there are still a couple of individuals with the same values, but that's ok! After all, some people might actually have similar brains!</span>
+<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a><span class="fu">## Build the individual dataframe</span></span>
+<span id="cb11-267"><a href="#cb11-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-268"><a href="#cb11-268" aria-hidden="true" tabindex="-1"></a>Now we collect everything into a tidy dataframe: one row per participant, with their individual η, γ, energy, and stress score:</span>
+<span id="cb11-269"><a href="#cb11-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-270"><a href="#cb11-270" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-271"><a href="#cb11-271" aria-hidden="true" tabindex="-1"></a>rows_ind <span class="op">=</span> []</span>
+<span id="cb11-272"><a href="#cb11-272" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> brain_idx, idx <span class="kw">in</span> <span class="bu">enumerate</span>(best_config_fine):</span>
+<span id="cb11-273"><a href="#cb11-273" aria-hidden="true" tabindex="-1"></a>    best_exp <span class="op">=</span> experiments_fine[<span class="bu">int</span>(idx)]</span>
+<span id="cb11-274"><a href="#cb11-274" aria-hidden="true" tabindex="-1"></a>    rows_ind.append({</span>
+<span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a>        <span class="st">"brain"</span>:       brain_idx,</span>
+<span id="cb11-276"><a href="#cb11-276" aria-hidden="true" tabindex="-1"></a>        <span class="st">"eta"</span>:         best_exp[<span class="st">'eta'</span>],</span>
+<span id="cb11-277"><a href="#cb11-277" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gamma"</span>:       best_exp[<span class="st">'gamma'</span>],</span>
+<span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a>        <span class="st">"best_energy"</span>: <span class="bu">float</span>(best_exp[<span class="st">'energy_tensor'</span>].mean(dim<span class="op">=</span><span class="dv">0</span>)[brain_idx]),</span>
+<span id="cb11-279"><a href="#cb11-279" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stress"</span>:      <span class="bu">float</span>(stress_scores[brain_idx]),</span>
+<span id="cb11-280"><a href="#cb11-280" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb11-281"><a href="#cb11-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-282"><a href="#cb11-282" aria-hidden="true" tabindex="-1"></a>df_ind <span class="op">=</span> pd.DataFrame(rows_ind)</span>
+<span id="cb11-283"><a href="#cb11-283" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_ind)</span>
+<span id="cb11-284"><a href="#cb11-284" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-285"><a href="#cb11-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-286"><a href="#cb11-286" aria-hidden="true" tabindex="-1"></a><span class="fu">## Do the wiring rules relate to early life stress?</span></span>
+<span id="cb11-287"><a href="#cb11-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-288"><a href="#cb11-288" aria-hidden="true" tabindex="-1"></a>Now the big question. Just like we did in the <span class="co">[</span><span class="ot">Topology tutorial</span><span class="co">](Topology.qmd)</span>, we correlate each parameter with the stress scores using a Pearson correlation and visualise the result with a regression plot:</span>
+<span id="cb11-289"><a href="#cb11-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-290"><a href="#cb11-290" aria-hidden="true" tabindex="-1"></a><span class="in">``` python</span></span>
+<span id="cb11-291"><a href="#cb11-291" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb11-292"><a href="#cb11-292" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb11-293"><a href="#cb11-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-294"><a href="#cb11-294" aria-hidden="true" tabindex="-1"></a>r_eta,   p_eta   <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"eta"</span>])</span>
+<span id="cb11-295"><a href="#cb11-295" aria-hidden="true" tabindex="-1"></a>r_gamma, p_gamma <span class="op">=</span> stats.pearsonr(df_ind[<span class="st">"stress"</span>], df_ind[<span class="st">"gamma"</span>])</span>
+<span id="cb11-296"><a href="#cb11-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-297"><a href="#cb11-297" aria-hidden="true" tabindex="-1"></a>COLORS <span class="op">=</span> [<span class="st">"#C0392B"</span>, <span class="st">"#2980B9"</span>]</span>
+<span id="cb11-298"><a href="#cb11-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-299"><a href="#cb11-299" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
+<span id="cb11-300"><a href="#cb11-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-301"><a href="#cb11-301" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, param, r_val, p_val, ylabel, color <span class="kw">in</span> <span class="bu">zip</span>(</span>
+<span id="cb11-302"><a href="#cb11-302" aria-hidden="true" tabindex="-1"></a>    axes,</span>
+<span id="cb11-303"><a href="#cb11-303" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"eta"</span>,                 <span class="st">"gamma"</span>],</span>
+<span id="cb11-304"><a href="#cb11-304" aria-hidden="true" tabindex="-1"></a>    [r_eta,                 r_gamma],</span>
+<span id="cb11-305"><a href="#cb11-305" aria-hidden="true" tabindex="-1"></a>    [p_eta,                 p_gamma],</span>
+<span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"η (distance penalty)"</span>, <span class="st">"γ (homophily)"</span>],</span>
+<span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a>    COLORS,</span>
+<span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a>    sns.regplot(</span>
+<span id="cb11-310"><a href="#cb11-310" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span>df_ind[<span class="st">"stress"</span>], y<span class="op">=</span>df_ind[param],</span>
+<span id="cb11-311"><a href="#cb11-311" aria-hidden="true" tabindex="-1"></a>        ax<span class="op">=</span>ax,</span>
+<span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a>        scatter_kws<span class="op">=</span>{<span class="st">"color"</span>: color, <span class="st">"edgecolors"</span>: <span class="st">"white"</span>,</span>
+<span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"linewidths"</span>: <span class="fl">0.6</span>, <span class="st">"s"</span>: <span class="dv">60</span>, <span class="st">"zorder"</span>: <span class="dv">3</span>},</span>
+<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a>        line_kws<span class="op">=</span>{<span class="st">"color"</span>: color, <span class="st">"linewidth"</span>: <span class="dv">2</span>},</span>
+<span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a>        ci<span class="op">=</span><span class="dv">95</span>,</span>
+<span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>color,</span>
+<span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-318"><a href="#cb11-318" aria-hidden="true" tabindex="-1"></a>    p_str <span class="op">=</span> <span class="ss">f"p = </span><span class="sc">{</span>p_val<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">if</span> p_val <span class="op">&gt;=</span> <span class="fl">0.001</span> <span class="cf">else</span> <span class="st">"p &lt; 0.001"</span></span>
+<span id="cb11-319"><a href="#cb11-319" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"r = </span><span class="sc">{</span>r_val<span class="sc">:+.2f}</span><span class="ss">,  </span><span class="sc">{</span>p_str<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-320"><a href="#cb11-320" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Early life stress score"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-321"><a href="#cb11-321" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(ylabel, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb11-323"><a href="#cb11-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-324"><a href="#cb11-324" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"GNM Parameters vs. Early Life Stress"</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb11-325"><a href="#cb11-325" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-326"><a href="#cb11-326" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"../images/GenerativeModels/individual_correlations.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb11-327"><a href="#cb11-327" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-329"><a href="#cb11-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-330"><a href="#cb11-330" aria-hidden="true" tabindex="-1"></a><span class="al">![](../images/GenerativeModels/individual_correlations.png)</span>{width="90%" fig-align="center"}</span>
+<span id="cb11-331"><a href="#cb11-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-332"><a href="#cb11-332" aria-hidden="true" tabindex="-1"></a>Both the correlations are significant!!! Early life stress is linked to individual differences in wiring rules!!</span>
+<span id="cb11-333"><a href="#cb11-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-334"><a href="#cb11-334" aria-hidden="true" tabindex="-1"></a>**A correlation with η** means that people with more early life stress have a different *spatial* wiring strategy. A less negative η means the brain is more willing to form long-range connections, which is consistent with the Adaptive Stochasticity Hypothesis: adversity might loosen the distance constraint, allowing for a more diffuse, stochastic developmental process.</span>
+<span id="cb11-335"><a href="#cb11-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-336"><a href="#cb11-336" aria-hidden="true" tabindex="-1"></a>**A correlation with γ** means that stress is linked to differences in *homophily*. Weaker homophily produces a more integrated, less clustered network and this is again consistent with a more stochastic developmental programme that does not lock in tight local communities.</span>
+<span id="cb11-337"><a href="#cb11-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-338"><a href="#cb11-338" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
+<span id="cb11-339"><a href="#cb11-339" aria-hidden="true" tabindex="-1"></a><span class="fu">## GNMs are playing a different game</span></span>
+<span id="cb11-340"><a href="#cb11-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-341"><a href="#cb11-341" aria-hidden="true" tabindex="-1"></a>This is just an example! What matters here is understanding the logic: we have moved from describing the brain with a handful of topology metrics to capturing its wiring principles with two interpretable parameters. We are asking a much richer and more mechanistic question than we could with topology alone.</span>
+<span id="cb11-342"><a href="#cb11-342" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-343"><a href="#cb11-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-344"><a href="#cb11-344" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
+<span id="cb11-345"><a href="#cb11-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-346"><a href="#cb11-346" aria-hidden="true" tabindex="-1"></a>It's worth stepping back and appreciating what we've done across these tutorials. We started with raw connectivity matrices and ended up with two numbers per person that capture how their brain wires itself. Those numbers can be compared across individuals and related to life experiences.</span>
+<span id="cb11-347"><a href="#cb11-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-348"><a href="#cb11-348" aria-hidden="true" tabindex="-1"></a>That's the power of Generative Network Models!</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
