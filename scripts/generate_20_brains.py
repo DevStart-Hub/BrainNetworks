@@ -134,51 +134,15 @@ for i in range(num_brains):
     print(f"  -> {int((adj > 0).sum()/2)} edges, weight range: {weighted_adj[weighted_adj > 0].min():.0f}-{weighted_adj[weighted_adj > 0].max():.0f} streamlines")
 
 # ============================================================
-# 4. Generate stress scores
-# ============================================================
-# Higher index = weaker constraints = more stochastic = higher stress
-# We create a simple linear mapping with some noise
-np.random.seed(1)
-base_stress = np.linspace(4, 16, num_brains)  # Smooth gradient from low to high
-noise = np.random.normal(0, 6, num_brains)   # Add some noise
-stress_scores = np.clip(base_stress + noise, 0, 20)  # Clip to 0-20 range
-stress_scores = np.round(stress_scores, 1)
-
-print(f"\nStress scores: {stress_scores}")
-
-# ============================================================
-# 5. Save everything
+# 4. Save brain networks and generation parameters
+# Stress scores are generated and saved in correlations.py
 # ============================================================
 np.save('./resources/BrainNetworks/DATA/brain_networks_20.npy', all_brains)
-np.save('./resources/BrainNetworks/DATA/stress_scores.npy', stress_scores)
 
-# Also save the parameter values for reference
 params = np.column_stack([eta_values, gamma_values])
 np.save('./resources/BrainNetworks/DATA/generation_params.npy', params)
 
 print(f"\nSaved:")
 print(f"  brain_networks_20.npy  shape={all_brains.shape}")
-print(f"  stress_scores.npy      shape={stress_scores.shape}")
 print(f"  generation_params.npy  shape={params.shape}")
 print("Done!")
-
-# ============================================================
-# 6. Plot all 20 brains as small matrix subplots
-# ============================================================
-import matplotlib.pyplot as plt
-
-fig, axes = plt.subplots(4, 5, figsize=(10, 8))
-for i, ax in enumerate(axes.flat):
-    ax.imshow(all_brains[i], cmap='Reds', interpolation='nearest', aspect='equal')
-    ax.set_xticks([])
-    ax.set_yticks([])
-    ax.set_title(f'{i+1}', fontsize=8, pad=2)
-
-#fig.text(0.5, 0.01, 'Brain Region', ha='center', fontsize=12)
-#fig.text(0.02, 0.5, 'Brain Region', va='center', rotation='vertical', fontsize=12)
-fig.suptitle('20 Brain Networks', fontsize=14, fontweight='bold', y=1.01)
-
-plt.tight_layout()
-plt.savefig('./images/BrainNetworks/all_20_brains_4x5.png', dpi=200, bbox_inches='tight')
-print("Saved 4x5 grid to images/BrainNetworks/all_20_brains_4x5.png")
-plt.show()

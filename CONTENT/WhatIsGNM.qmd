@@ -11,9 +11,7 @@ categories:
   - Graph Theory
 ---
 
-Remember where we left off? After five full tutorials, we finally correlated our topology metrics with early life stress and the results were... underwhelming. One significant correlation, a few weak trends, and a lot of noise.
-
-That's not necessarily a failure. It actually tells us something important: **a handful of summary statistics may not be enough to capture the full richness of how brains are organised**.
+Remember where we left off? After five full tutorials, we finally correlated our topology metrics with early life stress! Our results were pretty interesting, but they were **descriptive**: we were pointing out differences in brain topology but we couldn't really say much about how those differences came to be.
 
 So what else can we do?
 

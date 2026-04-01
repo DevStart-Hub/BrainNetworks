@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(conda run:*)",
+      "Bash(~/miniconda3/condabin/conda run:*)",
+      "Read(//c/Users/fp02//**)",
+      "Read(//c/ProgramData/miniconda3/**)",
+      "Read(//c/Users/fp02/**)",
+      "Bash(/c/Users/fp02/AppData/Local/anaconda3/envs/gnm_box/python.exe scripts/individual_sweep.py)",
+      "Bash(/c/Users/fp02/AppData/Local/anaconda3/envs/gnm_box/python.exe scripts/sweep.py)"
+    ]
+  }
+}

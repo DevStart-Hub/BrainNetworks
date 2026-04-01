@@ -80,6 +80,7 @@ website:
           - CONTENT/WhatIsGNM.qmd
           - CONTENT/ModelSpecification.qmd
           - CONTENT/ModelFitting.qmd
+          - CONTENT/IndividualDifferences.qmd
 
   ## Footer
   page-footer:

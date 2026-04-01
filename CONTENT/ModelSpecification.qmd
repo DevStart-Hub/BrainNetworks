@@ -18,7 +18,7 @@ We have seen that by changing the values of η (eta) and γ (gamma), we can prod
 To to this, we will use our fantastic GNM toolbox!!!! If you remember, we have set it up already in the Installation tutorial, so we can now just simply use it as any other python package.
 
 ::: callout-note
-## When we started working on GNMs, it was super complicated to run these models. Most of the code was in MATLAB (which is not open-source, and so we hate it!!!) and it was also super slow. So we made a brand new python package, the GNM toolbox!!!! This way, you don't have to painfully go through complicated MATLAB scripts ever in your life!
+When we started working on GNMs, it was super complicated to run these models. Most of the code was in MATLAB (which is not open-source, and so we hate it!!!) and it was also super slow. So we made a brand new python package, the GNM toolbox!!!! This way, you don't have to painfully go through complicated MATLAB scripts ever in your life!
 :::
 
 Before getting into all that, let's import our data.
@@ -114,10 +114,10 @@ sweep_config = fitting.SweepConfig(
 )
 ```
 
-Perfect, everything has been specified!!! Have you ever heard of parameter landscape? It sounds very fancy. It means all the potential combination of different parameters you want in your models. And you've just created one! Congrats for creating your first GNM landscape!
+Perfect, everything has been specified!!! Have you ever heard of parameter space? It sounds very fancy. It means all the potential combination of different parameters you want in your models. And you've just created one! Congrats for defining your first GNM parameter space!
 
 ::: callout-important
-Tou might have noticed that here we vary only two paramters: eta and gamma. For those two, we specified multiple values. For all the other parameters, we only specified a fixed default. However, all parameters can be changed! For example we may want to test out other wiring rules, different from homophily. Maybe something like: brain areas are more likely to wire together IF their genes are more similar!
+You might have noticed that here we vary only two parameters: eta and gamma. For those two, we specified multiple values. For all the other parameters, we only specified a fixed default. However, all parameters can be changed! For example we may want to test out other wiring rules, different from homophily. Maybe something like: brain areas are more likely to wire together IF their genes are more similar!
 
-Once you figure our the basic workings of GNMs, possibilities to personalise them and explore new things are endless!
+Once you figure our the basic workings of GNMs, possibilities to personalize them and explore new things are endless!
 :::
