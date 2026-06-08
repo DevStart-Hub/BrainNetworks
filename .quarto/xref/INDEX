@@ -40,5 +40,14 @@
   },
   "CONTENT/IndividualDifferences.qmd": {
     "IndividualDifferences.html": "9ed07fdf"
+  },
+  "CONTENT/WhatIsAnRNN.qmd": {
+    "WhatIsAnRNN.html": "9ab5f65b"
+  },
+  "CONTENT/TaskDesign.qmd": {
+    "TaskDesign.html": "e544292c"
+  },
+  "CONTENT/BuildingTheRNN.qmd": {
+    "BuildingTheRNN.html": "83de9925"
   }
 }

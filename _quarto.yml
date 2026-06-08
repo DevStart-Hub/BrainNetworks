@@ -81,6 +81,11 @@ website:
           - CONTENT/ModelSpecification.qmd
           - CONTENT/ModelFitting.qmd
           - CONTENT/IndividualDifferences.qmd
+      - section: "Artificial Neural Networks"
+        contents:
+          - CONTENT/WhatIsAnRNN.qmd
+          - CONTENT/TaskDesign.qmd
+          - CONTENT/BuildingTheRNN.qmd
 
   ## Footer
   page-footer:
@@ -98,6 +103,7 @@ format:
     # Toc
     toc: true
     toc-expand: 4    
+    embed-resources: true
 
     # Images
     lightbox: true

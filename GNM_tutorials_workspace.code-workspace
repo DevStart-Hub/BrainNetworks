@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../GenerativeNetworkModels"
+		},
+		{
+			"path": "../multitask-curiosity"
 		}
 	],
 	"settings": {}
