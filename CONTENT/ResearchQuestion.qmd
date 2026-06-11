@@ -54,7 +54,7 @@ Let's start by loading our 20 brain networks. You can download the full dataset 
 
 {{< downloadthis ../resources/BrainNetworks/DATA/stress_scores.npy label="Download Stress Scores" dname="stress_scores" type="secondary" >}}
 
-Each brain network is a 100×100 weighted connectivity matrix (the cell values are streamline counts, reflecting *how strong* each connection is), just like the one we saw in the previous tutorial. The full dataset is stored as a single array with shape `[20, 100, 100]`. Later, we'll threshold these weighted networks to a common density (which also turns them into simple binary "connected / not-connected" maps) before modelling.
+Each brain network is a 100×100 connectivity matrix, just like the one we saw in the previous tutorial. The full dataset is stored as a single array with shape `[20, 100, 100]`.
 
 ``` python
 import numpy as np
@@ -73,6 +73,6 @@ Here are all 20 brain networks we will be working with:
 
 ![](../images/BrainNetworks/all_20_brains_4x5.png){width="85%" fig-align="center"}
 
-Each of these matrices represents a different individual's brain. They all look a bit different — and our goal is to figure out whether those differences relate to early life stress!
+Each of these matrices represents a different individual's brain. They all look a bit different, and our goal is to figure out whether those differences relate to early life stress!
 
 Now we have everything we need to start exploring! In the next tutorial, we will dive into **preprocessing** to make sure these networks are comparable and ready for analysis. See you there! 🚀

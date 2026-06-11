@@ -14,11 +14,12 @@ Outputs:
 import numpy as np
 import matplotlib.pyplot as plt
 
-brains = np.load("./resources/BrainNetworks/DATA/brain_networks_20_preprocessed.npy")
+brains = np.load("./resources/BrainNetworks/DATA/brain_networks_20.npy")
 
 fig, axes = plt.subplots(4, 5, figsize=(10, 8))
 for i, ax in enumerate(axes.flat):
-    ax.imshow(brains[i], cmap="Reds", interpolation="nearest", aspect="equal")
+    vmax = np.percentile(brains[i][brains[i] > 0], 99)
+    ax.imshow(brains[i], cmap="Reds", interpolation="nearest", aspect="equal", vmax=vmax)
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_title(f"{i+1}", fontsize=8, pad=2)

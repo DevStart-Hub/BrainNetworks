@@ -10,15 +10,9 @@ categories:
   - RNN
 ---
 
-Look how far we've come!! In the first two sections we did two big things. First, we *described* brain networks: we measured their topology and asked whether it relates to early life stress. Then, we *grew* brain-like networks with GNMs: we found a tiny set of wiring rules that reproduces the brain's architecture.
+Look how far we've come!! In the first two sections we did two big things. First, we *described* brain networks: we measured their topology and asked whether it relates to early life stress. Then, we *grew* brain-like networks with GNMs: we found a tiny set of wiring rules that create artificial brains that resemble real ones.
 
-And here's something you might not have noticed: through all of that, **everything came back to one object**. The connectivity matrix! That humble grid of numbers telling us *who connects to whom*. We plotted it, we thresholded it, we measured its topology, and with GNMs we even grew it from scratch. It has quietly been the main character of this whole journey.
-
-So before meeting our shiny new tool, let's start from what we already have: that matrix.
-
-## Not another matrix that just sits there
-
-For all its powers, our connectivity matrix has one big limitation: it's a **map**, and a map doesn't *do* anything... It just gives us a very informative but completely **static** picture.
+Those artificial brains have one big limitation: they are like a **map**, and a map doesn't *do* anything... It just gives us a very informative but completely **static** picture.
 
 Wouldn't it be amazing if this same matrix could come to life? If it could take in some information, let it ripple through all those connections, and spit out an answer? If only it could *do something...*
 
@@ -36,7 +30,9 @@ So why is this version not just another static map? Because in the RNN, **the un
 In the brain-networks and GNM tutorials we called the dots in our network **nodes** — that's the term from graph theory. In neural-network land, people call the very same thing **units** (or sometimes "artificial neurons"). It's the exact same idea — a single element of the network that connects to others — just a different word borrowed from a different field. Now that we've crossed into RNN territory, we'll mostly say **units**.
 :::
 
-But hold on — we keep saying the units are "active" and that activity "flows". What does that actually mean, and where does the activity even come from? To really understand what $W_{rec}$ does, let's follow the activity through the network one step at a time. It all starts with the input.
+Okay, just by hearing the description, these RNNs sound a lot like real brains: complex networks that show patterns of activity. **So here's the big question: Are RNNs really similar to brains? In the following tutorials, we will set out to explore this. We will create our own RNN, and we will compare it to real brains!!!**
+
+But hold on, we keep saying that RNNs "active" and that activity "flows" in the networks. What does that actually mean, and where does the activity even come from? To really understand that, let's follow the activity through the network one step at a time. It all starts with the input.
 
 ## Where the activity comes from: the input
 

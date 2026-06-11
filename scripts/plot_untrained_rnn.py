@@ -89,17 +89,18 @@ fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharey=True)
 for ax, idx, title in zip(axes, [go_idx, nogo_idx], ["Go trial", "No-Go trial"]):
     for k in range(4):
         ax.axvspan(bounds[k], bounds[k + 1], color=colors[k], zorder=0)
-        ax.text((bounds[k] + bounds[k + 1]) / 2, 1.18, names[k],
-                ha='center', va='top', fontsize=9, color='#666')
+        ax.text((bounds[k] + bounds[k + 1]) / 2, 1.02, names[k],
+                transform=ax.get_xaxis_transform(),
+                ha='center', va='bottom', fontsize=9, color='#666')
     ax.plot(t_ms, y[:, idx, 0], color='#1E8449', lw=2.5, label='target')
     ax.plot(t_ms, out[:, idx, 0], color='#C0392B', lw=2, label='network output')
     ax.axhline(0, color='#cccccc', lw=0.8)
-    ax.set_title(title, fontsize=13, fontweight='bold')
+    ax.set_title(title, fontsize=13, fontweight='bold', pad=18)
     ax.set_xlabel('Time (ms)', fontsize=11)
     ax.set_xlim(0, 2000)
 axes[0].set_ylabel('output', fontsize=11)
 axes[0].legend(loc='upper left', fontsize=9)
-plt.suptitle(f'Untrained network (accuracy = {acc:.0%})', fontsize=13)
+plt.suptitle(f'Untrained network (accuracy = {acc:.0%})', fontsize=14, y=1.04)
 plt.tight_layout()
 out_path = './images/RecurrentNetworks/untrained_rnn.png'
 plt.savefig(out_path, dpi=200, bbox_inches='tight')

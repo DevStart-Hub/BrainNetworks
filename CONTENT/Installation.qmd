@@ -63,9 +63,9 @@ Now that everything is installed, let's fire up Python and test it out!
 
 For these tutorials, we have prepared a brain network for you to work with. You can download it here:
 
-{{< downloadthis ../resources/BrainNetworks/DATA/generated_binary_network.npy label="Download Network" dname="binary_network" type="secondary" >}}
+{{< downloadthis ../resources/BrainNetworks/DATA/weighted_network.npy label="Download Network" dname="weighted_network" type="secondary" >}}
 
-Save this file somewhere convenient — we will load it right away! This is a **binary connectivity matrix** (just like the spreadsheet we talked about in the previous tutorial), where each cell tells us whether two brain regions are connected (1) or not (0).
+Save this file somewhere convenient — we will load it right away! This is a **weighted connectivity matrix** (just like the spreadsheet we talked about in the previous tutorial), where each cell tells us *how strongly* two brain regions are connected (the number of streamlines running between them).
 
 Let's load it and take a look:
 
@@ -73,19 +73,19 @@ Let's load it and take a look:
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Load the binary connectivity matrix
-adj_matrix = np.load("binary_network.npy")
+# Load the weighted connectivity matrix
+adj_matrix = np.load("weighted_network.npy")
 print(f"Our brain network has {adj_matrix.shape[0]} nodes!")
 
 # Plot the connectivity matrix as a heatmap
 fig, ax = plt.subplots(figsize=(8, 7))
 im = ax.imshow(adj_matrix, cmap='Reds', interpolation='nearest', aspect='equal')
 cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-cbar.set_label('Connection', fontsize=12)
+cbar.set_label('Connection strength (streamline count)', fontsize=12)
 
 ax.set_xlabel('Brain Region', fontsize=13)
 ax.set_ylabel('Brain Region', fontsize=13)
-ax.set_title('Binary Connectivity Matrix', fontsize=15, fontweight='bold')
+ax.set_title('Connectivity Matrix', fontsize=15, fontweight='bold')
 
 plt.tight_layout()
 plt.show()
@@ -93,9 +93,9 @@ plt.show()
 
 If everything works, you should see something like this:
 
-![](../images/BrainNetworks/binary_matrix_heatmap.png){width="80%" fig-align="center"}
+![](../images/BrainNetworks/weighted_matrix_heatmap.png){width="80%" fig-align="center"}
 
-Look at that! Each coloured cell is a connection between two brain regions. You can already spot some structure — regions that are close together (along the diagonal) tend to be more connected, just like we discussed in the previous tutorial!
+Look at that! Each coloured cell is a connection between two brain regions, and the darker it is, the stronger that connection. You can already spot some structure — regions that are close together (along the diagonal) tend to be more strongly connected, just like we discussed in the previous tutorial!
 
 If that runs successfully without errors, congratulations! You have successfully set up everything you need, and you have just loaded and visualized your very first brain network in Python! 🎉
 

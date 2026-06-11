@@ -54,8 +54,9 @@ print(f"\nThresholding all brains to density = {target_density:.4f} (retain = {t
 brains_thresholded = np.zeros_like(brains)
 
 for i in range(num_brains):
-    brains_thresholded[i] = threshold_network(brains[i], retain=target_retain)
-    
+    keep_mask = threshold_network(brains[i], retain=target_retain)  # 0/1: which connections to keep
+    brains_thresholded[i] = keep_mask * brains[i]                    # apply mask, keep the weights
+
     G = nx.from_numpy_array(brains_thresholded[i])
     new_density = nx.density(G)
     print(f"Brain {i+1:2d}: {densities[i]:.4f} → {new_density:.4f}")

@@ -86,6 +86,8 @@ website:
           - CONTENT/WhatIsAnRNN.qmd
           - CONTENT/TaskDesign.qmd
           - CONTENT/BuildingTheRNN.qmd
+          - CONTENT/TrainingTheRNN.qmd
+          - CONTENT/LookingInsideTheRNN.qmd
 
   ## Footer
   page-footer:

@@ -49,5 +49,11 @@
   },
   "CONTENT/BuildingTheRNN.qmd": {
     "BuildingTheRNN.html": "83de9925"
+  },
+  "CONTENT/TrainingTheRNN.qmd": {
+    "TrainingTheRNN.html": "6de21e4d"
+  },
+  "CONTENT/LookingInsideTheRNN.qmd": {
+    "LookingInsideTheRNN.html": "342c844e"
   }
 }

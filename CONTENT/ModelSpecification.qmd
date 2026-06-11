@@ -25,13 +25,15 @@ Before getting into all that, let's import our data.
 
 ## Load the data
 
-We load all 20 preprocessed brains. First-off, we make these networks BINARY. This means that we do not care about how strong the connection is: just whether it is there or not:
+We load all 20 preprocessed brains. Remember that, after preprocessing, these networks are still **weighted**: each connection carries a strength (a streamline count).
 
--   0 = the connection is not there
+For modelling with GNMs, though, we'll **focus on the simplest version of the problem: binary networks**, where we only care *whether* a connection is there, not *how strong* it is:
 
--   1 = the connection is there!
+- 0 = the connection is not there
 
-Let's do that:
+- 1 = the connection is there!
+
+So let's **binarise** our brains:
 
 ``` python
 import numpy as np
@@ -67,13 +69,13 @@ Perfect! We are now ready to start our parameter sweep. The GNM toolbox makes th
 
 This function takes in 6 arguments. If we don't give it these 6 arguments, it will complain! So before typing any code, let's understand what there arguments are:
 
--   The first two arguments are `eta` and `gamma` values (I hope you know what these are by now!)
+- The first two arguments are `eta` and `gamma` values (I hope you know what these are by now!)
 
--   The next two arguments are `distance_relationship_type` and `preferential_relationship_type`. These are just default settings we don't really have to worry about (Remember when we looked at the GNM formula in the last tutorial? eta and gamma were following a powerlaw in there, and so here we're just simply giving the instruction: *follow the standard GNM formula!*)
+- The next two arguments are `distance_relationship_type` and `preferential_relationship_type`. These are just default settings we don't really have to worry about (Remember when we looked at the GNM formula in the last tutorial? eta and gamma were following a powerlaw in there, and so here we're just simply giving the instruction: *follow the standard GNM formula!*)
 
--   next up, we have `generative_rule`. Again, here we just want to use the standard rule (homophily) and so we will just tell to the function to use `MatchingIndex()`, which is the proper name for homophily, if you remember!
+- next up, we have `generative_rule`. Again, here we just want to use the standard rule (homophily) and so we will just tell to the function to use `MatchingIndex()`, which is the proper name for homophily, if you remember!
 
--   And finally, the function wants to know how many connections it needs to generate. We want as many connections as we have in our 20 brains - which, if you remember, have all the same number of connections (same density!)
+- And finally, the function wants to know how many connections it needs to generate. We want as many connections as we have in our 20 brains - which, if you remember, have all the same number of connections (same density!)
 
 Amazing, so let's define all these things and give them to the function:
 
@@ -98,11 +100,11 @@ So we defined 10 values for η and 10 values for γ: 100 combinations in total. 
 
 Perfect! Now that we defined our parameters sweep, it's time to set just some more details, and we need our second function for that, `SweepConfig()`. Here, we have to specify:
 
--   what are the parameters to sweep over (we've just defined them!)
+- what are the parameters to sweep over (we've just defined them!)
 
--   the distance matrix (easy, we have already imported that one!)
+- the distance matrix (easy, we have already imported that one!)
 
--   how many simulations we want. That's a very important one. GNMs are probabilistic, which means that the same exact combination of parameters might STILL produce different final synthetic networks. So it's quite risky to produce just one model for each combination of parameters: what if it's a weird one that we just got by chance? To be more confident that our synthetic networks are reliable, we produce many of them!
+- how many simulations we want. That's a very important one. GNMs are probabilistic, which means that the same exact combination of parameters might STILL produce different final synthetic networks. So it's quite risky to produce just one model for each combination of parameters: what if it's a weird one that we just got by chance? To be more confident that our synthetic networks are reliable, we produce many of them!
 
 So here's the function and its arguments:
 

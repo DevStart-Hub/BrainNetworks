@@ -66,7 +66,7 @@ What if we moved from a messy 3D graph into a clean and ordered 2D grid?
 
 Imagine a simple spreadsheet. We put our brain areas on the rows, and the same brain areas on the columns. Inside, we color each cell of this grid depending on *how strong* the connection is between those two areas (based on the streamline count).
 
-![](../images/BrainNetworks/binary_matrix_heatmap.png){width="70%" fig-align="center"}
+![](../images/BrainNetworks/weighted_matrix_heatmap.png){width="70%" fig-align="center"}
 
 This 2D grid is called a **Connectivity Matrix**. Suddenly, everything is perfectly visible! The brain went from an absolute mess to something beautifully structured.
 
