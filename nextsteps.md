@@ -123,12 +123,7 @@
 
 **Stress that many tasks exist:** reference the [neurogym](https://neurogym.github.io/) library and the multi-task work of Yang et al. (2019). We build ours from scratch so every moving part is visible. Tie Go/No-Go to **impulse control / executive function**, and back to the early-life-stress theme.
 
-**Task design (from scratch, but matching the neurogym/Poli period + timing conventions):**
-- Four periods, **500 ms each at dt = 100 → T = 20 timesteps**: **fixation → stimulus → delay → decision** (same structure used in the lab's neurogym tasks).
-- **3 input channels:** a **fixation cue** (on until the decision period), a **Go cue**, and a **No-Go cue** (exactly one of the two is on during the stimulus period).
-- **1 output:** target = 1 during the decision period on Go trials, 0 otherwise (including all of the No-Go trial).
-- `mask` marks the decision period — we score the network only there.
-- ⚠️ Consequence for the next tutorials: the model's **`n_input = 3`** (not 1).
+**Task design (from scratch, but matching the neurogym/Poli period + timing conventions):** - Four periods, **500 ms each at dt = 100 → T = 20 timesteps**: **fixation → stimulus → delay → decision** (same structure used in the lab's neurogym tasks). - **3 input channels:** a **fixation cue** (on until the decision period), a **Go cue**, and a **No-Go cue** (exactly one of the two is on during the stimulus period). - **1 output:** target = 1 during the decision period on Go trials, 0 otherwise (including all of the No-Go trial). - `mask` marks the decision period — we score the network only there. - ⚠️ Consequence for the next tutorials: the model's **`n_input = 3`** (not 1).
 
 ``` python
 import numpy as np
@@ -216,7 +211,7 @@ pred = (outputs[-1, :, 0] > 0.5).float().numpy()
 print(f"Untrained accuracy: {(pred == labels).mean():.2f}")   # ~0.50 — pure chance!
 ```
 
-- The untrained network sits at ~50% — it is guessing. Emphasise: the *architecture* is in place, but the *weights are meaningless* until the network learns them.
+- The untrained network sits at \~50% — it is guessing. Emphasise: the *architecture* is in place, but the *weights are meaningless* until the network learns them.
 
 **Closing hook:** The network has the right shape but the wrong numbers. How does it go from random weights to weights that solve the task? That is **learning** — the subject of the next tutorial.
 
@@ -358,11 +353,11 @@ with torch.no_grad():
 
 **Goal:** Quantitatively compare the connectivity structure of all three trained RNNs against real brain networks using the same metrics from Section 1 — closing the loop of the entire tutorial series.
 
-**The four networks to compare:** 1. **Basic RNN** — `W_rec` binarised to match brain network density 2. **Distance RNN** — `W_rec` binarised to match brain network density 3. **Dale RNN** — `W_rec` binarised to match brain network density 4. **Real brain networks** — the GNM default network (or the 20 brains from Section 1)
+**The four networks to compare:** 1. **Basic RNN** — `W_rec` binarised to match brain network density 2. **Real brain networks** — the GNM default network (or the 20 brains from Section 1)
 
 **Topological metrics (all introduced in Tutorial: Topology):** - **Degree distribution**: are some units/regions disproportionately connected (hubs)? - **Betweenness centrality**: which units act as information bottlenecks? - **Clustering coefficient**: do connected units form dense local clusters (modularity)? - **Edge length distribution**: how long are the connections on average in MNI space?
 
-**KS statistics — callback to the GNM energy function:** - Compute the same four KS statistics between each RNN and the real brain networks - This is the exact same energy formula used in Tutorial: Model Fitting (Section 2) - Rank the three models by total KS energy — lower energy = more brain-like connectivity - Expected ranking: Dale RNN \< Distance RNN \< Basic RNN
+**KS statistics — callback to the GNM energy function:** - Compute the same four KS statistics between each RNN and the real brain networks - This is the exact same energy formula used in Tutorial: Model Fitting (Section 2) - Rank the three models by total KS energy — lower energy = more brain-like connectivity
 
 **Visualisations:** - Side-by-side heatmaps: Basic \| Distance \| Dale \| Real Brain - Violin plots of each topological metric, one group per network type - **Radar/spider plot**: all four metrics at once, one polygon per network type — immediate visual comparison of the full profile - Bar chart of KS energy scores across the three RNN models vs real brain baseline
 

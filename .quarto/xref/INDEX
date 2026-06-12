@@ -55,5 +55,8 @@
   },
   "CONTENT/LookingInsideTheRNN.qmd": {
     "LookingInsideTheRNN.html": "342c844e"
+  },
+  "CONTENT/ComparingRNNsAndBrains.qmd": {
+    "ComparingRNNsAndBrains.html": "ddf81b96"
   }
 }

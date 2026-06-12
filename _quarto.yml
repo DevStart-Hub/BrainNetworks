@@ -88,6 +88,7 @@ website:
           - CONTENT/BuildingTheRNN.qmd
           - CONTENT/TrainingTheRNN.qmd
           - CONTENT/LookingInsideTheRNN.qmd
+          - CONTENT/ComparingRNNsAndBrains.qmd
 
   ## Footer
   page-footer:

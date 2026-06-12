@@ -523,5 +523,68 @@
     "title": "Welcome to DevStart",
     "section": "",
     "text": "Welcome to the Brain Network side of DevStart! 🎉\nThe tutorials that you will find here are entirely dedicated to exploring, understanding, and generating brain networks using Python and the GenerativeNetworkModels package.\nDevStart is an online hands-on manual for anyone who is approaching developmental cognitive neuroscience for the first time, from master’s students and PhDs to postdocs. \nAssuming no prior knowledge, Devstart guides you through your first steps as a developmental researcher. On our main website, you’ll find many examples and guidelines on how to grasp the basic principles of developmental research, design and set up a study with different research methods, analyze data, and start programming.\nBut here, you’re on the brainy side of DevStart, where we learn about brains as networks… So let’s dive in! 🚀\n\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html",
+    "href": "CONTENT/ComparingRNNsAndBrains.html",
+    "title": "Is the RNN brain-like?",
+    "section": "",
+    "text": "In the previous tutorial we cleaned up the RNN’s W_rec, until, in format, it was exactly like the brain connectivity matrix. We could finally lay the two side by side.\nBut eyeballing only gets us so far. Now for the real test: do they have the same topology? In other words, is our RNN actually wired like a brain, or does it just happen to be the same shape of grid?"
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#two-numbers-segregation-and-integration",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#two-numbers-segregation-and-integration",
+    "title": "Is the RNN brain-like?",
+    "section": "Two numbers: segregation and integration",
+    "text": "Two numbers: segregation and integration\nIn the Topology tutorial we measured several properties of brain networks. Here we’ll boil the comparison down to two famous summary measures that together capture the brain’s signature organisation:\n\nModularity — segregation. Does the network split into tight-knit modules: clusters of nodes that talk a lot within the cluster and little between? Brains are strongly modular (visual areas with visual areas, motor with motor, and so on).\nGlobal efficiency — integration. Can a signal get from any node to any other in only a few short steps? Brains are remarkably efficient too: despite all those separate modules, everything is just a short hop away.\n\nHolding both at once — segregated and integrated — is the hallmark of a small-world network, and the brain is the textbook example. So these two numbers are a great litmus test for “brain-likeness”."
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#why-weighted-metrics",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#why-weighted-metrics",
+    "title": "Is the RNN brain-like?",
+    "section": "Why weighted metrics?",
+    "text": "Why weighted metrics?\nA quick but important choice. Back in Section 1 we often reduced networks to binary (a connection is either there or not). But all our matrices are weighted: the strength of each connection carries real information (streamline counts for brains, learned weights for the RNN). Throwing that away would be a pity!\nSo here we use the weighted versions of both measures: a strong connection counts for more when forming a module, and acts as a better shortcut when measuring efficiency (a strong link = a short hop)."
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#a-fair-fight-same-footing",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#a-fair-fight-same-footing",
+    "title": "Is the RNN brain-like?",
+    "section": "A fair fight: same footing",
+    "text": "A fair fight: same footing\nWe already made W_rec positive, symmetric, and diagonal-free last time. One last thing is needed for a fair comparison: the two networks must have the same density (the same number of connections). Remember from Preprocessing that density and topology are tightly linked, so comparing networks of different densities would be cheating. The brains were already trimmed to a common density; we trim the RNN’s strongest connections to match:\nimport numpy as np\n\ndef preprocess(W, density=None):\n    W = np.abs(W)                 # strengths, not signs\n    W = (W + W.T) / 2             # symmetrise\n    np.fill_diagonal(W, 0)        # no self-connections\n    if density is not None:       # keep only the strongest connections\n        triu = W[np.triu_indices_from(W, k=1)]\n        threshold = np.sort(triu)[::-1][int(len(triu) * density)]\n        W = np.where(W &gt;= threshold, W, 0)\n    return W / W.max()            # normalise to 0–1 so the scales match"
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#measuring-weighted-topology",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#measuring-weighted-topology",
+    "title": "Is the RNN brain-like?",
+    "section": "Measuring weighted topology",
+    "text": "Measuring weighted topology\nNow the two metrics. Modularity is a one-liner with networkx (it finds communities and scores how modular they are, using the weights):\nimport networkx as nx\n\ndef weighted_modularity(W):\n    G = nx.from_numpy_array(W)\n    communities = nx.community.louvain_communities(G, weight=\"weight\", seed=42)\n    return nx.community.modularity(G, communities, weight=\"weight\")\nFor efficiency we turn each connection strength into a distance (a strong connection is a short hop), find the shortest weighted path between every pair of nodes, and average 1 / distance:\ndef weighted_efficiency(W):\n    G = nx.from_numpy_array(W)\n    for _, _, d in G.edges(data=True):\n        d[\"dist\"] = 1 / d[\"weight\"]          # strong connection -&gt; short distance\n    n, total = G.number_of_nodes(), 0.0\n    for src, lengths in nx.all_pairs_dijkstra_path_length(G, weight=\"dist\"):\n        for tgt, dist in lengths.items():\n            if src != tgt:\n                total += 1 / dist            # efficiency of this pair\n    return total / (n * (n - 1))\nWe run both on the trained RNN and on each of our 20 brains, and plot the results."
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#the-verdict",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#the-verdict",
+    "title": "Is the RNN brain-like?",
+    "section": "The verdict",
+    "text": "The verdict\n\n\n\n\n\nThe result is stark. The 20 brains huddle together in the top-right: highly modular and highly efficient, exactly as small-world networks should be. Our basic RNN (the blue star) sits far away in the bottom-left, with much lower modularity (≈ 0.15 vs the brains’ ≈ 0.36) and lower efficiency (≈ 0.22 vs ≈ 0.28) than any of the brains.\nSo the answer to our title question is a clear no. A network trained to do one simple task does not spontaneously wire itself like a brain. It solved the job perfectly well, but with a flat, weakly-structured connectivity that looks nothing like the brain’s segregated-yet-integrated organisation."
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#whats-next-nudging-it-towards-the-brain",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#whats-next-nudging-it-towards-the-brain",
+    "title": "Is the RNN brain-like?",
+    "section": "What’s next: nudging it towards the brain",
+    "text": "What’s next: nudging it towards the brain\nThat’s not a disappointment, it’s where things get interesting! If task-training alone doesn’t produce brain-like wiring, what would? We have two ideas to try in the coming tutorials:\n\nGive it a harder job. A single Go/No-Go task is trivially easy, and an easy task simply doesn’t demand rich structure. Perhaps a network only develops brain-like, modular wiring when it has to juggle many tasks at once. We’ll train it on a whole battery of tasks and measure again.\nBake in the brain’s wiring rules. Remember the GNMs from Section 2? Real brains pay a wiring cost: long-range connections are metabolically expensive, so the brain prefers short ones (that was η, the distance penalty). We can add the very same distance-dependent constraint to the RNN’s training and see whether it pulls the topology towards the brains.\n\nSee you in the next tutorial, where we start making our RNN a little more brain-like! 🚀"
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#two-summary-measures",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#two-summary-measures",
+    "title": "Is the RNN brain-like?",
+    "section": "Two summary measures",
+    "text": "Two summary measures\nIn the Topology tutorial we measured several properties of brain networks. Here we’ll introduce two more summary measures that, together, capture the brain’s signature organisation. Let’s build an intuition for each.\n\nModularity — does the network form modules?\nThe first measure is modularity. It asks whether the network breaks up into modules: groups of nodes that are densely wired to each other but only loosely connected to the rest.\n\n\n\n\n\nIn the little network above there are three clear modules (blue, orange, green). Inside each one, every node talks to its neighbours, while only a single thin bridge links one module to the next. A network like this has high modularity. Brains are modular in exactly this way: visual areas wire mostly to other visual areas, motor areas to motor areas, and so on. So modularity measures segregation — how much a network keeps its specialised parts to themselves.\n\n\nGlobal efficiency — how far apart is everything?\nThe second measure is global efficiency. It asks almost the opposite question: starting from any node, how few steps does it take to reach any other node?\n\n\n\n\n\nHere we’ve highlighted the shortest route between two nodes that sit in different modules, and it’s only a couple of hops. When every pair of nodes can be reached in just a few steps, the network has high global efficiency. Brains are remarkably efficient: even though they’re carved into modules, a signal can still get from almost anywhere to anywhere in a handful of steps. So efficiency measures integration — how easily the whole network can act as one.\n\n\nThe best of both worlds\nHere’s the beautiful part: brains manage to be both highly modular and highly efficient at the same time — specialised modules that are nonetheless all closely linked. That combination is called a small-world network, and it’s one of the most reliable signatures of brain organisation. So if our RNN is truly brain-like, it should score high on both measures, landing right next to the brains."
+  },
+  {
+    "objectID": "CONTENT/ComparingRNNsAndBrains.html#wait-are-we-ready-to-compare",
+    "href": "CONTENT/ComparingRNNsAndBrains.html#wait-are-we-ready-to-compare",
+    "title": "Is the RNN brain-like?",
+    "section": "Wait… are we ready to compare?",
+    "text": "Wait… are we ready to compare?\nAmazing, it looks like everything is ready to compare our networks! …Or maybe not!!! If you did our Preprocessing tutorial, you’ll remember there are two more things we have to take care of before any two networks can be compared fairly.\n\n1. The same density\nThe two networks must have the same density — the same number of connections. We saw in Preprocessing that density and topology are tightly linked (a denser network is automatically more efficient and less modular), so comparing networks at different densities would tell us nothing. The brains were already trimmed to a common density back then; we now do the same to the RNN, keeping only its strongest connections until it matches.\nPutting that together with the clean-up from the last tutorial (positive, symmetric, no diagonal, rescaled to 0–1), our full preprocessing is just:\nimport numpy as np\n\ndef preprocess(W, density=None):\n    W = np.abs(W)                 # strengths, not signs   (last tutorial)\n    W = (W + W.T) / 2             # symmetrise             (last tutorial)\n    np.fill_diagonal(W, 0)        # no self-connections    (last tutorial)\n    if density is not None:       # NEW: keep only the strongest connections\n        triu = W[np.triu_indices_from(W, k=1)]\n        threshold = np.sort(triu)[::-1][int(len(triu) * density)]\n        W = np.where(W &gt;= threshold, W, 0)\n    return W / W.max()            # rescale to 0–1 so the two scales match\n\n\n2. Fully connected\nThe second requirement is that the network be fully connected: you should be able to travel from any node to any other. This matters here because global efficiency is all about the paths between nodes, and a node with no connections has no paths at all. The brains all passed this check in the Preprocessing tutorial. Let’s check the RNN, once it’s been trimmed to the brains’ density:\nimport networkx as nx\n\nW_rec = preprocess(W_rec, density=0.18)\nprint(nx.is_connected(nx.from_numpy_array(W_rec)))   # -&gt; False!\nInteresting!! Once trimmed to the brains’ density, the RNN turns out not to be fully connected: a few units get cut off completely. That’s already our first hint that its wiring is unlike a brain’s. Happily, global efficiency handles this gracefully (an unreachable pair of nodes simply contributes zero), so we can still measure both networks on equal terms."
   }
 ]
