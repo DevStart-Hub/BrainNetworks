@@ -49,30 +49,41 @@ Putting that together with the clean-up from the [last tutorial](LookingInsideTh
 
 ``` python
 import numpy as np
+from netneurotools.networks import threshold_network
 
 def preprocess(W, density=None):
     W = np.abs(W)                 # strengths, not signs   (last tutorial)
     W = (W + W.T) / 2             # symmetrise             (last tutorial)
     np.fill_diagonal(W, 0)        # no self-connections    (last tutorial)
-    if density is not None:       # NEW: keep only the strongest connections
-        triu = W[np.triu_indices_from(W, k=1)]
-        threshold = np.sort(triu)[::-1][int(len(triu) * density)]
-        W = np.where(W >= threshold, W, 0)
+    if density is not None:       # NEW: keep the strongest connections (exactly as in Preprocessing)
+        keep = threshold_network(W, retain=density * 100)  # 0/1 mask of which connections to keep
+        W = keep * W                                       # apply the mask, keeping the weights
     return W / W.max()            # rescale to 0–1 so the two scales match
 ```
 
 ### 2. Fully connected
 
-The second requirement is that the network be **fully connected**: you should be able to travel from any node to any other. This matters here because global efficiency is all about the paths between nodes, and a node with no connections has no paths at all. The brains all passed this check in the Preprocessing tutorial. Let's check the RNN, once it's been trimmed to the brains' density:
+The second requirement is that the network be **fully connected**: you should be able to travel from any node to any other. This matters because several topology measures break down when part of the network is cut off from the rest. The brains all passed this check back in the Preprocessing tutorial. Let's check the RNN, once it's been trimmed to the brains' density:
 
 ``` python
 import networkx as nx
 
-W_rec = preprocess(W_rec, density=0.18)
-print(nx.is_connected(nx.from_numpy_array(W_rec)))   # -> False!
+rnn = preprocess(W_rec, density=0.18)
+print(nx.is_connected(nx.from_numpy_array(rnn)))   # -> True
 ```
 
-Happily, global efficiency handles this gracefully (an unreachable pair of nodes simply contributes zero), so **if we stick to these two metrics**, we can still measure both networks on equal terms.
+It's fully connected too. So both networks are now on exactly the same footing, and we're finally ready to compare them!
+
+::: callout-note
+## What if a network *had* come out disconnected?
+
+We just made a fuss about connectivity, so you might worry: what happens to our two measures if a trimmed network ends up in pieces, with some nodes cut off from the rest? Good news: **modularity** and **global efficiency** are exactly the two measures that *don't* mind.
+
+- **Modularity** never looks at paths at all. It only asks whether nodes cluster into densely-wired groups, so a network in two disconnected pieces is perfectly fine, it's just a very modular network.
+- **Global efficiency** is built to handle it by design. For a pair of nodes you *can't* reach, the distance is infinite, and efficiency counts that pair as $1/\infty = 0$. Unreachable pairs simply contribute nothing to the average, no crashes, no infinities.
+
+This is actually *why* these two are such popular choices. Contrast them with a measure like the **characteristic path length** (the average shortest path): the moment one pair of nodes is unreachable, that average shoots off to infinity and the whole number becomes meaningless. Modularity and efficiency stay well-defined no matter what, which is why we lean on them here.
+:::
 
 ## Measuring weighted topology
 
@@ -102,9 +113,27 @@ def weighted_efficiency(W):
     return total / (n * (n - 1))
 ```
 
+::: callout-note
+## Why write this by hand?
+
+For modularity, `networkx` has us covered. For weighted efficiency it doesn't: `nx.global_efficiency` exists, but it quietly **ignores the weights** and treats every connection as a single equal hop, which isn't what we want. So we spell out the weighted version ourselves. If you'd rather not hand-roll it, the standard tool in the field is [`bctpy`](https://github.com/aestrivex/bctpy)'s `efficiency_wei`, a one-liner that does exactly the same thing.
+:::
+
 We run both on the trained RNN and on each of our 20 brains:
 
-\[add code\]
+``` python
+import numpy as np
+
+brains = np.load("brain_networks_20_preprocessed.npy")   # the 20 brains, already at a common density
+
+# the RNN: `rnn` is the preprocessed W_rec from above
+rnn_mod = weighted_modularity(rnn)
+rnn_eff = weighted_efficiency(rnn)
+
+# each brain is already at the common density, so preprocess() just cleans + rescales it
+brain_mod = [weighted_modularity(preprocess(b)) for b in brains]
+brain_eff = [weighted_efficiency(preprocess(b)) for b in brains]
+```
 
 And here are the results:
 

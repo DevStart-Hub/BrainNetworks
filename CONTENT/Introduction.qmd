@@ -10,7 +10,7 @@ categories:
   - GNM
 ---
 
-Welcome to our very first tutorial on **Generative Network Models**! 🎉
+Welcome to our very first tutorial on **Network Neuroscience**! 🎉
 
 Before we dive into generating our own networks using `Python` (which we will do in all the upcoming tutorials!), we first need to understand *what* we are modeling and *why*. In this tutorial, we will explore the wonderful and complex world of brain networks!
 
