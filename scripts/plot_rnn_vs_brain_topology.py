@@ -12,6 +12,7 @@ import numpy as np
 import torch
 import networkx as nx
 import matplotlib.pyplot as plt
+from netneurotools.networks import threshold_network
 
 # ------------------------------------------------------------------
 # Weighted topology metrics
@@ -41,11 +42,8 @@ def prep(W, density=None):
     W = (W + W.T) / 2.0
     np.fill_diagonal(W, 0.0)
     if density is not None:
-        n = W.shape[0]
-        triu = W[np.triu_indices(n, 1)]
-        k = int(len(triu) * density)
-        thr = np.sort(triu)[::-1][k]
-        W = np.where(W >= thr, W, 0.0)
+        keep = threshold_network(W, retain=density * 100)   # 0/1 mask (as in Preprocessing)
+        W = keep * W                                        # apply mask, keep the weights
     mx = W.max()
     if mx > 0:
         W = W / mx

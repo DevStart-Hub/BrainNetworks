@@ -1,7 +1,7 @@
 ---
 title: "Model Specification"
 author-meta: "Francesco Poli"
-date: "28/03/2026"
+date: "2026-03-28"
 description-meta: "Setting up a Generative Network Model parameter sweep: loading brain data, defining the eta and gamma grid, and configuring the GNM toolbox ready for fitting."
 
 categories:

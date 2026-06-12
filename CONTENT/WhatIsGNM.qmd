@@ -1,7 +1,7 @@
 ---
 title: "What's a GNM?"
 author-meta: "Francesco Poli"
-date: "26/03/2026"
+date: "2026-03-26"
 description-meta: "An introduction to Generative Network Models: what they are, how they work, and why two simple parameters can capture the complex architecture of the brain."
 
 categories:

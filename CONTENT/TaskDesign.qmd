@@ -1,7 +1,7 @@
 ---
 title: "Task Design"
 author-meta: "Francesco Poli"
-date: "02/06/2026"
+date: "2026-06-02"
 description-meta: "Designing a cognitive task for our network to learn: the classic Go/No-Go test of impulse control, built from scratch with its fixation, stimulus, delay and decision periods."
 
 categories:

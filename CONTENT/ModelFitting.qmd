@@ -1,7 +1,7 @@
 ---
 title: "Model Fitting"
 author-meta: "Francesco Poli"
-date: "28/03/2026"
+date: "2026-03-28"
 description-meta: "Fitting Generative Network Models to real brain data: defining an energy function, running the parameter sweep, and reading the energy landscape to find the wiring rules that best reproduce group-level brain topology."
 
 categories:

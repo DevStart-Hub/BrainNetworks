@@ -1,7 +1,7 @@
 ---
 title: "Preprocessing"
 author-meta: "Francesco Poli"
-date: "25/03/2026" 
+date: "2026-03-25" 
 description-meta: "Quality-checking brain networks: thresholding to a common density and verifying full connectivity before analysis." 
 
 categories:

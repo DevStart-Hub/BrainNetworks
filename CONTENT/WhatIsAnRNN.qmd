@@ -1,7 +1,7 @@
 ---
 title: "What's an RNN?"
 author-meta: "Francesco Poli"
-date: "01/06/2026"
+date: "2026-06-01"
 description-meta: "Bridging from brain networks to Recurrent Neural Networks: the recurrent weight matrix is the very same connectivity matrix we already know — now wired up to take an input, compute, and produce an output."
 
 categories:

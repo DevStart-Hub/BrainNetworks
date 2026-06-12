@@ -1,7 +1,7 @@
 ---
 title: "Is the RNN brain-like?"
 author-meta: "Francesco Poli"
-date: "06/06/2026"
+date: "2026-06-06"
 description-meta: "Comparing the trained RNN's connectivity to real brains using weighted topology: modularity (segregation) and efficiency (integration). The basic RNN turns out to be far from brain-like — which sets up what we change next."
 
 categories:

@@ -1,7 +1,7 @@
 ---
 title: "Introduction"
 author-meta: "Francesco Poli"
-date: "23/03/2026" 
+date: "2026-03-23"
 description-meta: "An introduction to viewing the brain as an interconnected network, understanding graph representations, and reading connectivity matrices." 
 
 categories:
@@ -26,9 +26,9 @@ Historically, neuroscience was dominated by the *localization of function* view:
 
 Today, the modern consensus is that the brain relies on **both**! It involves:
 
--   **Functional Specialization**: Specific brain areas *do* have specialized roles.
+- **Functional Specialization**: Specific brain areas *do* have specialized roles.
 
--   **Global Integration**: These specialized areas must constantly communicate and integrate information across the whole brain to produce complex cognition.
+- **Global Integration**: These specialized areas must constantly communicate and integrate information across the whole brain to produce complex cognition.
 
 Viewing the brain as an interconnected system of regions (rather than isolated islands) is the most powerful way to explain how the brain adapts, learns, and thinks.
 
@@ -52,9 +52,9 @@ By doing this, we instantly simplify the mess into a much cleaner **network**! !
 
 If you look closely at this new network, you'll see two main things:
 
--   **Nodes**: Represented as circles, they indicate distinct brain areas.
+- **Nodes**: Represented as circles, they indicate distinct brain areas.
 
--   **Edges**: Represented as straight lines, each indicating the connection between two nodes.
+- **Edges**: Represented as straight lines, each indicating the connection between two nodes.
 
 By organizing things into nodes and edges, we have created a **graph**! A graph is simply a mathematical structure used to model relations between objects. This is incredibly useful because there is an entire branch of mathematics called **Graph Theory** that has been studying graphs for *centuries* (since 1736, to be exact!).
 
@@ -76,9 +76,9 @@ We are already learning deep truths about how the brain is biologically organize
 
 Because we turned the brain into a graph and its matrix, we can ask very cool questions about it, such as:
 
--   *Does this network contain **hubs**?* (Super-connected areas, like major airport terminals).
+- *Does this network contain **hubs**?* (Super-connected areas, like major airport terminals).
 
--   *What is the **shortest path** for information to travel from the visual area to the motor area?*
+- *What is the **shortest path** for information to travel from the visual area to the motor area?*
 
 Without even realizing it, we are already doing **Network Topology** (studying the structural shape of the network)!!! This is what we will explore in intense detail in a following tutorial, but before we do that...
 

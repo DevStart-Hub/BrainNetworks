@@ -1,7 +1,7 @@
 ---
 title: "Building the RNN"
 author-meta: "Francesco Poli"
-date: "03/06/2026"
+date: "2026-06-03"
 description-meta: "Building a Leaky RNN from scratch in PyTorch, one piece at a time: the three sets of weights, the leaky update rule, the loop over time, and a first run on the untrained network."
 
 categories:

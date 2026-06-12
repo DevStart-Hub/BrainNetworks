@@ -1,7 +1,7 @@
 ---
 title: "Individual Differences"
 author-meta: "Francesco Poli"
-date: "28/03/2026"
+date: "2026-03-28"
 description-meta: "Moving from group-level to individual-level GNM parameter estimation: plotting individual optima on the energy landscape, running a fine-grained sweep, and testing whether individual wiring rules relate to early life stress."
 
 categories:
