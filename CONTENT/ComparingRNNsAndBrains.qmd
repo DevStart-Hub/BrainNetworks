@@ -110,8 +110,8 @@ And here are the results:
 
 ![](../images/RecurrentNetworks/rnn_vs_brain_topology.png){width="80%" fig-align="center"}
 
-The 20 brains are all together in the **top-right**: highly modular *and* highly efficient, exactly as small-world networks should be. Our basic RNN (the blue star) sits far away in the **bottom-left**, with **much lower modularity** (≈ 0.15 vs the brains' ≈ 0.36) **and lower efficiency** (≈ 0.22 vs ≈ 0.28) than *any* of the brains.
+The 20 brains are all together in the **top-right**: highly modular *and* highly efficient, exactly as small-world networks should be. Our basic RNN (the blue star) sits far away in the **bottom-left**, with **much lower modularity** **and lower efficiency** than *any* of the brains.
 
 So the answer to our original question (Is our RNN brain-like?) is a clear **no**. A network trained to do one simple task does **not** spontaneously wire itself like a brain. It solved the job perfectly well, but with a flat, weakly-structured connectivity that looks nothing like the brain's segregated-yet-integrated organisation.
 
-That's not a disappointment though, it's where things get interesting! If task-training alone doesn't produce brain-like wiring, what *would* See you in the next tutorial, where we start making our RNN a little more brain-like! 🚀
+That's not a disappointment though, it's where things get interesting! In the tutorial we will release next, we will start making our RNN a little more brain-like! 🚀

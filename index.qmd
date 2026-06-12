@@ -5,10 +5,18 @@ comments: false
 
 Welcome to the **Brain Network** side of DevStart! 🎉
 
-The tutorials that you will find here are entirely dedicated to exploring, understanding, and generating brain networks using Python and the `GenerativeNetworkModels` package.
+The tutorials that you will find here are entirely dedicated to learning about Network Neuroscience, Generative Network Models, and Artificial Neural Netowkrs.
 
-DevStart is an online hands-on manual for anyone who is approaching developmental cognitive neuroscience for the first time, from master’s students and PhDs to postdocs. 
+DevStart is an online hands-on manual for anyone who is approaching developmental cognitive neuroscience for the first time, from master’s students and PhDs to postdocs and PIs. 
 
 Assuming no prior knowledge, Devstart guides you through your first steps as a developmental researcher. On our main website, you’ll find many examples and guidelines on how to grasp the basic principles of developmental research, design and set up a study with different research methods, analyze data, and start programming.
 
 But here, you're on the brainy side of DevStart, where we learn about brains as networks... So let's dive in! 🚀
+
+::: callout-warning
+The Website has been pre-realesed for the OHBM Course "**Promises and Perils of Connectome-Constrained Neuro-AI Models**" organized by Kayson Fakhar, Fatemeh Hadaeghi, and Duncan Astle. However, it is still very much work in progress! If you spot any error, or if you have ideas on how to make the tutorials better, do **email us!** We are always very grateful for any feedback!
+:::
+
+## Acknowledgements
+
+We thank [Michèle Desjardins](https://www.crchudequebec.ulaval.ca/en/researcher/michele-desjardins/) for the feedback she gave us on an earlier version of the tutorials!
