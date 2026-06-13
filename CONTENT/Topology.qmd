@@ -244,9 +244,7 @@ AFTER 5 FULL TUTORIALS, FINALLY SOME RESULTS!!! Let's interpret them!
 
 Well, degree doesn't really work as we have seen: all networks have the same average degree! What about the other three? The effects seem pretty strong!!
 
-If we were to interpret this result, we'd say that participants with GREATER early life stress end up having brains that have LOWER betweenness centrality and clustering coefficient, but LONGER connections. If we interpret this in light of the adaptive stochasticity hypothesis, this is evidence favoring the idea that brains shaped by adversity develop in a more stochastic, less constrained way: with fewer critical bottleneck regions and a more distributed, decentralised architecture
-
-These results are a bit weak and messy though... That's why we need better modelling tools, just like generative network models!!!! See you on the other side!!!
+If we were to interpret this result, we'd say that participants with GREATER early life stress end up having brains that have LOWER betweenness centrality and clustering coefficient, but LONGER connections. If we interpret this in light of the adaptive stochasticity hypothesis, this is evidence favoring the idea that brains shaped by adversity develop in a more stochastic, less constrained way: with fewer critical bottleneck regions and a more distributed, decentralised architecture.
 
 ::: callout-important
 ## This is just an example!
